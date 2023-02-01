@@ -6,6 +6,7 @@ import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 
 import 'package:provider/provider.dart';
 import 'package:sigalogin/servicios/authServices.dart';
+import 'package:sigalogin/servicios/productos_servicio.dart';
 
 void main() => runApp(AppState());
 
@@ -13,7 +14,10 @@ class AppState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthServices())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthServices()),
+        ChangeNotifierProvider(create: (_) => ClienteSevices())
+      ],
       child: MyApp(),
     );
   }

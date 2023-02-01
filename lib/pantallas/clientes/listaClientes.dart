@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sigalogin/servicios/productos_servicio.dart';
 
 import '../../clases/customers.dart';
 import '../../clases/themes.dart';
 import '../../servicios/db_helper.dart';
 import '../NavigationDrawer.dart';
+
+import 'package:provider/provider.dart';
 
 class clienteLista extends StatefulWidget {
   @override
@@ -21,6 +24,8 @@ class CustomerListState extends State<clienteLista> {
   }
 
   Widget build(BuildContext context) {
+    final productoServices = Provider.of<ClienteSevices>(context);
+
     // Clients.sort();
     return Scaffold(
       appBar: AppBar(
