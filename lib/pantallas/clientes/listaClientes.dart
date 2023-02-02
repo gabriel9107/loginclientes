@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sigalogin/pantallas/clientes/new_cliente.dart';
 import 'package:sigalogin/servicios/productos_servicio.dart';
 
 import '../../clases/customers.dart';
@@ -24,7 +25,7 @@ class CustomerListState extends State<clienteLista> {
   }
 
   Widget build(BuildContext context) {
-    final productoServices = Provider.of<ClienteSevices>(context);
+    final servicioClientes = Provider.of<ClienteSevices>(context);
 
     // Clients.sort();
     return Scaffold(
@@ -45,12 +46,10 @@ class CustomerListState extends State<clienteLista> {
       drawer: NavigationDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => nuevoCliente('Nuevo cliente')
-          //       ),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewClient('Nuevo cliente')),
+          );
         },
         tooltip: 'Agregar',
         child: Icon(Icons.add),
@@ -101,12 +100,12 @@ class CustomerListState extends State<clienteLista> {
                                   Icons.edit,
                                 ),
                                 onPressed: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) =>
-                                  //           nuevoCliente('Editar Cliente')),
-                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            NewClient('Editar Cliente')),
+                                  );
                                 },
                               ),
                               IconButton(
@@ -114,12 +113,12 @@ class CustomerListState extends State<clienteLista> {
                                   Icons.delete,
                                 ),
                                 onPressed: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) =>
-                                  //           nuevoCliente('Editar Cliente')),
-                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            NewClient('Editar Cliente')),
+                                  );
                                 },
                               ),
                             ],

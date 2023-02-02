@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/pantallas/DashboardScreen.dart';
+import 'package:sigalogin/pantallas/productos/products_screen.dart';
 import 'package:sigalogin/pantallas/user_screen.dart';
 
 import '../clases/themes.dart';
@@ -91,8 +92,8 @@ class NavigationDrawer extends StatelessWidget {
               title: const Text('Productos'),
               onTap: () =>
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    // builder: (context) => ProductsList(),
-                    builder: (context) => DashboardScreen(),
+                    builder: (context) => ProductsList(),
+                    // builder: (context) => DashboardScreen(),
                   ))),
           ListTile(
             leading: const Icon(Icons.padding_outlined),
