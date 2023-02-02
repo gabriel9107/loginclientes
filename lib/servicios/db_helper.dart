@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -14,10 +16,10 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'Sigas1.db');
+    String path = join(documentsDirectory.path, 'Customer.db');
     return await openDatabase(
       path,
-      version: 8,
+      version: 9,
       onCreate: _onCreate,
     );
   }
@@ -33,97 +35,93 @@ class DatabaseHelper {
       Comment1 TEXT
       )''');
 
-    //   await db.execute('''CREATE TABLE Usuario(
-    //        id INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,UsuarioNombre TEXT
-    //     ,UsuarioClave TEXT
-    //     ,Compagnia TEXT
-    //     ,Activo TEXT
-    //     )''');
+    await db.execute('''CREATE TABLE Usuario(
+           id INTEGER PRIMARY KEY AUTOINCREMENT
+        ,UsuarioNombre TEXT
+        ,UsuarioClave TEXT
+        ,Compagnia TEXT
+        ,Activo TEXT
+        )''');
 
-    //   await db.execute('''CREATE TABLE InvoiceHeaders(
-    //        id INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,SALESID TEXT
-    //     ,INVOICEID TEXT
-    //     ,PAYMENT TEXT
-    //     ,INVOICEDATE TEXT
-    //     ,DUEDATE TEXT
-    //     ,INVOICEAMOUNT TEXT
-    //     ,INVOICINGNAME TEXT
-    //     ,PrintCounterDevolution TEXT
-    //     ,PrintCounterCreditNote TEXT
-    //     ,INVOICEACCOUNT TEXT
-    //     ,PayedAmount TEXT
-    //     )''');
+    await db.execute('''CREATE TABLE InvoiceHeaders(
+           id INTEGER PRIMARY KEY AUTOINCREMENT
+        ,SALESID TEXT
+        ,INVOICEID TEXT
+        ,PAYMENT TEXT
+        ,INVOICEDATE TEXT
+        ,DUEDATE TEXT
+        ,INVOICEAMOUNT TEXT
+        ,INVOICINGNAME TEXT
+        ,PrintCounterDevolution TEXT
+        ,PrintCounterCreditNote TEXT
+        ,INVOICEACCOUNT TEXT
+        ,PayedAmount TEXT
+        )''');
 
-    //   //tablas correspondiente a las ordenes
-    //   //SalesOrders tiene la cabezera y
-    //   //SalesLine el detalle de los productos
+    await db.execute('''CREATE TABLE SalesOrders(
+          ID INTEGER PRIMARY KEY AUTOINCREMENT
+        ,ordenNumero TEXT
+        ,Cash TEXT
+        ,Change TEXT
+        ,CustomerID TEXT
+        ,Date TEXT
+        ,GPID TEXT
+        ,IsDelete TEXT
+        ,Totals TEXT
+        ,VAT TEXT
+        ,UserName TEXT
+        ,Status TEXT
+        ,Commets TEXT
+        )''');
 
-    //   await db.execute('''CREATE TABLE SalesOrders(
-    //       ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,ordenNumero TEXT
-    //     ,Cash TEXT
-    //     ,Change TEXT
-    //     ,CustomerID TEXT
-    //     ,Date TEXT
-    //     ,GPID TEXT
-    //     ,IsDelete TEXT
-    //     ,Totals TEXT
-    //     ,VAT TEXT
-    //     ,UserName TEXT
-    //     ,Status TEXT
-    //     ,Commets TEXT
-    //     )''');
+    await db.execute('''CREATE TABLE SalesLines(
+    ID INTEGER PRIMARY KEY AUTOINCREMENT
+        ,SalesOrdersID TEXT
+        ,Price TEXT
+        ,Qty TEXT
+        ,ProductID TEXT
+        ,ProductCode TEXT
+        ,Products_ID TEXT
+        ,ProductName TEXT
+        )''');
 
-    //   await db.execute('''CREATE TABLE SalesLines(
-    // ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,SalesOrdersID TEXT
-    //     ,Price TEXT
-    //     ,Qty TEXT
-    //     ,ProductID TEXT
-    //     ,ProductCode TEXT
-    //     ,Products_ID TEXT
-    //     ,ProductName TEXT
-    //     )''');
+    await db.execute('''CREATE TABLE Productos(
+        ID INTEGER PRIMARY KEY AUTOINCREMENT
+        ,Nombre TEXT
+        ,ProductoCodigo TEXT
+        ,Qty TEXT
+        ,TypeOfSales TEXT
+        ,OuM TEXT
+        ,Price TEXT
+        ,Compagnia TEXT
+        ,Sincronizado TEXT
+        ,IsDelete TEXT
+        )''');
 
-    //   await db.execute('''CREATE TABLE Products(
-    //     ID INTEGER PRIMARY KEY AUTOINCREMENT
+    await db.execute('''CREATE TABLE PaymentOrders(
+         ID INTEGER PRIMARY KEY AUTOINCREMENT
 
-    //     ,IsDelete TEXT
-    //     ,Price TEXT
-    //     ,ProductCode TEXT
-    //     ,ProductID TEXT
-    //     ,ProductName TEXT
-    //     ,Qty TEXT
-    //     ,TypeOSales TEXT
-    //     ,UoM TEXT
-    //     )''');
-
-    //   // await db.execute('''CREATE TABLE PaymentOrders(
-    //   //    ID INTEGER PRIMARY KEY AUTOINCREMENT
-
-    //   //  Id TEXT
-    //   //   ,VendorID TEXT
-    //   //   ,Datetime TEXT
-    //   //   ,Amount TEXT
-    //   //   ,Method TEXT
-    //   //   ,BankName TEXT
-    //   //   ,CheckNumber TEXT
-    //   //   ,CheckDate TEXT
-    //   //   ,IsEnabled TEXT
-    //   //   ,Customer_Code TEXT
-    //   //   ,IsOpen TEXT
-    //   //   ,Imported TEXT
-    //   //   )''');
-    //   // await db.execute('''CREATE TABLE PaymentItems(
-    //   //    ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //   //   ,PaymentOrderId TEXT
-    //   //   ,InvoiceNumber TEXT
-    //   //   ,AmountApply TEXT
-    //   //   ,InvoiveAmountAtMoment TEXT
-    //   //   ,IsEnabled TEXT
-    //   //   )''');
+       Id TEXT
+        ,VendorID TEXT
+        ,Datetime TEXT
+        ,Amount TEXT
+        ,Method TEXT
+        ,BankName TEXT
+        ,CheckNumber TEXT
+        ,CheckDate TEXT
+        ,IsEnabled TEXT
+        ,Customer_Code TEXT
+        ,IsOpen TEXT
+        ,Imported TEXT
+        )''');
+    await db.execute('''CREATE TABLE PaymentItems(
+         ID INTEGER PRIMARY KEY AUTOINCREMENT
+        ,PaymentOrderId TEXT
+        ,InvoiceNumber TEXT
+        ,AmountApply TEXT
+        ,InvoiveAmountAtMoment TEXT
+        ,IsEnabled TEXT
+        )''');
   }
 
 //Clientes
@@ -136,9 +134,27 @@ class DatabaseHelper {
     return customersList;
   }
 
-  Future<int> Add(Customers customers) async {
+  Future<List<Producto>> getProductos() async {
     Database db = await instance.database;
-    return await db.insert('Customer', customers.toMap());
+    var productos = await db.query('Productos', orderBy: 'ProductoCodigo');
+
+    List<Producto> productoLista =
+        productos.map((c) => Producto.fromMap(c)).toList();
+
+    return productoLista;
+  }
+
+  Future<int> Add(Customers customers) async {
+    String customerCode = customers.CustomerCode;
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT * FROM Customer WHERE ProductoCodigo; = '$customerCode'");
+
+    if (res.length < 0)
+      return await db.insert('Customer', customers.toMap());
+    else {
+      return 0;
+    }
   }
 
   Future<int> update(Customers customers) async {
@@ -147,6 +163,33 @@ class DatabaseHelper {
     return await db.update('Customers', customers.toMap(),
         where: '$id = ?', whereArgs: [id]);
   }
+
+  Future<int> addProduct(Producto producto) async {
+    var db = await instance.database;
+    return await db.insert('Productos', producto.toMap());
+  }
+
+  Future<bool> aregarProductoSiNoExiste(
+      String ProductoCodigo, Producto producto) async {
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT * FROM Productos WHERE ProductoCodigo; = '$ProductoCodigo' and IsDelete = 0");
+
+    print(res.length);
+
+    if (res.length < 0) {
+      addWProduct(producto);
+      return false;
+    }
+    return true;
+  }
+
+  Future<int> addWProduct(Producto producto) async {
+    Database db = await instance.database;
+    return await db.insert('Productos', producto.toMap());
+  }
+
+  // void addProduct(Producto producto) {}
 
 //Pedidos de ventas
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 import 'package:sigalogin/servicios/authServices.dart';
 
 import '../../provider/login_from_prodivder.dart';
@@ -39,8 +40,12 @@ class LoginScreen extends StatelessWidget {
         )),
         SizedBox(height: 50),
         TextButton(
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, 'register'),
+            onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                ),
+            // Navigator.pushReplacementNamed(context, 'register'),
+
             style: ButtonStyle(
               overlayColor:
                   MaterialStateProperty.all(Colors.indigo.withOpacity(0.1)),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/pantallas/clientes/new_cliente.dart';
-import 'package:sigalogin/servicios/productos_servicio.dart';
+import 'package:sigalogin/servicios/productos_services.dart';
 
 import '../../clases/customers.dart';
 import '../../clases/themes.dart';
+import '../../servicios/clientes_Services.dart';
 import '../../servicios/db_helper.dart';
 import '../NavigationDrawer.dart';
 
@@ -26,6 +27,7 @@ class CustomerListState extends State<clienteLista> {
 
   Widget build(BuildContext context) {
     final servicioClientes = Provider.of<ClienteSevices>(context);
+    // final servicioProductos = Provider.of<ProductoServices>(context);
 
     // Clients.sort();
     return Scaffold(
@@ -43,7 +45,7 @@ class CustomerListState extends State<clienteLista> {
           )
         ],
       ),
-      drawer: NavigationDrawer(),
+      drawer: navegacions(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
