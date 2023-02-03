@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../clases/themes.dart';
 import '../../provider/login_from_prodivder.dart';
 import '../../servicios/authServices.dart';
 import '../../ui/InputDecorations.dart';
@@ -15,6 +16,12 @@ class RegisterScreen extends StatelessWidget {
         body: AuthBackground(
             child: SingleChildScrollView(
       child: Column(children: [
+        AppBar(
+          backgroundColor: navBar,
+          leading: BackButton(
+            color: Colors.black,
+          ),
+        ),
         SizedBox(height: 350),
         CardContainer(
             child: Column(

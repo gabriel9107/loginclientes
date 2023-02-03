@@ -6,7 +6,7 @@ import 'package:sigalogin/pantallas/user_screen.dart';
 import '../clases/themes.dart';
 import 'clientes/listaClientes.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class navegacions extends StatelessWidget {
   // const NavigationDrawer({Key? key}) : super(key: key)
 
   @override

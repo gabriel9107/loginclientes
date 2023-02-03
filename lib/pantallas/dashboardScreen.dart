@@ -23,7 +23,7 @@ class DashboardScreen extends StatelessWidget {
           backgroundColor: navBar,
           elevation: 0.0,
           title: Text('Dashboard')),
-      drawer: NavigationDrawer(),
+      drawer: navegacions(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
