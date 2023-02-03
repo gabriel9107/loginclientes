@@ -100,8 +100,6 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE PaymentOrders(
          ID INTEGER PRIMARY KEY AUTOINCREMENT
-
-       Id TEXT
         ,VendorID TEXT
         ,Datetime TEXT
         ,Amount TEXT
@@ -125,15 +123,21 @@ class DatabaseHelper {
   }
 
 //Clientes
+
+//Obtener Clientes
   Future<List<Customers>> getCustomers() async {
     Database db = await instance.database;
     var customers = await db.query('Customer', orderBy: 'CustomerName');
     List<Customers> customersList = customers.isNotEmpty
         ? customers.map((c) => Customers.fromMap(c)).toList()
         : [];
+
+    print('Lista de clientes');
+    print(customersList);
     return customersList;
   }
 
+//Obtener Productos
   Future<List<Producto>> getProductos() async {
     Database db = await instance.database;
     var productos = await db.query('Productos', orderBy: 'ProductoCodigo');
@@ -144,24 +148,57 @@ class DatabaseHelper {
     return productoLista;
   }
 
+//Agregar Clientes
   Future<int> Add(Customers customers) async {
     String customerCode = customers.CustomerCode;
     Database db = await instance.database;
-    var res = await db.rawQuery(
-        "SELECT * FROM Customer WHERE ProductoCodigo; = '$customerCode'");
-
-    if (res.length < 0)
-      return await db.insert('Customer', customers.toMap());
-    else {
-      return 0;
-    }
+    return await db.insert('Customer', customers.toMap());
   }
 
+  Future<int> Deletecustomer(Customers customers) async {
+    String customerCode = customers.CustomerCode;
+    Database db = await instance.database;
+    return await db.delete('Customer');
+  }
+
+  Future<int> Deleteproducto() async {
+    Database db = await instance.database;
+    return await db.delete('Productos');
+  }
+
+//Actualizar Clientes
   Future<int> update(Customers customers) async {
     Database db = await instance.database;
     int id = customers.toMap()['id'];
     return await db.update('Customers', customers.toMap(),
         where: '$id = ?', whereArgs: [id]);
+  }
+
+//Verificar si existe el Cliente antes de sincronizarlo
+  Future<int> customerExists(Customers customers) async {
+    String customerCode = customers.CustomerCode;
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM Customer WHERE CustomerCode= '$customerCode')");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      Add(customers);
+    }
+    return 0;
+  }
+
+  Future<int> productoExists(Producto producto) async {
+    String codigoProducto = producto.productoCodigo.toString();
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM Productos WHERE ProductoCodigo= '$codigoProducto')");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      addProduct(producto);
+    }
+    return 0;
   }
 
   Future<int> addProduct(Producto producto) async {
@@ -173,7 +210,7 @@ class DatabaseHelper {
       String ProductoCodigo, Producto producto) async {
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT * FROM Productos WHERE ProductoCodigo; = '$ProductoCodigo' and IsDelete = 0");
+        "SELECT * FROM Productos WHERE ProductoCodigo = '$ProductoCodigo' and IsDelete = 0");
 
     print(res.length);
 

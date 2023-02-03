@@ -26,15 +26,27 @@ class ProductoServices extends ChangeNotifier {
         await http.get(url, headers: {"Content-Type": "application/json"});
     // final jsonList = jsonDecode(response.body) as List<dynamic>;
 
+    DatabaseHelper.instance.Deleteproducto();
     final Map<String, dynamic> productosMap = json.decode(response.body);
     final productomap = Producto.fromJson(productosMap);
 
     productosMap.forEach((key, value) {
-      if (value != "") {
-        final tempProductos = Producto.fromJson(value);
-        print(tempProductos.nombre);
-        DatabaseHelper.instance.addProduct(tempProductos);
-      }
+      // if (value != "") {
+      final tempProductos = Producto.fromJson(value);
+
+      Producto produts = Producto(
+          compagnia: tempProductos.compagnia,
+          isDelete: tempProductos.isDelete,
+          nombre: tempProductos.nombre,
+          ouM: tempProductos.ouM,
+          price: tempProductos.price,
+          productoCodigo: tempProductos.productoCodigo,
+          qty: tempProductos.qty,
+          sincronizado: tempProductos.sincronizado,
+          typeOfSales: tempProductos.typeOfSales);
+      print(tempProductos.nombre);
+      DatabaseHelper.instance.productoExists(produts);
+      // }
 
       // DatabaseHelper.instance.aregarProductoSiNoExiste(
       //     tempProductos.productoCodigo.toString(), productomap);

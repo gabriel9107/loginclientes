@@ -5,6 +5,7 @@ import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 import 'package:sigalogin/servicios/authServices.dart';
 
 import '../../provider/login_from_prodivder.dart';
+import '../../servicios/notifications_service.dart';
 import '../../ui/InputDecorations.dart';
 import '../../widgets/auth_background.dart';
 import '../../widgets/card_container.dart';
@@ -115,14 +116,15 @@ class _LoginForm extends StatelessWidget {
                     final authServices =
                         Provider.of<AuthServices>(context, listen: false);
                     if (!loginForm.isValidForm()) return;
-
+                    loginForm.isLoading = true;
                     final String? errorMessage = await authServices.login(
                         loginForm.email, loginForm.password);
                     if (errorMessage == null) {
                       loginForm.isLoading = true;
                       Navigator.pushReplacementNamed(context, 'home');
                     } else {
-                      print(errorMessage);
+                      NotificationsService.showSnackbar(errorMessage);
+                      loginForm.isLoading = false;
                     }
                   }),
             ],

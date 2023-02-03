@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/pantallas/DashboardScreen.dart';
+import 'package:sigalogin/pantallas/pedidos/pedidos.dart';
 import 'package:sigalogin/pantallas/productos/products_screen.dart';
+import 'package:sigalogin/pantallas/sincronizar/products_screen.dart';
 import 'package:sigalogin/pantallas/user_screen.dart';
 
 import '../clases/themes.dart';
 import 'clientes/listaClientes.dart';
+import 'login/IniciarUsuario.dart';
 
 class navegacions extends StatelessWidget {
   // const NavigationDrawer({Key? key}) : super(key: key)
@@ -24,7 +27,7 @@ class navegacions extends StatelessWidget {
       // Container(
 
       // color: Colors.blue.shade700,
-      color: navBar,
+      color: Color.fromARGB(255, 61, 64, 238),
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
@@ -85,7 +88,7 @@ class navegacions extends StatelessWidget {
               onTap: () =>
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                     // builder: (context) => pedidop(),
-                    builder: (context) => DashboardScreen(),
+                    builder: (context) => pedidop(),
                   ))),
           ListTile(
               leading: const Icon(Icons.production_quantity_limits),
@@ -103,18 +106,28 @@ class navegacions extends StatelessWidget {
           const Divider(color: Colors.black54),
           ListTile(
             leading: const Icon(Icons.update),
-            title: const Text('Exportar Cobros'),
-            onTap: () {},
+            title: const Text('Sincronizar'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                // builder: (context) => pedidop(),
+                builder: (context) => PincronizarLista(),
+              ));
+            },
           ),
           ListTile(
             leading: const Icon(Icons.notifications),
-            title: const Text('Notificaciones'),
+            title: const Text('Perfil'),
             onTap: () {},
           ),
           ListTile(
             leading: const Icon(Icons.exit_to_app_outlined),
             title: const Text('Salir'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                // builder: (context) => pedidop(),
+                builder: (context) => LoginScreen(),
+              ));
+            },
           ),
         ],
       ));

@@ -26,9 +26,6 @@ class CustomerListState extends State<clienteLista> {
   }
 
   Widget build(BuildContext context) {
-    final servicioClientes = Provider.of<ClienteSevices>(context);
-    // final servicioProductos = Provider.of<ProductoServices>(context);
-
     // Clients.sort();
     return Scaffold(
       appBar: AppBar(

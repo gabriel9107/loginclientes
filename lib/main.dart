@@ -7,6 +7,7 @@ import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 import 'package:provider/provider.dart';
 import 'package:sigalogin/servicios/authServices.dart';
 import 'package:sigalogin/servicios/clientes_Services.dart';
+import 'package:sigalogin/servicios/notifications_service.dart';
 import 'package:sigalogin/servicios/productos_services.dart';
 
 void main() => runApp(AppState());
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         'register': (context) => RegisterScreen(),
         'home': (context) => const DashboardScreen()
       },
-
+      scaffoldMessengerKey: NotificationsService.messengerKey,
       theme: ThemeData(
         // This is the theme of your application.
         //

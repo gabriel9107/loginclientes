@@ -4,37 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/pantallas/NavigationDrawer.dart';
-import 'package:sigalogin/pantallas/buscar/busquedadeProductos.dart';
 import 'package:sigalogin/pantallas/productos/products_detail.dart';
-import 'package:sqflite/sqflite.dart';
 
 import '../../clases/customers.dart';
 import '../../clases/product.dart';
+import '../../servicios/clientes_Services.dart';
 import '../../servicios/db_helper.dart';
+import 'package:provider/provider.dart';
 
-class ProductsList extends StatefulWidget {
+import '../../servicios/productos_services.dart';
+
+class PincronizarLista extends StatefulWidget {
   @override
-  createState() => ProductsListState();
+  createState() => PincronizarListState();
 }
 // State<StatefulWidget> createState() {
 //   return ProductsList();
 // }
 
-class ProductsListState extends State<ProductsList> {
-  Future<List<Producto>> productos = DatabaseHelper.instance.getProductos();
+class PincronizarListState extends State<PincronizarLista> {
+  late List<Product> products;
 
   @override
   void initState() {
-    productos = DatabaseHelper.instance.getProductos();
+    products = Product.getProduct();
     super.initState();
   }
 
   Widget build(BuildContext context) {
+    final servicioClientes = Provider.of<ClienteSevices>(context);
+    final servicioProductos = Provider.of<ProductoServices>(context);
     // DBProvider().initializeDB();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Siga Mobile - Lista de Productos'),
-        backgroundColor: navBar,
+        backgroundColor: Color.fromARGB(255, 61, 64, 238),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

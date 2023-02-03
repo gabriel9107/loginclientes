@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../clases/themes.dart';
 import '../../provider/login_from_prodivder.dart';
 import '../../servicios/authServices.dart';
+import '../../servicios/notifications_service.dart';
 import '../../ui/InputDecorations.dart';
 import '../../widgets/auth_background.dart';
 import '../../widgets/card_container.dart';
@@ -17,7 +18,7 @@ class RegisterScreen extends StatelessWidget {
             child: SingleChildScrollView(
       child: Column(children: [
         AppBar(
-          backgroundColor: navBar,
+          backgroundColor: Color.fromARGB(255, 61, 64, 238),
           leading: BackButton(
             color: Colors.black,
           ),
@@ -114,6 +115,7 @@ class _LoginForm extends StatelessWidget {
                         Provider.of<AuthServices>(context, listen: false);
 
                     if (!loginForm.isValidForm()) return;
+                    loginForm.isLoading = true;
 
                     final String? errorMessage = await authservices.createUser(
                         loginForm.email, loginForm.password);
@@ -122,7 +124,10 @@ class _LoginForm extends StatelessWidget {
                       Navigator.pushReplacementNamed((context), 'home');
                     }
 
-                    Navigator.pushReplacementNamed(context, 'home');
+                    print(errorMessage);
+                    NotificationsService.showSnackbar(errorMessage.toString());
+
+                    loginForm.isLoading = false;
                   }),
             ],
           )),

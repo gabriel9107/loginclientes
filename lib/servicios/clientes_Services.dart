@@ -38,7 +38,7 @@ class ClienteSevices extends ChangeNotifier {
             Phone1: tempCliente.telefono1.toString(),
             Phone2: tempCliente.telefono2.toString(),
             Comment1: tempCliente.comentario.toString());
-        DatabaseHelper.instance.Add(insert);
+        DatabaseHelper.instance.customerExists(insert);
       }
     });
 
