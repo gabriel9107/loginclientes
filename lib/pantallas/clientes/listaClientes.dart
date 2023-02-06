@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
 import 'package:sigalogin/pantallas/clientes/new_cliente.dart';
 import 'package:sigalogin/servicios/productos_services.dart';
 
@@ -9,6 +10,9 @@ import '../../servicios/db_helper.dart';
 import '../NavigationDrawer.dart';
 
 import 'package:provider/provider.dart';
+
+import '../buscar/buscarClientesEnCLientes.dart';
+import '../pedidos/PedidosVentas.dart';
 
 class clienteLista extends StatefulWidget {
   @override
@@ -37,7 +41,9 @@ class CustomerListState extends State<clienteLista> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () => {
-              // showSearch(context: context, delegate: MySearchDelegate())
+              showSearch(
+                  context: context,
+                  delegate: MySearchDelegateParaClientesEnClientes())
             },
           )
         ],
@@ -86,12 +92,13 @@ class CustomerListState extends State<clienteLista> {
                                   Icons.point_of_sale_sharp,
                                 ),
                                 onPressed: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => CartPage(
-                                  //             customer.CustomerCode.toString(),
-                                  //             null)));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CartPage(
+                                              customer.CustomerCode.toString(),
+                                              customer.CustomerName
+                                                  .toString())));
                                 },
                               ),
                               IconButton(
@@ -123,10 +130,16 @@ class CustomerListState extends State<clienteLista> {
                             ],
                           ),
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) =>
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DetalleDelCliente()
+                                    //  CartPage(
+                                    //     customer.CustomerCode,
+                                    //     customer.CustomerName.toString())
+
+                                    ));
+
                             //           detallePage(customer.CustomerName)),
                             // );
                             // NavigateDetail('Edit Product');

@@ -44,7 +44,7 @@ class ProductoServices extends ChangeNotifier {
           qty: tempProductos.qty,
           sincronizado: tempProductos.sincronizado,
           typeOfSales: tempProductos.typeOfSales);
-      print(tempProductos.nombre);
+
       DatabaseHelper.instance.productoExists(produts);
       // }
 
@@ -66,8 +66,5 @@ class ProductoServices extends ChangeNotifier {
     // final jsonList = jsonDecode(response.body) as List<dynamic>;
   }
 
-  SincronizarClientes(var respuesta) {
-    print('esta es la respuesta');
-    print(respuesta);
-  }
+  SincronizarClientes(var respuesta) {}
 }

@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../clases/customers.dart';
+import '../clases/ordenDeventa.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConsturctor();
@@ -132,8 +133,6 @@ class DatabaseHelper {
         ? customers.map((c) => Customers.fromMap(c)).toList()
         : [];
 
-    print('Lista de clientes');
-    print(customersList);
     return customersList;
   }
 
@@ -212,8 +211,6 @@ class DatabaseHelper {
     var res = await dbClient.rawQuery(
         "SELECT * FROM Productos WHERE ProductoCodigo = '$ProductoCodigo' and IsDelete = 0");
 
-    print(res.length);
-
     if (res.length < 0) {
       addWProduct(producto);
       return false;
@@ -226,31 +223,44 @@ class DatabaseHelper {
     return await db.insert('Productos', producto.toMap());
   }
 
+  Future<List<OrdenVenta>> getOrdenes() async {
+    Database db = await instance.database;
+    var ordenes = await db.query('SalesOrders', orderBy: 'ID');
+    // List<OrdenVenta> ordenesLista = ordenes.isNotEmpty
+    //     ? ordenes.map((c) => OrdenVenta.fromMap(c)).toList()
+    //     : [];
+
+    List<OrdenVenta> ordenesLista = ordenes.isNotEmpty
+        ? ordenes.map((c) => OrdenVenta.fromMap(c)).toList()
+        : [];
+    return ordenesLista;
+  }
+
   // void addProduct(Producto producto) {}
 
 //Pedidos de ventas
 
-//   Future<int> AddSales(OrdenVenta pedido) async {
-//     Database db = await instance.database;
-//     return await db.insert('SalesOrders', pedido.toMap());
-//   }
+  Future<int> AddSales(OrdenVenta pedido) async {
+    Database db = await instance.database;
+    return await db.insert('SalesOrders', pedido.toMap());
+  }
 
-//   Future<int> AddSalesDetalle(OrdenVentaDetalle detallePedido) async {
-//     Database db = await instance.database;
-//     return await db.insert('SalesLines', detallePedido.toMap());
-//   }
+  Future<int> AddSalesDetalle(OrdenVentaDetalle detallePedido) async {
+    Database db = await instance.database;
+    return await db.insert('SalesLines', detallePedido.toMap());
+  }
 
 // //obtener el proximo numero de orden
-//   Future<String> getNextSalesOrders() async {
-//     Database db = await instance.database;
-//     var res = await db.rawQuery(
-//         " SELECT ordenNumero FROM SalesLines WHERE ID = (SELECT MAX(ID) FROM SalesLines); ");
-//     if (res.length == 0) {
-//       return "1";
-//     }
+  Future<String> getNextSalesOrders() async {
+    Database db = await instance.database;
+    var res = await db
+        .rawQuery("SELECT * FROM SalesOrders ORDER BY ID DESC LIMIT 1; ");
+    if (res.length == 0) {
+      return "1";
+    }
 
-//     return res.toString();
-//   }
+    return res.toString();
+  }
 
 // //Lista de ordenes para pedidos de venta
 //   Future<List<OrdenVenta>> getOrdenes() async {

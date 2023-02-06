@@ -1,3 +1,7 @@
+import 'package:sigalogin/clases/global.dart';
+
+import '../servicios/db_helper.dart';
+
 class Customers {
   final int? id;
   final String CustomerCode;
@@ -35,5 +39,25 @@ class Customers {
       'Phone2': Phone2,
       'Comment1': Comment1,
     };
+  }
+
+  static Future getCustomers() async {
+    var documento =
+        await DatabaseHelper.instance.getCustomers() as List<Customers>;
+
+    if (ListaClientes == false) {
+      documento.forEach((element) {
+        Customers customer = new Customers(
+            CustomerCode: element.CustomerCode,
+            CustomerName: element.CustomerName,
+            CustomerDir: element.CustomerDir,
+            Phone1: element.Phone1,
+            Phone2: element.Phone2,
+            Comment1: element.Comment1);
+        TodosLosClientes.add(customer);
+      });
+      ListaClientes = true;
+    }
+    return documento;
   }
 }

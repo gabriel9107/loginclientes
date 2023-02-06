@@ -47,8 +47,5 @@ class ClienteSevices extends ChangeNotifier {
     // final jsonList = jsonDecode(response.body) as List<dynamic>;
   }
 
-  SincronizarClientes(var respuesta) {
-    print('esta es la respuesta');
-    print(respuesta);
-  }
+  SincronizarClientes(var respuesta) {}
 }
