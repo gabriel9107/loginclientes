@@ -133,7 +133,8 @@ class CustomerListState extends State<clienteLista> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DetalleDelCliente()
+                                    builder: (context) => DetalleDelCliente(
+                                        customer.CustomerCode.toString())
                                     //  CartPage(
                                     //     customer.CustomerCode,
                                     //     customer.CustomerName.toString())

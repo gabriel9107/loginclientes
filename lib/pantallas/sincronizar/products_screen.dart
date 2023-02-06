@@ -5,6 +5,8 @@ import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/pantallas/NavigationDrawer.dart';
 import 'package:sigalogin/pantallas/productos/products_detail.dart';
+import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
+import 'package:sigalogin/servicios/factura_service.dart';
 
 import '../../clases/customers.dart';
 import '../../clases/product.dart';
@@ -27,13 +29,17 @@ class PincronizarListState extends State<PincronizarLista> {
 
   @override
   void initState() {
-    products = Product.getProduct();
+    // products = Product.getProduct();
     super.initState();
   }
 
   Widget build(BuildContext context) {
     final servicioClientes = Provider.of<ClienteSevices>(context);
     final servicioProductos = Provider.of<ProductoServices>(context);
+
+    final servicioFactura = Provider.of<FacturaServices>(context);
+    // final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
+
     // DBProvider().initializeDB();
     return Scaffold(
       appBar: AppBar(

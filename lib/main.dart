@@ -7,6 +7,8 @@ import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 import 'package:provider/provider.dart';
 import 'package:sigalogin/servicios/authServices.dart';
 import 'package:sigalogin/servicios/clientes_Services.dart';
+import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
+import 'package:sigalogin/servicios/factura_service.dart';
 import 'package:sigalogin/servicios/notifications_service.dart';
 import 'package:sigalogin/servicios/productos_services.dart';
 
@@ -19,7 +21,9 @@ class AppState extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthServices()),
         ChangeNotifierProvider(create: (_) => ClienteSevices()),
-        ChangeNotifierProvider(create: (_) => ProductoServices())
+        ChangeNotifierProvider(create: (_) => ProductoServices()),
+        ChangeNotifierProvider(create: (_) => FacturaServices()),
+        ChangeNotifierProvider(create: (_) => FacturaDetalleServices())
       ],
       child: MyApp(),
     );

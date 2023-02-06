@@ -98,8 +98,8 @@ class _LoginForm extends StatelessWidget {
                       : 'La contraseña debe de ser de 6 caracteres';
                 },
               ),
-              SizedBox(height: 30),
-              SizedBox(height: 50),
+              const SizedBox(height: 30),
+              const SizedBox(height: 50),
               MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -107,9 +107,10 @@ class _LoginForm extends StatelessWidget {
                   elevation: 0,
                   color: Colors.deepPurple,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                    child:
-                        Text('Ingresar', style: TextStyle(color: Colors.white)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 80, vertical: 15),
+                    child: const Text('Ingresar',
+                        style: TextStyle(color: Colors.white)),
                   ),
                   onPressed: () async {
                     FocusScope.of(context).unfocus();

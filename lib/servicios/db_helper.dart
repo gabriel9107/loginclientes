@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:sigalogin/clases/factura.dart';
+import 'package:sigalogin/clases/facturaDetalle.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
@@ -6,6 +8,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../clases/customers.dart';
+import '../clases/detalleFactura.dart';
 import '../clases/ordenDeventa.dart';
 
 class DatabaseHelper {
@@ -17,10 +20,10 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'Customer.db');
+    String path = join(documentsDirectory.path, 'Customer3.db');
     return await openDatabase(
       path,
-      version: 9,
+      version: 1,
       onCreate: _onCreate,
     );
   }
@@ -120,6 +123,35 @@ class DatabaseHelper {
         ,AmountApply TEXT
         ,InvoiveAmountAtMoment TEXT
         ,IsEnabled TEXT
+        )''');
+
+    ///creando 2 tablas Factura y Factura detalle para cambiarle la forma del flujo y que sea mas entendible por los idiomas
+    ///
+    ///
+    await db.execute('''CREATE TABLE Factura(
+         ID INTEGER PRIMARY KEY AUTOINCREMENT
+        ,FacturaFecha TEXT
+        ,FacturaId TEXT
+        ,FacturaVencimiento TEXT
+        ,MetodoDepago TEXT
+        
+        ,MontoFactura TEXT
+        ,PedidosId TEXT
+        ,TotalPagado TEXT
+        
+        )''');
+
+    ///
+    ///
+    await db.execute('''CREATE TABLE FacturaDetalle(
+         ID INTEGER PRIMARY KEY AUTOINCREMENT
+        ,FacturaNumero TEXT
+        ,LineaNumero1 TEXT
+        ,Nombre TEXT
+        ,PrecioVenta TEXT
+        ,ProductoCodigo TEXT
+        ,Qty TEXT
+        ,montoLinea TEXT
         )''');
   }
 
@@ -260,6 +292,65 @@ class DatabaseHelper {
     }
 
     return res.toString();
+  }
+
+// Relacionado a las Facturas
+
+  Future<int> AddFactura(Factura factura) async {
+    Database db = await instance.database;
+    return await db.insert('Factura', factura.toMap());
+  }
+
+  // Future<List<Factura>> getFacturasporClientes(String clienteId) async {
+  //   Database db = await instance.database;
+  //   var factura = await db
+  //       .rawQuery("SELECT * FROM Factura WHERE FacturaId= '$clienteId')");
+
+  //   List<Factura> facturaList =
+  //       factura.map((c) => Factura.fromJson(c)).toList();
+
+  // return
+  // }
+
+  Future<List<Factura>> getFacturas() async {
+    Database db = await instance.database;
+    var factura = await db.query('Factura', orderBy: 'ID');
+
+    List<Factura> productoLista =
+        factura.map((c) => Factura.fromJson(c)).toList();
+
+    return productoLista;
+  }
+
+  Future<int> AddDetalleFactura(FacturaDetalleAsync factura) async {
+    Database db = await instance.database;
+    return await db.insert('FacturaDetalle', factura.toMap());
+  }
+
+  Future<int> SincronizarFactura(Factura factura) async {
+    String facturaNumero = factura.facturaId.toString();
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM Factura WHERE FacturaId= '$facturaNumero')");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      AddFactura(factura);
+    }
+    return 0;
+  }
+
+  Future<int> SincronizarDefalleFactura(FacturaDetalleAsync factura) async {
+    String facturaNumero = factura.facturaNumero;
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM facturaDetalle WHERE FacturaNumero= '$facturaNumero')");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      AddDetalleFactura(factura);
+    }
+    return 0;
   }
 
 // //Lista de ordenes para pedidos de venta

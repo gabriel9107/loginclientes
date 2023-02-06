@@ -177,7 +177,8 @@ class CartBottomNavBar extends StatelessWidget {
 
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             // builder: (context) => pedidop(), pedidosLista
-                            builder: (context) => DetalleDelCliente()));
+                            builder: (context) =>
+                                DetalleDelCliente(totales.idClienteFactura)));
                       }),
                     )
                   ]),

@@ -49,7 +49,7 @@ class _mainPage extends State<CartPage> {
       appBar: AppBar(
         title: Text('Siga Mobile - Pedidos      Cliente : ' +
             this.clienteCodigo.toString()),
-        backgroundColor: Color.fromARGB(255, 42, 135, 221),
+        backgroundColor: const Color.fromARGB(255, 42, 135, 221),
 
         //Boton de Buscar
         actions: [
@@ -73,7 +73,7 @@ class _mainPage extends State<CartPage> {
             return SingleChildScrollView(
               child: Column(children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   child: Container(
                     width: 650,
                     height: 120,
@@ -91,7 +91,7 @@ class _mainPage extends State<CartPage> {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          child: SizedBox(
+                          child: const SizedBox(
                             height: 50,
                             width: 150,
                           ),
