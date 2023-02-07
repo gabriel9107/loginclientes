@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'global.dart';
+import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
+
+import '../servicios/db_helper.dart';
 
 Map<String, Factura> facturaFromJson(String str) => Map.from(json.decode(str))
     .map((k, v) => MapEntry<String, Factura>(k, Factura.fromJson(v)));
@@ -60,5 +64,30 @@ class Factura {
       "PedidosId": pedidosId,
       "totalPagado": totalPagado,
     };
+  }
+
+  List<Factura> factura = [];
+  static Future obtenerFacturas() async {
+    var documento =
+        await DatabaseHelper.instance.getFacturas() as List<Factura>;
+
+    if (ListasFactura == false) {
+      documento.forEach((element) {
+        Factura a = new Factura(
+            facturaFecha: element.facturaFecha,
+            facturaId: element.facturaId,
+            facturaVencimiento: element.facturaVencimiento,
+            id: element.id,
+            metodoDePago: element.metodoDePago,
+            montoFactura: element.montoFactura,
+            pedidosId: element.pedidosId,
+            totalPagado: element.totalPagado);
+        TodasLasFacturas.add(a);
+      });
+      ListasFactura = true;
+    }
+    // TodosProductos.add(documento);
+    // Lista.add(documento);
+    return documento;
   }
 }

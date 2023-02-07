@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../buscar/buscarFacturasParaPagos.dart';
+
 class RealizarPago extends StatefulWidget {
   @override
   _realizarPagoPageState createState() => _realizarPagoPageState();
@@ -11,6 +13,14 @@ class _realizarPagoPageState extends State<RealizarPago> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Realizar Pagos'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () => {
+                showSearch(context: context, delegate: BuscarFacturaEnPagos())
+              },
+            )
+          ],
         ),
         body: Center(
           child: Column(
