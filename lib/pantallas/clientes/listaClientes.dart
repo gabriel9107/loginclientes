@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
 import 'package:sigalogin/pantallas/clientes/new_cliente.dart';
-import 'package:sigalogin/servicios/productos_services.dart';
 
 import '../../clases/customers.dart';
+import '../../clases/facturaDetalle.dart';
 import '../../clases/themes.dart';
 import '../../servicios/clientes_Services.dart';
 import '../../servicios/db_helper.dart';
@@ -92,6 +92,7 @@ class CustomerListState extends State<clienteLista> {
                                   Icons.point_of_sale_sharp,
                                 ),
                                 onPressed: () {
+                                  FacturaDetalle.limpiarfacturas();
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

@@ -119,6 +119,15 @@ class FacturaDetalle {
     return facturaDetalle.toList();
   }
 
+  static bool limpiarfacturas() {
+    facturaDetalle.clear();
+    return true;
+  }
+
+  static remover(var index) {
+    facturaDetalle.removeAt(index);
+  }
+
   static void guardarPedido(
       OrdenVenta orden, List<OrdenVentaDetalle> ordendetalle) {
     DatabaseHelper.instance.AddSales(orden);
