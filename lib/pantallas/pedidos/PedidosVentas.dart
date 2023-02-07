@@ -24,12 +24,14 @@ class _mainPage extends State<CartPage> {
 
   String? nombreCliente;
   _mainPage(this.clienteCodigo, this.nombreCliente);
-  late List<FacturaDetalle> detalleFactura = FacturaDetalle.getFacturaDetalle();
+
+  late List<FacturaDetalle> detalleFactura = [];
+  //  FacturaDetalle.getFacturaDetalle();
   String NumeroPedido = DatabaseHelper.instance.getNextSalesOrders().toString();
+  int _lastIntegerSelected = 0;
   _refresh() async {
     await Future.delayed(Duration(seconds: 2), () {
-      detalleFactura = FacturaDetalle.getFacturaDetalle();
-      print('dineisy');
+      detalleFactura = [];
     });
     return;
   }
@@ -47,23 +49,27 @@ class _mainPage extends State<CartPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text('Siga Mobile - Pedidos      Cliente : ' +
-            this.clienteCodigo.toString()),
-        backgroundColor: const Color.fromARGB(255, 42, 135, 221),
+          title: Text('Siga Mobile - Pedidos      Cliente : ' +
+              this.clienteCodigo.toString()),
+          backgroundColor: const Color.fromARGB(255, 42, 135, 221),
 
-        //Boton de Buscar
-        actions: [
-          IconButton(
-            onPressed: () => {
-              showSearch(
-                  context: context,
-                  delegate: MySearchDelegateParaProductosEnPedidos()),
-              refresh()
-            },
-            icon: const Icon(Icons.search),
-          )
-        ],
-      ),
+          //Boton de Buscar
+          actions: <Widget>[
+            IconButton(
+                tooltip: 'Search',
+                icon: const Icon(Icons.search),
+                onPressed: () async {
+                  await showSearch(
+                      context: context,
+                      delegate: MySearchDelegateParaProductosEnPedidos());
+
+                  if (_lastIntegerSelected != null) {
+                    setState(() {
+                      refresh();
+                    });
+                  }
+                })
+          ]),
       drawer: navegacions(),
       body: RefreshIndicator(
         onRefresh: refresh,
@@ -75,7 +81,7 @@ class _mainPage extends State<CartPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   child: Container(
-                    width: 650,
+                    width: 670,
                     height: 120,
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -129,10 +135,19 @@ class _mainPage extends State<CartPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Icon(
-                                  CupertinoIcons.plus,
-                                  color: Colors.white,
-                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        print('restando');
+                                        detalleFactura[index]
+                                            .cantidadProducto += 1;
+                                      });
+                                    },
+                                    child: Icon(
+                                      CupertinoIcons.plus,
+                                      color: Colors.white,
+                                      size: 20,
+                                    )),
                                 Text(
                                   detalleFactura[index]
                                       .cantidadProducto
@@ -142,12 +157,52 @@ class _mainPage extends State<CartPage> {
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
                                 ),
-                                Icon(
-                                  CupertinoIcons.minus,
-                                  color: Colors.white,
-                                )
+                                GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        detalleFactura[index]
+                                            .cantidadProducto -= 1;
+                                        print(detalleFactura[index]
+                                            .cantidadProducto);
+
+                                        // qty -= 1;
+                                      });
+                                    },
+                                    child: Icon(
+                                      CupertinoIcons.minus,
+                                      color: Colors.white,
+                                      size: 20,
+                                    )),
                               ],
                             ),
+                          ),
+                        ),
+                        Container(
+                          width: 30,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(''),
+                              Text(''),
+                              GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      detalleFactura.removeAt(index);
+                                      // detalleFactura[index].cantidadProducto -=
+                                      // //     1;
+                                      // print(detalleFactura[index]
+                                      //     .cantidadProducto);
+
+                                      // qty -= 1;
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                    size: 20,
+                                  )),
+                            ],
                           ),
                         ),
                       ],

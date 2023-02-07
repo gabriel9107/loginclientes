@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/pantallas/DashboardScreen.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
+import 'package:sigalogin/pantallas/pedidos/ordenesDeventa.dart';
 import 'package:sigalogin/pantallas/pedidos/pedidos.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
 import 'package:sigalogin/pantallas/productos/products_screen.dart';
@@ -112,7 +113,7 @@ class navegacions extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                 // builder: (context) => pedidop(),
-                builder: (context) => PincronizarLista(),
+                builder: (context) => Cart(),
               ));
             },
           ),

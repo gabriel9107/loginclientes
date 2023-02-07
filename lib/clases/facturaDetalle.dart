@@ -51,7 +51,7 @@ class FacturaMaster {
           iD: 1,
           idClienteFactura: "1",
           montoDescuento: numberFormat(descuento),
-          montoImpuesto: numberFormat(impuesto),
+          montoImpuesto: numberFormat(0),
           subtotal: numberFormat(subtotal),
           totalApagar: numberFormat(totalApagar));
     }
@@ -65,11 +65,13 @@ class FacturaMaster {
             .reduce((value, element) => value + element) *
         cantidadArticulos);
 
-    descuento = ((subtotal * descuentoI) / 1000).toDouble();
+    descuento = 0;
+    // descuento = ((subtotal * descuentoI) / 1000).toDouble();
 
     impuestoI = 5;
 
-    impuesto = ((subtotal * impuestoI) / 1000).toDouble();
+    impuesto = ((subtotal * 18) / 1000).toDouble();
+    impuesto = 0;
 
     totalApagar = ((subtotal - descuento) + impuesto);
 
@@ -85,7 +87,7 @@ class FacturaMaster {
   }
 
   int impuestoPorEmpleador() {
-    return 10;
+    return 18;
   }
 
   double get descuentoPorEmpleador {

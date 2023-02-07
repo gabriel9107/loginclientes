@@ -17,7 +17,7 @@ class CartBottomNavBar extends StatelessWidget {
 
     return BottomAppBar(
         child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             height: 250,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,49 +60,49 @@ class CartBottomNavBar extends StatelessWidget {
                     )
                   ],
                 ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       "Descuentos",
+                //       style: TextStyle(
+                //           color: Colors.black,
+                //           fontSize: 22,
+                //           fontWeight: FontWeight.bold),
+                //     ),
+                //     Text(
+                //       ("\$" + totales.montoDescuento.toString()),
+                //       style: TextStyle(
+                //           fontSize: 25,
+                //           fontWeight: FontWeight.bold,
+                //           color: Color(0xFF4C53A5)),
+                //     )
+                //   ],
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       "Itbis",
+                //       style: TextStyle(
+                //           color: Colors.black,
+                //           fontSize: 22,
+                //           fontWeight: FontWeight.bold),
+                //     ),
+                //     Text(
+                //       ("\$" + totales.montoImpuesto.toString()),
+                //       style: TextStyle(
+                //           fontSize: 25,
+                //           fontWeight: FontWeight.bold,
+                //           color: Color(0xFF4C53A5)),
+                //     )
+                //   ],
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Descuentos",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      ("\$" + totales.montoDescuento.toString()),
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF4C53A5)),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Impuestos",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      ("\$" + totales.montoImpuesto.toString()),
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF4C53A5)),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total a Pagar",
+                      "Total del pedido",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 22,
@@ -124,7 +124,6 @@ class CartBottomNavBar extends StatelessWidget {
                   height: 50,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 113, 219, 86),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(children: <Widget>[
