@@ -9,7 +9,8 @@ import 'clientes/detalleDelCLiente.dart';
 
 class CartBottomNavBar extends StatelessWidget {
   String? NumeroPedido;
-  CartBottomNavBar(this.NumeroPedido);
+  String? idCliente;
+  CartBottomNavBar(this.NumeroPedido, this.idCliente);
   @override
   Widget build(BuildContext context) {
     FacturaMaster totales = FacturaMaster.totales();
@@ -149,28 +150,32 @@ class CartBottomNavBar extends StatelessWidget {
                             cash: totales.totalApagar.toString(),
                             ordenNumero: "1",
                             change: "0",
-                            customerID: totales.idClienteFactura,
+                            customerID: idCliente.toString(),
                             date: DateTime.now().toString(),
                             gPID: "",
                             isDelete: "0",
                             totals: totales.totalApagar,
-                            userName: CurrentUserName,
+                            userName: usuario,
                             vAT: totales.montoImpuesto,
                             status: "Activo",
                             commets: 'NO comentario');
 
-                        DatabaseHelper.instance.AddSales(orden);
-
-                        detalle.forEach((element) {
-                          OrdenVentaDetalle detalleventa =
-                              new OrdenVentaDetalle(
-                                  salesOrdersID: "1",
-                                  price: element.montoproducto,
-                                  qty: element.cantidadProducto,
-                                  productCode: element.codigoProducto,
-                                  productName: element.nombreProducto);
-                          DatabaseHelper.instance.AddSalesDetalle(detalleventa);
-                        });
+                        DatabaseHelper.instance
+                            .AddSalesWithId(orden)
+                            .then((value) => {
+                                  detalle.forEach((element) {
+                                    OrdenVentaDetalle detalleventa =
+                                        new OrdenVentaDetalle(
+                                            salesOrdersID: value.toString(),
+                                            price: element.montoproducto,
+                                            qty: element.cantidadProducto,
+                                            productCode: element.codigoProducto,
+                                            productName:
+                                                element.nombreProducto);
+                                    DatabaseHelper.instance
+                                        .AddSalesDetalle(detalleventa);
+                                  })
+                                });
 
 //Guardar Factura
 

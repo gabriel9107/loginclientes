@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../buscar/buscarClientesEnCLientes.dart';
 import '../pedidos/PedidosVentas.dart';
+import 'nuevoCliente.dart';
 
 class clienteLista extends StatefulWidget {
   @override
@@ -111,23 +112,23 @@ class CustomerListState extends State<clienteLista> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            NewClient('Editar Cliente')),
+                                            EditarCliente(customer)),
                                   );
                                 },
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            NewClient('Editar Cliente')),
-                                  );
-                                },
-                              ),
+                              // IconButton(
+                              //   icon: Icon(
+                              //     Icons.delete,
+                              //   ),
+                              //   onPressed: () {
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) =>
+                              //               NewClient('Editar Cliente')),
+                              //     );
+                              //   },
+                              // ),
                             ],
                           ),
                           onTap: () {

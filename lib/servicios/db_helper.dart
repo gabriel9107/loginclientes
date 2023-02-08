@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:sigalogin/clases/factura.dart';
 import 'package:sigalogin/clases/facturaDetalle.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
@@ -277,6 +279,12 @@ class DatabaseHelper {
     return await db.insert('SalesOrders', pedido.toMap());
   }
 
+  Future<int> AddSalesWithId(OrdenVenta pedido) async {
+    Database db = await instance.database;
+    int id = await db.insert('SalesOrders', pedido.toMap());
+    return id;
+  }
+
   Future<int> AddSalesDetalle(OrdenVentaDetalle detallePedido) async {
     Database db = await instance.database;
     return await db.insert('SalesLines', detallePedido.toMap());
@@ -367,26 +375,26 @@ class DatabaseHelper {
 //     return ordenesLista;
 //   }
 
-//   Future<List<OrdenVentaDetalle>> getDetallesporId(String id) async {
-//     Database db = await instance.database;
-//     var detalle =
-//         await db.rawQuery("SELECT * FROM SalesLines WHERE ID = '$id'");
+  Future<List<OrdenVentaDetalle>> getDetallesporId(String id) async {
+    Database db = await instance.database;
+    var detalle = await db
+        .rawQuery("SELECT * FROM SalesLines WHERE SalesOrdersID = '$id'");
 
-//     List<OrdenVentaDetalle> ordenesDetalleLista = detalle.isNotEmpty
-//         ? detalle.map((c) => OrdenVentaDetalle.fromMap(c)).toList()
-//         : [];
-//     return ordenesDetalleLista;
-//   }
+    List<OrdenVentaDetalle> ordenesDetalleLista = detalle.isNotEmpty
+        ? detalle.map((c) => OrdenVentaDetalle.fromMap(c)).toList()
+        : [];
+    return ordenesDetalleLista;
+  }
 
-//   Future<List<OrdenVentaDetalle>> getDetalles() async {
-//     Database db = await instance.database;
-//     var detallesOrden = await db.query('SalesLines', orderBy: 'ID');
+  Future<List<OrdenVentaDetalle>> getDetalles() async {
+    Database db = await instance.database;
+    var detallesOrden = await db.query('SalesLines', orderBy: 'ID');
 
-//     List<OrdenVentaDetalle> ordenesDetalleLista = detallesOrden.isNotEmpty
-//         ? detallesOrden.map((c) => OrdenVentaDetalle.fromMap(c)).toList()
-//         : [];
-//     return ordenesDetalleLista;
-//   }
+    List<OrdenVentaDetalle> ordenesDetalleLista = detallesOrden.isNotEmpty
+        ? detallesOrden.map((c) => OrdenVentaDetalle.fromMap(c)).toList()
+        : [];
+    return ordenesDetalleLista;
+  }
 
 //   //creando y leyendo los usuarios
 //   Future<int> saveUser(Usuario user) async {

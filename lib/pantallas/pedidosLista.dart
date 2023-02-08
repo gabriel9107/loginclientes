@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
+import 'package:sigalogin/pantallas/pedidos/PedidosVentas%20copy.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
 
 import '../clases/ordenDeventa.dart';
@@ -29,14 +30,14 @@ class _ListaOedidosState extends State<pedidosLista> {
 
         // backgroundColor: Color.fromARGB(255, 25, 28, 228),
 
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () => {
-              // showSearch(context: context, delegate: MySearchDelegate())
-            },
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.search),
+        //     onPressed: () => {
+        //       // showSearch(context: context, delegate: MySearchDelegate())
+        //     },
+        //   )
+        // ],
       ),
       drawer: navegacions(),
       floatingActionButton: FloatingActionButton(
@@ -101,7 +102,8 @@ class _ListaOedidosState extends State<pedidosLista> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CartPage("", "")),
+                                  builder: (context) =>
+                                      PedidoHistorico(pedidos)),
                             );
                             // NavigateDetail('Edit Product');
                           },

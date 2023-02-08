@@ -6,6 +6,7 @@ import 'package:sigalogin/clases/modelos/productos.dart';
 
 import 'customers.dart';
 
+String usuario = '';
 double _impuesto = 18;
 bool ListasFactura = false;
 List<Factura> TodasLasFacturas = [];

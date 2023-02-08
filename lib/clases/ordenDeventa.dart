@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class OrdenVenta {
   final int? id;
   final ordenNumero;
@@ -66,7 +64,7 @@ class OrdenVenta {
 }
 
 class OrdenVentaDetalle {
-  final Int? iD;
+  final String? iD;
   final String salesOrdersID;
   final double price;
   final int qty;
@@ -83,10 +81,11 @@ class OrdenVentaDetalle {
 
   factory OrdenVentaDetalle.fromMap(Map<String, dynamic> json) =>
       OrdenVentaDetalle(
-          iD: json['ID'],
+          // iD:  json['ID'],
+          iD: json['ID'].toString(),
           salesOrdersID: json['SalesOrdersID'],
-          price: json['Price'],
-          qty: json['Qty'],
+          price: double.parse(json['Price']),
+          qty: int.parse(json['Qty']),
           productCode: json['ProductCode'],
           productName: json['ProductName']);
 

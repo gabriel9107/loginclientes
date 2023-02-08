@@ -54,6 +54,32 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
       final input = query.toLowerCase();
       return result.contains(input);
     }).toList();
+    Future<void> _showMyDialog() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Alert'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('debe de agregar una cantidad'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return ListView.builder(
       itemCount: suggestions.length,
@@ -85,16 +111,18 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
                 child: ElevatedButton(
                   onPressed: () {
                     // double price = suggestion.price as double;
-
-                    FacturaDetalle.addfacturaDetalle(FacturaDetalle(
-                        facturaNumero: "1",
-                        codigoProducto: suggestion.productoCodigo.toString(),
-                        montoproducto:
-                            double.parse(suggestion.price.toString()),
-                        nombreProducto: suggestion.nombre.toString(),
-                        cantidadProducto:
-                            int.parse(textController.text.toString())));
-                    close(context, null);
+                    if (textController.text.isEmpty) {
+                      _showMyDialog();
+                    } else {
+                      FacturaDetalle.addfacturaDetalle(FacturaDetalle(
+                          facturaNumero: "1",
+                          codigoProducto: suggestion.productoCodigo.toString(),
+                          montoproducto:
+                              double.parse(suggestion.price.toString()),
+                          nombreProducto: suggestion.nombre.toString(),
+                          cantidadProducto: int.parse(textController.text)));
+                      close(context, null);
+                    }
                   },
                   child: Text('Agregar'),
                 ),

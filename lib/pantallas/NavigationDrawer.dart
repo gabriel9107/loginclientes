@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/pantallas/DashboardScreen.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
 import 'package:sigalogin/pantallas/pedidos/ordenesDeventa.dart';
@@ -49,15 +50,15 @@ class navegacions extends StatelessWidget {
               CircleAvatar(
                 radius: 52,
                 backgroundImage: NetworkImage(
-                    'https://media-exp1.licdn.com/dms/image/C5603AQFi7E4ddF3_pQ/profile-displayphoto-shrink_200_200/0/1516449677675?e=2147483647&v=beta&t=7GNpJdPJoCaIq3B-dPcdspAYvazBLSDndpzw5--W-hM'),
+                    'https://cdn-icons-png.flaticon.com/512/21/21104.png'),
               ),
               SizedBox(height: 12),
+              // Text(
+              //   'Gabriel Montero ',
+              //   style: TextStyle(fontSize: 28, color: Colors.white),
+              // ),
               Text(
-                'Gabriel Montero ',
-                style: TextStyle(fontSize: 28, color: Colors.white),
-              ),
-              Text(
-                '40221025725',
+                usuario.replaceAll('@gmail.com', ''),
                 style: TextStyle(fontSize: 28, color: Colors.white),
               )
             ],
@@ -117,11 +118,11 @@ class navegacions extends StatelessWidget {
               ));
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.notifications),
-            title: const Text('Perfil'),
-            onTap: () {},
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.notifications),
+          //   title: const Text('Perfil'),
+          //   onTap: () {},
+          // ),
           ListTile(
             leading: const Icon(Icons.exit_to_app_outlined),
             title: const Text('Salir'),

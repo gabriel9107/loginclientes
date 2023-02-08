@@ -71,14 +71,18 @@ class MySearchDelegateParaProductos extends SearchDelegate {
                 alignment: Alignment.topRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    FacturaDetalle.addfacturaDetalle(FacturaDetalle(
-                        facturaNumero: "1",
-                        codigoProducto: suggestion.codigoProducto,
-                        montoproducto: suggestion.precioProducto,
-                        nombreProducto: suggestion.nombreProducto,
-                        cantidadProducto:
-                            int.parse(textController.text.toString())));
-                    close(context, null);
+                    int valor = int.parse(textController.text.toString());
+
+                    if (valor != null) {
+                      FacturaDetalle.addfacturaDetalle(FacturaDetalle(
+                          facturaNumero: "1",
+                          codigoProducto: suggestion.codigoProducto,
+                          montoproducto: suggestion.precioProducto,
+                          nombreProducto: suggestion.nombreProducto,
+                          cantidadProducto:
+                              int.parse(textController.text.toString())));
+                      close(context, null);
+                    }
                   },
                   child: Text('Agregar'),
                 ),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 import 'package:sigalogin/servicios/authServices.dart';
 
+import '../../clases/global.dart';
 import '../../provider/login_from_prodivder.dart';
 import '../../servicios/notifications_service.dart';
 import '../../ui/InputDecorations.dart';
@@ -120,6 +121,7 @@ class _LoginForm extends StatelessWidget {
                     loginForm.isLoading = true;
                     final String? errorMessage = await authServices.login(
                         loginForm.email, loginForm.password);
+                    usuario = loginForm.email;
                     if (errorMessage == null) {
                       loginForm.isLoading = true;
                       Navigator.pushReplacementNamed(context, 'home');
