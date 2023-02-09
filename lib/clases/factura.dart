@@ -66,6 +66,12 @@ class Factura {
     };
   }
 
+  static List<Factura> facturatemp = <Factura>[];
+
+  static void addfacturaDetalle(Factura detalle) {
+    facturatemp.add(detalle);
+  }
+
   List<Factura> factura = [];
   static Future obtenerFacturas() async {
     var documento =

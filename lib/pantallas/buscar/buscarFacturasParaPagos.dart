@@ -10,10 +10,6 @@ import '../../clases/global.dart';
 
 class BuscarFacturaEnPagos extends SearchDelegate {
   @override
-  final textController = TextEditingController();
-
-  Pattern get input => 'q';
-
   List<Widget>? buildActions(BuildContext context) => [
         IconButton(
             icon: const Icon(Icons.clear),
@@ -79,9 +75,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
 
               Container(
                 width: 60,
-                child: Text(
-                  '10,000.',
-                ),
+                child: Text(suggestion.montoFactura),
               ),
               // Container(
               //   child: Text('Prueba'),
@@ -97,22 +91,31 @@ class BuscarFacturaEnPagos extends SearchDelegate {
               // ),
 
               IconButton(onPressed: () {}, icon: Icon(Icons.payment)),
-              Container(
-                width: 100,
-                child: TextField(
-                  controller: textController,
-                  decoration: InputDecoration(hintText: 'saldo '),
-                  keyboardType: TextInputType.numberWithOptions(
-                      signed: false, decimal: true),
-                  onTap: () {
-                    query = suggestion.facturaId.toString();
-                  },
-                ),
-              ),
+              // Container(
+              //   width: 100,
+              //   child: TextField(
+              //     controller: textController,
+              //     decoration: InputDecoration(hintText: 'saldo '),
+              //     keyboardType: TextInputType.numberWithOptions(
+              //         signed: false, decimal: true),
+              //     onTap: () {
+              //       query = suggestion.facturaId.toString();
+              //     },
+              //   ),
+              // ),
               Container(
                 alignment: Alignment.topRight,
                 child: ElevatedButton(
                   onPressed: () {
+                    Factura.addfacturaDetalle(Factura(
+                        facturaFecha: suggestion.facturaFecha,
+                        facturaId: suggestion.facturaId,
+                        facturaVencimiento: suggestion.facturaVencimiento,
+                        id: suggestion.id,
+                        metodoDePago: suggestion.metodoDePago,
+                        montoFactura: suggestion.montoFactura,
+                        pedidosId: suggestion.pedidosId,
+                        totalPagado: suggestion.totalPagado));
                     // double price = suggestion.price as double;
 
                     // FacturaDetalle.addfacturaDetalle(FacturaDetalle(

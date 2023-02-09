@@ -112,7 +112,14 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
                   onPressed: () {
                     // double price = suggestion.price as double;
                     if (textController.text.isEmpty) {
-                      _showMyDialog();
+                      FacturaDetalle.addfacturaDetalle(FacturaDetalle(
+                          facturaNumero: "1",
+                          codigoProducto: suggestion.productoCodigo.toString(),
+                          montoproducto:
+                              double.parse(suggestion.price.toString()),
+                          nombreProducto: suggestion.nombre.toString(),
+                          cantidadProducto: 1));
+                      close(context, null);
                     } else {
                       FacturaDetalle.addfacturaDetalle(FacturaDetalle(
                           facturaNumero: "1",
