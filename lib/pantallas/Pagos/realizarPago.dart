@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/factura.dart';
+import 'package:sigalogin/pantallas/Pagos/resumenDePago.dart';
 
 import '../../clases/factura.dart';
 import '../buscar/buscarFacturasParaPagos.dart';
@@ -27,27 +28,40 @@ class _realizarPagoPageState extends State<RealizarPago> {
   Widget build(BuildContext context) {
     bool efectivo = false;
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Realizar Pagos'),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () => {
-                showSearch(context: context, delegate: BuscarFacturaEnPagos())
-              },
-            )
+      appBar: AppBar(
+        title: Text('Realizar Pagos'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () => {
+              showSearch(context: context, delegate: BuscarFacturaEnPagos())
+            },
+          )
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('Codigo de cliente :    7488803',
+                style: TextStyle(fontSize: 15)),
+            Text('Nombre de cliente : Aro y Motor (Guerra)',
+                style: TextStyle(fontSize: 12, color: Colors.grey)),
+            _form(efectivo),
+            _list(facturas)
           ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[_form(efectivo), _list(facturas)],
-          ),
-          // body:
-        ));
+        // body:
+      ),
+      bottomNavigationBar: ResumenDePagos(),
+    );
   }
 }
 
+//  bottomNavigationBar:
+//           CartBottomNavBar(NumeroPedido, clienteCodigo.toString()),
+//     );
 _form(bool efectivo) => Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -150,54 +164,161 @@ _form(bool efectivo) => Container(
     );
 
 _list(List<Factura> factura) => Expanded(
-    child: Card(
-        child: ListView.builder(
-            itemCount: 4,
-            itemBuilder: (BuildContext context, int index) {
-              return;
-            })));
-          
-          //  ListTile(
-          //     title: Text('Num Factura	: FVS002708',
-          //         style: TextStyle(fontSize: 18)),
-          //     subtitle: Text(
-          //       'Fecha Emsión	 : 22/Jan/2019	',
-          //       style: TextStyle(fontSize: 20, color: Colors.red),
-          //     ),
-          //     trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          //       Container(
-          //         width: 100,
-          //         child: Text('Fecha Vencimiento	'),
-          //       ),
-          //       Container(
-          //         width: 80,
-          //         child: Text('08/Mar/2019	',
-          //             style: TextStyle(fontSize: 20, color: Colors.red)),
-          //       ),
-          //       Container(
-          //         width: 80,
-          //         child: Text('Valor original	'),
-          //       ),
-          //       Container(
-          //         width: 80,
-          //         child: Text('6240.79'),
-          //       ),
-          //       Container(
-          //         width: 80,
-          //         child: Text('Valor pagado	'),
-          //       ),
-          //       Container(
-          //         width: 80,
-          //         child: Text('5,891.30'),
-          //       ),
-          //       Container(
-          //         width: 80,
-          //         child: Text('Saldo'),
-          //       ),
-          //     ]));
-    //     },
-    //   ),
-    // ));
+        child: Card(
+      child: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return SingleChildScrollView(
+              child: Column(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Container(
+                  width: 670,
+                  height: 120,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(0, 3))
+                      ]),
+                  child: Row(children: [
+                    // Container(
+                    //   alignment: Alignment.center,
+                    //   child: const SizedBox(
+                    //     height: 50,
+                    //     width: 100,
+                    //   ),
+                    // ),
+                    Container(
+                      width: 30,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                              onTap: () {},
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                                size: 50,
+                              )),
+                        ],
+                      ),
+                    ),
+
+                    Container(
+                      alignment: Alignment.center,
+                      child: const SizedBox(
+                        height: 50,
+                        width: 70,
+                      ),
+                    ),
+                    Container(
+                      width: 200,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "Numero de Factura : FVS002708 ",
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Fecha Emision : 22/Jan/2019	",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Text(
+                            "Fecha Vencimiento : 08/Mar/2019	",
+                            style: TextStyle(fontSize: 10, color: Colors.red),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: 150,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "Valor original : 6240.79	",
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Valor Pagado : 5,891.30",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Text(
+                            "Saldo :",
+                            style: TextStyle(fontSize: 10, color: Colors.red),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: 100,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "",
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                          Container(
+                            width: 100,
+                            child: TextField(
+                              // controller: textController,
+                              decoration:
+                                  InputDecoration(hintText: 'Salo A Pagar '),
+                              keyboardType: TextInputType.numberWithOptions(
+                                  signed: false, decimal: true),
+                              onTap: () {
+                                // query = suggestion.facturaId.toString();
+                              },
+                            ),
+                          ),
+                          Text(
+                            "",
+                            style: TextStyle(fontSize: 10, color: Colors.red),
+                          )
+                        ],
+                      ),
+                    ),
+                  ])),
+            )
+          ]));
+          // Container(
+          //   width: 80,
+          //   child: Text('Valor original	'),
+          // ),
+          // Container(
+          //   width: 80,
+          //   child: Text('6240.79'),
+          // ),
+          // Container(
+          //   width: 80,
+          //   child: Text('Valor pagado	'),
+          // ),
+          // Container(
+          //   width: 80,
+          //   child: Text('5,891.30'),
+          // ),
+          // Container(
+          //   width: 80,
+          //   child: Text('Saldo'),
+          // ),
+          // ]));
+        },
+      ),
+    ));
 // _list(List<Factura> facturas) => Expanded(
 //       child: Card(
 //         child: Scrollbar(

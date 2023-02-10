@@ -90,7 +90,19 @@ class BuscarFacturaEnPagos extends SearchDelegate {
               //   child: Text('Valor Pendiente'),
               // ),
 
-              IconButton(onPressed: () {}, icon: Icon(Icons.payment)),
+//  Container(
+//                 width: 100,
+//                 child: TextField(
+//                   controller: textController,
+//                   decoration: InputDecoration(hintText: 'saldo '),
+//                   keyboardType: TextInputType.numberWithOptions(
+//                       signed: false, decimal: true),
+//                   onTap: () {
+//                     query = suggestion.facturaId.toString();
+//                   },
+//                 ),
+//  )
+              // IconButton(onPressed: () {}, icon: Icon(Icons.payment)),
               // Container(
               //   width: 100,
               //   child: TextField(
@@ -116,6 +128,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                         montoFactura: suggestion.montoFactura,
                         pedidosId: suggestion.pedidosId,
                         totalPagado: suggestion.totalPagado));
+                    close(context, null);
                     // double price = suggestion.price as double;
 
                     // FacturaDetalle.addfacturaDetalle(FacturaDetalle(

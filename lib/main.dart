@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sigalogin/pantallas/dashboardScreen.dart';
 import 'package:sigalogin/pantallas/home.dart';
@@ -12,7 +14,19 @@ import 'package:sigalogin/servicios/factura_service.dart';
 import 'package:sigalogin/servicios/notifications_service.dart';
 import 'package:sigalogin/servicios/productos_services.dart';
 
-void main() => runApp(AppState());
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
+void main() {
+  HttpOverrides.global = MyHttpOverrides();
+  runApp(AppState());
+}
 
 class AppState extends StatelessWidget {
   @override
