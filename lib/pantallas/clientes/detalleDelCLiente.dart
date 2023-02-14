@@ -7,6 +7,7 @@ import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
 
 import '../../servicios/db_helper.dart';
 import '../NavigationDrawer.dart';
+import '../Pagos/pagodeprueba.dart';
 import 'new_cliente.dart';
 
 class DetalleDelCliente extends StatelessWidget {
@@ -41,7 +42,7 @@ class DetalleDelCliente extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RealizarPago()),
+                MaterialPageRoute(builder: (context) => RealizarPagodeprueba()),
               );
             },
             tooltip: 'Agregar',

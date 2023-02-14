@@ -70,6 +70,12 @@ class Factura {
 
   static void addfacturaDetalle(Factura detalle) {
     facturatemp.add(detalle);
+    print('detalle de factura');
+    print(facturatemp.length);
+  }
+
+  static List<Factura> obtenerfacturadetalle() {
+    return facturatemp;
   }
 
   List<Factura> factura = [];

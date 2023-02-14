@@ -3,6 +3,7 @@ import 'package:sigalogin/clases/ordenDeventa.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
+import '../../clases/detalledePago.dart';
 import '../../clases/facturaDetalle.dart';
 import '../../clases/global.dart';
 import '../clientes/detalleDelCLiente.dart';
@@ -10,6 +11,8 @@ import '../clientes/detalleDelCLiente.dart';
 class ResumenDePagos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var subtotal = PagosDetalles.obtenerSubtotal();
+    var total = PagosDetalles.obtenerTotal();
     return BottomAppBar(
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -36,7 +39,7 @@ class ResumenDePagos extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '\$0',
+                      subtotal.toString(),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -55,7 +58,7 @@ class ResumenDePagos extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '10,000.00',
+                      total.toString(),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,

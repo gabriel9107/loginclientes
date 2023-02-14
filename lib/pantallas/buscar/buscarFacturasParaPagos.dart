@@ -5,6 +5,7 @@ import 'package:sigalogin/clases/product.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
+import '../../clases/detalledePago.dart';
 import '../../clases/facturaDetalle.dart';
 import '../../clases/global.dart';
 
@@ -119,15 +120,30 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                 alignment: Alignment.topRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    Factura.addfacturaDetalle(Factura(
-                        facturaFecha: suggestion.facturaFecha,
-                        facturaId: suggestion.facturaId,
-                        facturaVencimiento: suggestion.facturaVencimiento,
-                        id: suggestion.id,
-                        metodoDePago: suggestion.metodoDePago,
-                        montoFactura: suggestion.montoFactura,
-                        pedidosId: suggestion.pedidosId,
-                        totalPagado: suggestion.totalPagado));
+                    var facturafecha = DateTime.now();
+                    var facturafechavencimiento = DateTime.now();
+                    var pago = new PagosDetalles(
+                        activo: 1,
+                        montoPagado: suggestion.totalPagado as double,
+                        numeroDeFactura: suggestion.montoFactura,
+                        ordeDePago: null,
+                        valorfactura: suggestion.montoFactura as double,
+                        valorpendiente: 0,
+                        fechaEmision: facturafecha,
+                        fechavencimiento: facturafechavencimiento);
+
+                    PagosDetalles.agregarFacturasaPagos(pago);
+
+                    // Factura.addfacturaDetalle(Factura(
+                    //     facturaFecha: suggestion.facturaFecha,
+                    //     facturaId: suggestion.facturaId,
+                    //     facturaVencimiento: suggestion.facturaVencimiento,
+                    //     id: suggestion.id,
+                    //     metodoDePago: suggestion.metodoDePago,
+                    //     montoFactura: suggestion.montoFactura,
+                    //     pedidosId: suggestion.pedidosId,
+                    //     totalPagado: suggestion.totalPagado));
+
                     close(context, null);
                     // double price = suggestion.price as double;
 
