@@ -12,7 +12,7 @@ class ResumenDePagos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var subtotal = PagosDetalles.obtenerSubtotal();
-    var total = PagosDetalles.obtenerTotal();
+    var total = Pagos.obtenermontodelpago();
     return BottomAppBar(
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -114,6 +114,8 @@ class ResumenDePagos extends StatelessWidget {
                       ),
                       onPressed: (() {
 //Guardar Factura
+                        // // Pagos.eliminartodos();
+                        // PagosDetalles.eliminarpago();
 
                         // DetalleDelCliente(totales.idClienteFactura)));
                       }),

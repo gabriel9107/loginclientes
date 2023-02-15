@@ -122,13 +122,15 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                   onPressed: () {
                     var facturafecha = DateTime.now();
                     var facturafechavencimiento = DateTime.now();
+                    double montoFactura = 9692.32;
+
                     var pago = new PagosDetalles(
                         activo: 1,
-                        montoPagado: suggestion.totalPagado as double,
-                        numeroDeFactura: suggestion.montoFactura,
+                        montoPagado: 0,
+                        numeroDeFactura: suggestion.facturaId.toString(),
                         ordeDePago: null,
-                        valorfactura: suggestion.montoFactura as double,
-                        valorpendiente: 0,
+                        valorfactura: montoFactura,
+                        valorpendiente: montoFactura,
                         fechaEmision: facturafecha,
                         fechavencimiento: facturafechavencimiento);
 
