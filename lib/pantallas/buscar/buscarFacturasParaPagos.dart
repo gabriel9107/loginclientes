@@ -8,6 +8,7 @@ import 'package:sigalogin/servicios/db_helper.dart';
 import '../../clases/detalledePago.dart';
 import '../../clases/facturaDetalle.dart';
 import '../../clases/global.dart';
+import '../../clases/modelos/pagodetalle.dart';
 
 class BuscarFacturaEnPagos extends SearchDelegate {
   @override
@@ -124,17 +125,17 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                     var facturafechavencimiento = DateTime.now();
                     double montoFactura = 9692.32;
 
-                    var pago = new PagosDetalles(
+                    var pago = new Pagodetalle(
                         activo: 1,
                         montoPagado: 0,
                         numeroDeFactura: suggestion.facturaId.toString(),
-                        ordeDePago: null,
+                        pago: 0,
                         valorfactura: montoFactura,
                         valorpendiente: montoFactura,
                         fechaEmision: facturafecha,
                         fechavencimiento: facturafechavencimiento);
 
-                    PagosDetalles.agregarFacturasaPagos(pago);
+                    Pagodetalle.agregarFacturasaPagos(pago);
 
                     // Factura.addfacturaDetalle(Factura(
                     //     facturaFecha: suggestion.facturaFecha,

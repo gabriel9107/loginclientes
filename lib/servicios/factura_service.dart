@@ -34,10 +34,11 @@ class FacturaServices extends ChangeNotifier {
         final temp = Factura.fromJson(value);
 
         Factura facturas = Factura(
+            id: temp.id,
+            clienteId: temp.clienteId,
             facturaFecha: temp.facturaFecha,
             facturaId: temp.facturaId,
             facturaVencimiento: temp.facturaVencimiento,
-            id: temp.id,
             metodoDePago: temp.metodoDePago,
             montoFactura: temp.montoFactura,
             pedidosId: temp.pedidosId,

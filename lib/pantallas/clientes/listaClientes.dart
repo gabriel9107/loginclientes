@@ -136,7 +136,8 @@ class CustomerListState extends State<clienteLista> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => DetalleDelCliente(
-                                        customer.CustomerCode.toString())
+                                        customer.CustomerCode.toString(),
+                                        customer.CustomerName.toString())
                                     //  CartPage(
                                     //     customer.CustomerCode,
                                     //     customer.CustomerName.toString())

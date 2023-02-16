@@ -1,9 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:sigalogin/clases/detalledePago.dart';
 import 'package:sigalogin/clases/factura.dart';
 import 'package:sigalogin/clases/facturaDetalle.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
+import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -11,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../clases/customers.dart';
 import '../clases/detalleFactura.dart';
+import '../clases/modelos/pagodetalle.dart';
 import '../clases/ordenDeventa.dart';
 
 class DatabaseHelper {
@@ -22,7 +24,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'Customer3.db');
+    String path = join(documentsDirectory.path, 'sga3.db');
     return await openDatabase(
       path,
       version: 1,
@@ -129,6 +131,7 @@ class DatabaseHelper {
 
     ///creando 2 tablas Factura y Factura detalle para cambiarle la forma del flujo y que sea mas entendible por los idiomas
     ///
+
     ///
     await db.execute('''CREATE TABLE Factura(
          ID INTEGER PRIMARY KEY AUTOINCREMENT
@@ -136,7 +139,7 @@ class DatabaseHelper {
         ,FacturaId TEXT
         ,FacturaVencimiento TEXT
         ,MetodoDepago TEXT
-        
+        ,clienteId TEXT
         ,MontoFactura TEXT
         ,PedidosId TEXT
         ,TotalPagado TEXT
@@ -154,6 +157,30 @@ class DatabaseHelper {
         ,ProductoCodigo TEXT
         ,Qty TEXT
         ,montoLinea TEXT
+        )''');
+
+    await db.execute('''CREATE TABLE Pago(
+         ID INTEGER PRIMARY KEY AUTOINCREMENT
+        ,banco TEXT,
+        clienteId INTEGER,
+        clienteNombre TEXT,
+        fechaCheque TEXT,
+        formadePago TEXT,
+        numeroDeCheque TEXT,
+        valordelpago TEXT,
+        vendedor TEXT 
+        )''');
+
+    await db.execute('''CREATE TABLE DetalleDePago(
+         ID INTEGER PRIMARY KEY AUTOINCREMENT
+        , fechaEmision TEXT 
+        , fechavencimiento TEXT
+        , montoPagado TEXT  
+        , numeroDeFactura TEXT  
+        , pago INTEGER 
+        , valorfactura TEXT  
+        , valorpendiente TEXT  
+        , int activo INTEGER 
         )''');
   }
 
@@ -234,6 +261,30 @@ class DatabaseHelper {
     return 0;
   }
 
+  Future<int> aregarPagoAsincronizar(Pago pago) async {
+    var db = await instance.database;
+    return await db.insert('Pago', pago.toJson());
+  }
+
+  Future<int> aregardetalledePagoAsincronizar(Pagodetalle pago) async {
+    var db = await instance.database;
+    return await db.insert('DetalleDePago', pago.toJson());
+  }
+
+  Future<int> agregarPago(Pago pago) async {
+    var db = await instance.database;
+    return await db.insert('Pago', pago.toJson());
+  }
+
+  Future<List<Pago>> obtenerPagosPorClientes(String cliente) async {
+    var db = await instance.database;
+    var pagos = await db.query('Pago', orderBy: 'Id');
+    List<Pago> listadePagos =
+        pagos.isNotEmpty ? pagos.map((e) => Pago.fromMap(e)).toList() : [];
+
+    return listadePagos;
+  }
+
   Future<int> addProduct(Producto producto) async {
     var db = await instance.database;
     return await db.insert('Productos', producto.toMap());
@@ -309,16 +360,16 @@ class DatabaseHelper {
     return await db.insert('Factura', factura.toMap());
   }
 
-  // Future<List<Factura>> getFacturasporClientes(String clienteId) async {
-  //   Database db = await instance.database;
-  //   var factura = await db
-  //       .rawQuery("SELECT * FROM Factura WHERE FacturaId= '$clienteId')");
+  Future<List<Factura>> getFacturasporClientes(String clienteId) async {
+    Database db = await instance.database;
+    var factura = await db
+        .rawQuery("SELECT * FROM Factura WHERE FacturaId= '$clienteId')");
 
-  //   List<Factura> facturaList =
-  //       factura.map((c) => Factura.fromJson(c)).toList();
+    List<Factura> facturaList =
+        factura.map((c) => Factura.fromJson(c)).toList();
 
-  // return
-  // }
+    return facturaList;
+  }
 
   Future<List<Factura>> getFacturas() async {
     Database db = await instance.database;
@@ -360,6 +411,13 @@ class DatabaseHelper {
     }
     return 0;
   }
+
+//Agregar pagos
+
+  // Future<int> AddPagos(Pagos pago) async {
+  //   Database db = await instance.database;
+  //   return await db.insert('Pago', pago.toMap());
+  // }
 
 // //Lista de ordenes para pedidos de venta
 //   Future<List<OrdenVenta>> getOrdenes() async {

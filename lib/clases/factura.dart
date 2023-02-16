@@ -12,30 +12,34 @@ String facturaToJson(Map<String, Factura> data) => json.encode(
 
 class Factura {
   Factura({
+    required this.id,
+    required this.clienteId,
     required this.facturaFecha,
     required this.facturaId,
     required this.facturaVencimiento,
-    required this.id,
     required this.metodoDePago,
     required this.montoFactura,
     required this.pedidosId,
     required this.totalPagado,
   });
 
+  int? id;
+  int clienteId;
   String? facturaFecha;
   String? facturaId;
   String? facturaVencimiento;
-  int? id;
   String? metodoDePago;
   String montoFactura;
+
   String? pedidosId;
   int? totalPagado;
 
   factory Factura.fromJson(Map<String, dynamic> json) => Factura(
+        id: json["Id"],
+        clienteId: 7488803,
         facturaFecha: json["FacturaFecha"],
         facturaId: json["FacturaId"],
         facturaVencimiento: json["FacturaVencimiento"],
-        id: json["Id"],
         metodoDePago: json["MetodoDePago"],
         montoFactura: json["MontoFactura"].toString(),
         pedidosId: json["PedidosId"],
@@ -43,10 +47,11 @@ class Factura {
       );
 
   Map<String, dynamic> toJson() => {
+        "Id": id,
+        "clienteId": clienteId,
         "FacturaFecha": facturaFecha,
         "FacturaId": facturaId,
         "FacturaVencimiento": facturaVencimiento,
-        "Id": id,
         "MetodoDePago": metodoDePago,
         "MontoFactura": montoFactura,
         "PedidosId": pedidosId,
@@ -55,10 +60,11 @@ class Factura {
 
   Map<String, dynamic> toMap() {
     return {
+      "Id": id,
+      "clienteId": clienteId,
       "FacturaFecha": facturaFecha,
       "FacturaId": facturaId,
       "FacturaVencimiento": facturaVencimiento,
-      "Id": id,
       "MetodoDePago": metodoDePago,
       "MontoFactura": montoFactura,
       "PedidosId": pedidosId,
@@ -86,10 +92,11 @@ class Factura {
     if (ListasFactura == false) {
       documento.forEach((element) {
         Factura a = new Factura(
+            id: element.id,
+            clienteId: element.clienteId,
             facturaFecha: element.facturaFecha,
             facturaId: element.facturaId,
             facturaVencimiento: element.facturaVencimiento,
-            id: element.id,
             metodoDePago: element.metodoDePago,
             montoFactura: element.montoFactura,
             pedidosId: element.pedidosId,

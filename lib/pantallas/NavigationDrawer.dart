@@ -113,7 +113,7 @@ class navegacions extends StatelessWidget {
             title: const Text('Sincronizar'),
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => pedidop(),
+                builder: (context) => PincronizarLista(),
                 // builder: (context) => Cart(),
               ));
             },

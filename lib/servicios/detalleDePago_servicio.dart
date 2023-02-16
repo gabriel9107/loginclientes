@@ -9,17 +9,18 @@ import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/ordenDePago.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 import '../clases/modelos/clientes.dart';
+import '../clases/modelos/pagodetalle.dart';
 import '../clases/modelos/productos.dart';
 
-class OrdenDepagoServicio extends ChangeNotifier {
+class detalleDepagoServicio extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
 
-  OrdenDepagoServicio() {
+  detalleDepagoServicio() {
     this.sincronizar();
   }
 
   Future sincronizar() async {
-    final url = Uri.https(_baseUrl, 'Pagos.json');
+    final url = Uri.https(_baseUrl, 'detalledepago.json');
 
     final resp = await http.get(url);
 
@@ -33,9 +34,9 @@ class OrdenDepagoServicio extends ChangeNotifier {
 
     servicioMap.forEach((key, value) {
       // if (value != "") {
-      final pago = Pago.fromJson(value);
+      final pago = Pagodetalle.fromJson(value);
 
-      // DatabaseHelper.instance.aregarPago(pago);
+      DatabaseHelper.instance.aregardetalledePagoAsincronizar(pago);
     });
   }
 }

@@ -1,113 +1,146 @@
-class Pagos {
-  String? id;
-  String formadePago;
-  String? banco;
-  double valordelpago;
-  String? numeroDeCheque;
-  String? fechaCheque;
+// import 'package:flutter/material.dart';
 
-  Pagos(
-      {this.id,
-      required this.formadePago,
-      this.banco,
-      required this.valordelpago,
-      this.fechaCheque,
-      this.numeroDeCheque});
+// import 'package:sigalogin/servicios/db_helper.dart';
 
-  static List<Pagos> pago = [];
-  // Pagos pagos =;
-  static agregarpago(Pagos pagos) {
-    pago.add(pagos);
-  }
+// import 'global.dart';
+// import 'modelos/pago.dart';
 
-  static var pagos = new Pagos(formadePago: "1", valordelpago: 0);
-  static agregarpago1() {}
+// class Pagos {
+//   String? id;
+//   String formadePago;
+//   String? banco;
+//   double valordelpago;
+//   String? numeroDeCheque;
+//   String? fechaCheque;
 
-  static actualizarmontodelpago(double monto) {
-    pagos.valordelpago = monto;
-  }
+//   Pagos(
+//       {this.id,
+//       required this.formadePago,
+//       this.banco,
+//       required this.valordelpago,
+//       this.fechaCheque,
+//       this.numeroDeCheque});
 
-  static obtenermontodelpago() {
-    return pagos.valordelpago;
-  }
+//   static List<Pagos> pago = [];
+//   // Pagos pagos =;
+//   static agregarpago(Pagos pagos) {
+//     pago.add(pagos);
+//   }
 
-  static eliminarPago(int index) {
-    pago.clear();
-  }
+//   static var pagos = new Pagos(formadePago: "1", valordelpago: 0);
+//   static agregarpago1() {}
 
-  static updatePago(Pagos pagos, index) {
-    pago[index].formadePago = pagos.formadePago;
-    pago[index].banco = pagos.banco;
-    pago[index].valordelpago = pagos.valordelpago;
-    pago[index].numeroDeCheque = pagos.numeroDeCheque;
-    pago[index].numeroDeCheque = pagos.numeroDeCheque;
-  }
-}
+//   static actualizarmontodelpago(double monto) {
+//     pagos.valordelpago = monto;
+//   }
 
-class PagosDetalles {
-  String? id;
-  String? ordeDePago;
-  String numeroDeFactura;
-  DateTime? fechavencimiento;
-  DateTime? fechaEmision;
+//   static obtenermontodelpago() {
+//     return pagos.valordelpago;
+//   }
 
-  double valorfactura;
-  double valorpendiente;
-  double montoPagado;
+//   static eliminarPago(int index) {
+//     pago.clear();
+//   }
 
-  int activo;
+//   static guardarPago() {
+    
 
-  PagosDetalles(
-      {this.id,
-      required this.ordeDePago,
-      required this.numeroDeFactura,
-      this.fechavencimiento,
-      this.fechaEmision,
-      required this.montoPagado,
-      required this.valorfactura,
-      required this.valorpendiente,
-      required this.activo});
+    
+//     pago.forEach((element) {
+//      var newpago = Pago(banco: element.banco.toString(),
+//       clienteId: 7488803,
+//        clienteNombre: 'Aro y Motor (Guerra)',
+//         fechaCheque: DateTime.tryParse(element.fechaCheque), 
+//         formadePago: element.formadePago,
+          
+//          numeroDeCheque: element.numeroDeCheque,
+//           valordelpago: element.valordelpago,
+//            vendedor: usuario.toString())  
 
-  static List<PagosDetalles> pagos = [];
+    
+//       //  newpago. = element.banco;
+//       // newpago.first.fechaCheque = element.fechaCheque;
+//       // newpago.first.formadePago = element.formadePago;
+//       // newpago.first.numeroDeCheque = element.numeroDeCheque;
+//       // newpago.first.valordelpago = element.valordelpago;
+//     });
 
-  static agregarFacturasaPagos(PagosDetalles pago) {
-    return pagos.add(pago);
-    print(pagos.length);
-  }
+//     DatabaseHelper.instance.aregarPago(oag);
+//   }
 
-  static eliminarpago(int index) {
-    pagos.removeAt(index);
-    pagos.remove(index);
-    return null;
-  }
+//   static updatePago(Pagos pagos, index) {
+//     pago[index].formadePago = pagos.formadePago;
+//     pago[index].banco = pagos.banco;
+//     pago[index].valordelpago = pagos.valordelpago;
+//     pago[index].numeroDeCheque = pagos.numeroDeCheque;
+//     pago[index].numeroDeCheque = pagos.numeroDeCheque;
+//   }
+// }
 
-  static List<PagosDetalles> getDetalleFactura() {
-    return pagos;
-  }
+// class PagosDetalles {
+//   String? id;
+//   String? ordeDePago;
+//   String numeroDeFactura;
+//   DateTime? fechavencimiento;
+//   DateTime? fechaEmision;
 
-  static double obtenerSubtotal() {
-    if (pagos.length > 0) {
-      double monto = pagos
-          .map((e) => e.montoPagado)
-          .reduce((value, element) => value + element);
-      if (monto != 0) {
-        return monto;
-      }
-    }
-    return 0;
+//   double valorfactura;
+//   double valorpendiente;
+//   double montoPagado;
 
-    // double pagos = pagos
-    //     .map((e) => e.montoPagado)
-    //     .reduce((value, element) => value + element);
-  }
+//   int activo;
 
-  static double obtenerTotal() {
-    return 1000;
-  }
+//   PagosDetalles(
+//       {this.id,
+//       required this.ordeDePago,
+//       required this.numeroDeFactura,
+//       this.fechavencimiento,
+//       this.fechaEmision,
+//       required this.montoPagado,
+//       required this.valorfactura,
+//       required this.valorpendiente,
+//       required this.activo});
 
-  static actualizardetalle(int index, double? monto) {
-    if (monto != null) {
-      pagos[index].montoPagado = monto;
-    }
-  }
-}
+//   static List<PagosDetalles> pagos = [];
+
+//   static agregarFacturasaPagos(PagosDetalles pago) {
+//     return pagos.add(pago);
+//     print(pagos.length);
+//   }
+
+//   static eliminarpago(int index) {
+//     pagos.removeAt(index);
+//     pagos.remove(index);
+//     return null;
+//   }
+
+//   static List<PagosDetalles> getDetalleFactura() {
+//     return pagos;
+//   }
+
+//   static double obtenerSubtotal() {
+//     if (pagos.length > 0) {
+//       double monto = pagos
+//           .map((e) => e.montoPagado)
+//           .reduce((value, element) => value + element);
+//       if (monto != 0) {
+//         return monto;
+//       }
+//     }
+//     return 0;
+
+//     // double pagos = pagos
+//     //     .map((e) => e.montoPagado)
+//     //     .reduce((value, element) => value + element);
+//   }
+
+//   static double obtenerTotal() {
+//     return 1000;
+//   }
+
+//   static actualizardetalle(int index, double? monto) {
+//     if (monto != null) {
+//       pagos[index].montoPagado = monto;
+//     }
+//   }
+// }

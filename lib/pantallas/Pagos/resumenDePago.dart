@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/ordenDeventa.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
@@ -6,13 +7,17 @@ import 'package:sigalogin/servicios/db_helper.dart';
 import '../../clases/detalledePago.dart';
 import '../../clases/facturaDetalle.dart';
 import '../../clases/global.dart';
+import '../../clases/modelos/pagodetalle.dart';
+import '../alertas.dart';
 import '../clientes/detalleDelCLiente.dart';
+import '../clientes/listaClientes.dart';
 
 class ResumenDePagos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var subtotal = PagosDetalles.obtenerSubtotal();
-    var total = Pagos.obtenermontodelpago();
+    var subtotal = Pagodetalle.obtenerSubtotal();
+    var total = Pago.obtenermontodelpago();
+
     return BottomAppBar(
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -113,6 +118,13 @@ class ResumenDePagos extends StatelessWidget {
                             color: Colors.white),
                       ),
                       onPressed: (() {
+                        Pago.guardarPago();
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => clienteLista()));
+
 //Guardar Factura
                         // // Pagos.eliminartodos();
                         // PagosDetalles.eliminarpago();
