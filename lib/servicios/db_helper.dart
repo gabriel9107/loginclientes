@@ -40,7 +40,10 @@ class DatabaseHelper {
       CustomerDir TEXT, 
       Phone1 TEXT, 
       Phone2 TEXT, 
-      Comment1 TEXT
+      Comment1 TEXT, 
+      creadoPor TEXT, 
+      creadoEn Text
+
       )''');
 
     await db.execute('''CREATE TABLE Usuario(
@@ -363,7 +366,7 @@ class DatabaseHelper {
   Future<List<Factura>> getFacturasporClientes(String clienteId) async {
     Database db = await instance.database;
     var factura = await db
-        .rawQuery("SELECT * FROM Factura WHERE FacturaId= '$clienteId')");
+        .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId'");
 
     List<Factura> facturaList =
         factura.map((c) => Factura.fromJson(c)).toList();
@@ -411,6 +414,24 @@ class DatabaseHelper {
     }
     return 0;
   }
+
+  Future<int> actualizarMontoFactura(String id, String totalPagado) async {
+    Database db = await instance.database;
+    final data = {
+      'TotalPagado': totalPagado,
+      // 'description': descrption,
+      // 'createdAt': DateTime.now().toString()
+    };
+
+    final result = await db
+        .update('Factura', data, where: "FacturaId = ?", whereArgs: [id]);
+    return result;
+  }
+  // Future<int> actualizarMontoFactura(String facturaNumero, id) async {
+  //   Database db = await instance.database;
+  //   return await db
+  //       .update('Factura', factura.toMap(), where: 'id = ?', whereArgs: [id]);
+  // }
 
 //Agregar pagos
 
@@ -481,4 +502,6 @@ class DatabaseHelper {
   //       res.isNotEmpty ? res.map((c) => User.fromMap(c)).toList() : null;
   //   return list;
   // }
+
+//Panel
 }

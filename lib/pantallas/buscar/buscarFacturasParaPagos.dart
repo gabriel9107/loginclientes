@@ -77,7 +77,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
 
               Container(
                 width: 60,
-                child: Text(suggestion.montoFactura),
+                child: Text(suggestion.totalPagado.toString()),
               ),
               // Container(
               //   child: Text('Prueba'),

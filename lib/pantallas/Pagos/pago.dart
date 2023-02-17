@@ -268,7 +268,7 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    'FVS002708'
+                                    facturas[index].numeroDeFactura
                                     // +
                                     //     facturas[index]
                                     //         .facturaFecha

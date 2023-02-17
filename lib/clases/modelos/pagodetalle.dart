@@ -3,6 +3,10 @@
 //     final pagodetalle = pagodetalleFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:ffi';
+
+import 'package:sigalogin/clases/factura.dart';
+import 'package:sigalogin/servicios/db_helper.dart';
 
 List<Pagodetalle?> pagodetalleFromJson(String str) => List<Pagodetalle?>.from(
     json.decode(str).map((x) => x == null ? null : Pagodetalle.fromJson(x)));
@@ -85,5 +89,16 @@ class Pagodetalle {
       }
     }
     return 0;
+  }
+
+  static ActualizarFacutas() {
+    pagos.forEach((element) {
+      actualizarMontoFactura(
+          element.numeroDeFactura, element.montoPagado.toString());
+    });
+  }
+
+  static void actualizarMontoFactura(String numerofactura, String montoPagado) {
+    DatabaseHelper.instance.actualizarMontoFactura(numerofactura, montoPagado);
   }
 }

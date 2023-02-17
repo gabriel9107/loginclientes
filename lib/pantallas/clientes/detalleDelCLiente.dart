@@ -89,7 +89,8 @@ class ListFactura extends StatelessWidget {
       "item8"
     ];
     return FutureBuilder<List<Factura>>(
-      future: DatabaseHelper.instance.getFacturas(),
+      future: DatabaseHelper.instance
+          .getFacturasporClientes(this.customerCode.toString()),
       builder: (BuildContext context, AsyncSnapshot<List<Factura>> snapshot) {
         if (!snapshot.hasData) {
           return Center(child: Text('Cargando...'));
@@ -132,7 +133,7 @@ class ListFactura extends StatelessWidget {
                                     factura.montoFactura,
                                   ),
                                   Text(
-                                    factura.montoFactura,
+                                    factura.totalPagado.toString(),
                                   ),
                                 ],
                               )

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:sigalogin/clases/global.dart';
+import 'package:sigalogin/clases/modelos/pagodetalle.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 List<Pago?> pagoFromJson(String str) => List<Pago?>.from(
@@ -120,6 +121,7 @@ class Pago {
   static void guardarPago() {
     DatabaseHelper.instance.agregarPago(pago);
 
-    // );
+    Pagodetalle.ActualizarFacutas();
+    pagos.clear();
   }
 }
