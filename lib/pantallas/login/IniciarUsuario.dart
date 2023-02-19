@@ -121,7 +121,8 @@ class _LoginForm extends StatelessWidget {
                     loginForm.isLoading = true;
                     final String? errorMessage = await authServices.login(
                         loginForm.email, loginForm.password);
-                    usuario = loginForm.email;
+                    usuario = loginForm.email.replaceAll('@gmail.com', '');
+
                     if (errorMessage == null) {
                       loginForm.isLoading = true;
                       Navigator.pushReplacementNamed(context, 'home');

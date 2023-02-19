@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/customers.dart';
+import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 class EditarCliente extends StatefulWidget {
@@ -48,7 +49,9 @@ class _editClienteScreenState extends State<EditarCliente> {
                     CustomerDir: customerDirController.text,
                     CustomerName: customerNameController.text,
                     Phone1: phone1Controller.text,
-                    Phone2: phone2Controller.text);
+                    Phone2: phone2Controller.text,
+                    creadoEn: DateTime.now().toString(),
+                    creadoPor: usuario);
                 DatabaseHelper.instance.update(update);
               },
               icon: const Icon(Icons.save))

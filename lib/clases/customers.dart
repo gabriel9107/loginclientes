@@ -10,6 +10,8 @@ class Customers {
   final String Phone1;
   final String Phone2;
   final String Comment1;
+  final String creadoEn;
+  final String creadoPor;
 
   Customers(
       {this.id,
@@ -18,7 +20,9 @@ class Customers {
       required this.CustomerDir,
       required this.Phone1,
       required this.Phone2,
-      required this.Comment1});
+      required this.Comment1,
+      required this.creadoEn,
+      required this.creadoPor});
 
   factory Customers.fromMap(Map<String, dynamic> json) => new Customers(
       id: json['id'],
@@ -27,7 +31,9 @@ class Customers {
       CustomerDir: json['CustomerDir'],
       Phone1: json['Phone1'],
       Phone2: json['Phone2'],
-      Comment1: json['Comment1']);
+      Comment1: json['Comment1'],
+      creadoEn: json['creadoEn'].toString(),
+      creadoPor: json['creadoPor'].toString());
 
   Map<String, dynamic> toMap() {
     return {
@@ -38,6 +44,8 @@ class Customers {
       'Phone1': Phone1,
       'Phone2': Phone2,
       'Comment1': Comment1,
+      'creadoEn': creadoEn,
+      'creadoPor': creadoPor,
     };
   }
 
@@ -53,7 +61,9 @@ class Customers {
             CustomerDir: element.CustomerDir,
             Phone1: element.Phone1,
             Phone2: element.Phone2,
-            Comment1: element.Comment1);
+            Comment1: element.Comment1,
+            creadoEn: element.creadoEn,
+            creadoPor: element.creadoPor);
         TodosLosClientes.add(customer);
       });
       ListaClientes = true;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
 import 'package:sigalogin/pantallas/clientes/new_cliente.dart';
 
@@ -62,7 +63,7 @@ class CustomerListState extends State<clienteLista> {
       ),
       body: Center(
         child: FutureBuilder<List<Customers>>(
-          future: DatabaseHelper.instance.getCustomers(),
+          future: DatabaseHelper.instance.obtenerClientesPorVendedor(usuario),
           builder:
               (BuildContext context, AsyncSnapshot<List<Customers>> snapshot) {
             if (!snapshot.hasData) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
 
 import '../../clases/customers.dart';
@@ -121,7 +122,9 @@ class MyCustomForm extends StatelessWidget {
                     CustomerDir: customerDirController.text,
                     Phone1: phone1Controller.text,
                     Phone2: phone2Controller.text,
-                    Comment1: commentController.text));
+                    Comment1: commentController.text,
+                    creadoEn: DateTime.now().toString(),
+                    creadoPor: usuario));
 
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => clienteLista()));

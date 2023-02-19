@@ -10,6 +10,7 @@ import '../../servicios/db_helper.dart';
 import '../NavigationDrawer.dart';
 import '../Pagos/pago.dart';
 import '../Pagos/pagodeprueba.dart';
+import '../alertas.dart';
 import 'new_cliente.dart';
 
 class DetalleDelCliente extends StatelessWidget {
@@ -89,9 +90,39 @@ class ListFactura extends StatelessWidget {
       "item8"
     ];
     return FutureBuilder<List<Factura>>(
-      future: DatabaseHelper.instance
-          .getFacturasporClientes(this.customerCode.toString()),
+      future: DatabaseHelper.instance.getFacturas(),
+      // .getFacturasporClientes(this.customerCode.toString()),
       builder: (BuildContext context, AsyncSnapshot<List<Factura>> snapshot) {
+        Future<void> _showMyDialog() async {
+          return showDialog<void>(
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Country List'),
+              );
+              //   title: const Text('AlertDialog Title'),
+              //   content: SingleChildScrollView(
+              //     child: ListBody(
+              //       children: const <Widget>[
+              //         Text('This is a demo alert dialog.'),
+              //         Text('Would you like to approve of this message?'),
+              //       ],
+              //     ),
+              //   ),
+              //   actions: <Widget>[
+              //     TextButton(
+              //       child: const Text('Approve'),
+              //       onPressed: () {
+              //         Navigator.of(context).pop();
+              //       },
+              //     ),
+              //   ],
+              // );
+            },
+          );
+        }
+
         if (!snapshot.hasData) {
           return Center(child: Text('Cargando...'));
         }
@@ -141,7 +172,9 @@ class ListFactura extends StatelessWidget {
                           ),
                         ],
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        _showMyDialog();
+                      },
                     ),
                   );
                 }).toList(),
@@ -166,7 +199,7 @@ class ListPagos extends StatelessWidget {
             return Center(child: Text('Cargando...'));
           }
           return snapshot.data!.isEmpty
-              ? Center(child: Text('No existen Facturas en el momento...'))
+              ? Center(child: Text('No existen Pagos en el momento...'))
               : ListView(
                   children: snapshot.data!.map((pago) {
                     return Card(
@@ -212,6 +245,21 @@ class ListPagos extends StatelessWidget {
         });
   }
 
+  Widget setupAlertDialoadContainer() {
+    return Container(
+      height: 300.0, // Change as per your requirement
+      width: 300.0, // Change as per your requirement
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: 5,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text('Gujarat, India'),
+          );
+        },
+      ),
+    );
+  }
 //
 //
 //

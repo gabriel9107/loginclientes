@@ -24,10 +24,10 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'sga3.db');
+    String path = join(documentsDirectory.path, 'sga4.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 5,
       onCreate: _onCreate,
     );
   }
@@ -200,6 +200,18 @@ class DatabaseHelper {
     return customersList;
   }
 
+  Future<List<Customers>> obtenerClientesPorVendedor(String vendedor) async {
+    Database db = await instance.database;
+    var clientes = await db
+        .rawQuery("SELECT * FROM Customer where creadoPor = '$vendedor'");
+
+    List<Customers> listadeClientes = clientes.isNotEmpty
+        ? clientes.map((e) => Customers.fromMap(e)).toList()
+        : [];
+
+    return listadeClientes;
+  }
+
 //Obtener Productos
   Future<List<Producto>> getProductos() async {
     Database db = await instance.database;
@@ -230,12 +242,31 @@ class DatabaseHelper {
   }
 
 //Actualizar Clientes
+
   Future<int> update(Customers customers) async {
     Database db = await instance.database;
-    int id = customers.toMap()['id'];
-    return await db.update('Customers', customers.toMap(),
-        where: '$id = ?', whereArgs: [id]);
+
+    final data = {
+      'CustomerName': customers.CustomerName,
+      'CustomerCode': customers.CustomerCode,
+      'CustomerDir': customers.CustomerDir,
+      'Phone1': customers.Phone1,
+      'Phone2': customers.Phone2,
+      'Comment1': customers.Comment1
+    };
+
+    final result = await db
+        .update('Customer', data, where: "id = ?", whereArgs: [customers.id]);
+    return result;
   }
+
+  // Future<int> update(Customers customers) async {
+  //   Database db = await instance.database;
+  //   int? id = customers.id;
+
+  //   return await db.update('Customer', customers.toMap(),
+  //       where: '$id = ?', whereArgs: [id]);
+  // }
 
 //Verificar si existe el Cliente antes de sincronizarlo
   Future<int> customerExists(Customers customers) async {
@@ -280,13 +311,24 @@ class DatabaseHelper {
   }
 
   Future<List<Pago>> obtenerPagosPorClientes(String cliente) async {
-    var db = await instance.database;
-    var pagos = await db.query('Pago', orderBy: 'Id');
+    Database db = await instance.database;
+    var pagos =
+        await db.rawQuery("SELECT * FROM Pago where clienteId = '$cliente'");
+
     List<Pago> listadePagos =
         pagos.isNotEmpty ? pagos.map((e) => Pago.fromMap(e)).toList() : [];
 
     return listadePagos;
   }
+
+  // Future<List<Pago>> obtenerPagosPorClientes(String cliente) async {
+  //   var db = await instance.database;
+  //   var pagos = await db.query('Pago', orderBy: 'Id');
+  //   List<Pago> listadePagos =
+  //       pagos.isNotEmpty ? pagos.map((e) => Pago.fromMap(e)).toList() : [];
+
+  //   return listadePagos;
+  // }
 
   Future<int> addProduct(Producto producto) async {
     var db = await instance.database;

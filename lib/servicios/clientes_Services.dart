@@ -37,7 +37,9 @@ class ClienteSevices extends ChangeNotifier {
             CustomerDir: tempCliente.nombre.toString(),
             Phone1: tempCliente.telefono1.toString(),
             Phone2: tempCliente.telefono2.toString(),
-            Comment1: tempCliente.comentario.toString());
+            Comment1: tempCliente.comentario.toString(),
+            creadoEn: DateTime.now().toString(),
+            creadoPor: tempCliente.codigoVendedor.toString());
         DatabaseHelper.instance.customerExists(insert);
       }
     });
