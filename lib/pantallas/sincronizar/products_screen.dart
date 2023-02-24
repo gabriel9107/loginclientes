@@ -5,6 +5,7 @@ import 'package:sigalogin/pantallas/NavigationDrawer.dart';
 import 'package:sigalogin/pantallas/productos/products_detail.dart';
 import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
 import 'package:sigalogin/servicios/factura_service.dart';
+import 'package:sigalogin/servicios/pedido_servicio.dart';
 
 import '../../clases/customers.dart';
 import '../../clases/product.dart';
@@ -12,6 +13,7 @@ import '../../servicios/clientes_Services.dart';
 import '../../servicios/db_helper.dart';
 import 'package:provider/provider.dart';
 
+import '../../servicios/PedidoDetalle_Servicio.dart';
 import '../../servicios/productos_services.dart';
 
 class PincronizarLista extends StatefulWidget {
@@ -34,9 +36,11 @@ class PincronizarListState extends State<PincronizarLista> {
   Widget build(BuildContext context) {
     final servicioClientes = Provider.of<ClienteSevices>(context);
     final servicioProductos = Provider.of<ProductoServices>(context);
+    final servicioPedidos = Provider.of<PedidoServicio>(context);
+    final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
 
     final servicioFactura = Provider.of<FacturaServices>(context);
-    // final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
+    final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
 
     // DBProvider().initializeDB();
     return Scaffold(
@@ -73,13 +77,13 @@ class PincronizarListState extends State<PincronizarLista> {
                             backgroundColor: Colors.blue,
                             child: Icon(Icons.emoji_people),
                           ),
-                          title: Text(producto.productoCodigo.toString()),
+                          title: Text(producto.codigo.toString()),
                           subtitle: Text(producto.nombre.toString()),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Text('En Existencia :  '),
-                              Text(producto.qty.toString())
+                              Text(producto.cantidad.toString())
                             ],
                           ),
                           onTap: () {

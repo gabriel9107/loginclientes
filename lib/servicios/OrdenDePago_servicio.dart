@@ -27,7 +27,7 @@ class OrdenDepagoServicio extends ChangeNotifier {
         await http.get(url, headers: {"Content-Type": "application/json"});
     // final jsonList = jsonDecode(response.body) as List<dynamic>;
 
-    DatabaseHelper.instance.Deleteproducto();
+    // DatabaseHelper.instance.Deleteproducto();
     final Map<String, dynamic> servicioMap = json.decode(response.body);
     // final productomap = Producto.fromJson(productosMap);
 

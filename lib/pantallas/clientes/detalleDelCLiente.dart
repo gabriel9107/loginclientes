@@ -3,6 +3,7 @@ import 'package:sigalogin/clases/factura.dart';
 import 'package:sigalogin/clases/themes.dart';
 
 import 'package:sigalogin/pantallas/Pagos/realizarPago.dart';
+import 'package:sigalogin/pantallas/clientes/detalleDeFactura.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
 
 import '../../clases/modelos/pago.dart';
@@ -90,8 +91,9 @@ class ListFactura extends StatelessWidget {
       "item8"
     ];
     return FutureBuilder<List<Factura>>(
-      future: DatabaseHelper.instance.getFacturas(),
-      // .getFacturasporClientes(this.customerCode.toString()),
+      future: DatabaseHelper.instance
+          // .getFacturas(),
+          .getFacturasporClientes(this.customerCode.toString()),
       builder: (BuildContext context, AsyncSnapshot<List<Factura>> snapshot) {
         Future<void> _showMyDialog() async {
           return showDialog<void>(
@@ -141,8 +143,7 @@ class ListFactura extends StatelessWidget {
                       title: Text('Factura Numero :' +
                           ' ' +
                           factura.facturaId.toString()),
-                      subtitle: Text(
-                          'Pedido Numero' + ' ' + factura.pedidosId.toString()),
+                      subtitle: Text('Pedido Numero' + ' ' + factura.pedidoId),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -161,7 +162,7 @@ class ListFactura extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    factura.montoFactura,
+                                    factura.montoFactura.toString(),
                                   ),
                                   Text(
                                     factura.totalPagado.toString(),
@@ -173,7 +174,12 @@ class ListFactura extends StatelessWidget {
                         ],
                       ),
                       onTap: () {
-                        _showMyDialog();
+                        // _showMyDialog();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DetalleDeFactura(factura.facturaId)));
                       },
                     ),
                   );
@@ -231,7 +237,7 @@ class ListPagos extends StatelessWidget {
                                     children: [
                                       Text('Numero de factura'),
                                       Text(
-                                        pago.clienteNombre.toString(),
+                                        pago.clienteId.toString(),
                                       ),
                                     ],
                                   )

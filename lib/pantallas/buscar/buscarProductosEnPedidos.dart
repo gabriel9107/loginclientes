@@ -87,7 +87,7 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
         final suggestion = suggestions[index];
         return ListTile(
           title: Text('Nombre: ' + suggestion.nombre.toString()),
-          subtitle: Text('Costo : ' + suggestion.price.toString()),
+          subtitle: Text('Costo : ' + suggestion.precio.toString()),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -114,18 +114,18 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
                     if (textController.text.isEmpty) {
                       FacturaDetalle.addfacturaDetalle(FacturaDetalle(
                           facturaNumero: "1",
-                          codigoProducto: suggestion.productoCodigo.toString(),
+                          codigoProducto: suggestion.codigo.toString(),
                           montoproducto:
-                              double.parse(suggestion.price.toString()),
+                              double.parse(suggestion.precio.toString()),
                           nombreProducto: suggestion.nombre.toString(),
                           cantidadProducto: 1));
                       close(context, null);
                     } else {
                       FacturaDetalle.addfacturaDetalle(FacturaDetalle(
                           facturaNumero: "1",
-                          codigoProducto: suggestion.productoCodigo.toString(),
+                          codigoProducto: suggestion.codigo.toString(),
                           montoproducto:
-                              double.parse(suggestion.price.toString()),
+                              double.parse(suggestion.precio.toString()),
                           nombreProducto: suggestion.nombre.toString(),
                           cantidadProducto: int.parse(textController.text)));
                       close(context, null);
@@ -169,11 +169,11 @@ class Productos {
             isDelete: element.isDelete,
             nombre: element.nombre,
             ouM: element.ouM,
-            price: element.price,
-            productoCodigo: element.productoCodigo,
-            qty: element.qty,
+            precio: element.precio,
+            codigo: element.codigo,
+            cantidad: element.cantidad,
             sincronizado: element.sincronizado,
-            typeOfSales: element.typeOfSales);
+            tipodeVenta: element.tipodeVenta);
         TodosProductos.add(a);
       });
       ListaProducto = true;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:sigalogin/clases/global.dart';
+import 'package:sigalogin/clases/modelos/clientes.dart';
 import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
 import 'package:sigalogin/pantallas/clientes/new_cliente.dart';
 
@@ -62,10 +64,10 @@ class CustomerListState extends State<clienteLista> {
         child: Icon(Icons.add),
       ),
       body: Center(
-        child: FutureBuilder<List<Customers>>(
+        child: FutureBuilder<List<Cliente>>(
           future: DatabaseHelper.instance.obtenerClientesPorVendedor(usuario),
           builder:
-              (BuildContext context, AsyncSnapshot<List<Customers>> snapshot) {
+              (BuildContext context, AsyncSnapshot<List<Cliente>> snapshot) {
             if (!snapshot.hasData) {
               return Center(child: Text('Cargando...'));
             }
@@ -81,11 +83,10 @@ class CustomerListState extends State<clienteLista> {
                             backgroundColor: Colors.blue,
                             child: Icon(Icons.emoji_people),
                           ),
-                          title: Text(customer.CustomerCode +
-                              ' | ' +
-                              customer.CustomerName),
+                          title:
+                              Text(customer.codigo + ' | ' + customer.nombre),
                           subtitle: Text(
-                              customer.CustomerDir + ' | ' + customer.Phone1),
+                              customer.direccion + ' | ' + customer.telefono1),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
@@ -99,9 +100,8 @@ class CustomerListState extends State<clienteLista> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => CartPage(
-                                              customer.CustomerCode.toString(),
-                                              customer.CustomerName
-                                                  .toString())));
+                                              customer.codigo.toString(),
+                                              customer.nombre.toString())));
                                 },
                               ),
                               IconButton(
@@ -137,8 +137,8 @@ class CustomerListState extends State<clienteLista> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => DetalleDelCliente(
-                                        customer.CustomerCode.toString(),
-                                        customer.CustomerName.toString())
+                                        customer.codigo.toString(),
+                                        customer.nombre.toString())
                                     //  CartPage(
                                     //     customer.CustomerCode,
                                     //     customer.CustomerName.toString())

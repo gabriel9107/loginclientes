@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/customers.dart';
 import 'package:sigalogin/clases/global.dart';
+import 'package:sigalogin/clases/modelos/clientes.dart';
+import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 class EditarCliente extends StatefulWidget {
-  Customers clientes;
+  Cliente clientes;
 
   EditarCliente(this.clientes);
 
@@ -13,7 +15,7 @@ class EditarCliente extends StatefulWidget {
 }
 
 class _editClienteScreenState extends State<EditarCliente> {
-  Customers _clientes;
+  Cliente _clientes;
   _editClienteScreenState(this._clientes);
   final customerCodeController = TextEditingController();
   final customerNameController = TextEditingController();
@@ -25,12 +27,12 @@ class _editClienteScreenState extends State<EditarCliente> {
   @override
   void initState() {
     super.initState();
-    customerCodeController.text = _clientes.CustomerCode.toString();
-    customerNameController.text = _clientes.CustomerName.toString();
-    customerDirController.text = _clientes.CustomerDir.toString();
-    phone1Controller.text = _clientes.Phone1.toString();
-    phone2Controller.text = _clientes.Phone2.toString();
-    commentController.text = _clientes.Comment1.toString();
+    customerCodeController.text = _clientes.codigo.toString();
+    customerNameController.text = _clientes.nombre.toString();
+    customerDirController.text = _clientes.direccion.toString();
+    phone1Controller.text = _clientes.telefono1.toString();
+    phone2Controller.text = _clientes.telefono2.toString();
+    commentController.text = _clientes.comentario.toString();
   }
 
   @override
@@ -42,17 +44,26 @@ class _editClienteScreenState extends State<EditarCliente> {
         actions: [
           IconButton(
               onPressed: () {
-                Customers update = Customers(
+                Cliente update = Cliente(
                     id: _clientes.id,
-                    Comment1: commentController.text,
-                    CustomerCode: customerCodeController.text,
-                    CustomerDir: customerDirController.text,
-                    CustomerName: customerNameController.text,
-                    Phone1: phone1Controller.text,
-                    Phone2: phone2Controller.text,
+                    comentario: commentController.text,
+                    codigo: customerCodeController.text,
+                    direccion: customerDirController.text,
+                    nombre: customerNameController.text,
+                    telefono1: phone1Controller.text,
+                    telefono2: phone2Controller.text,
                     creadoEn: DateTime.now().toString(),
-                    creadoPor: usuario);
-                DatabaseHelper.instance.update(update);
+                    activo: 1,
+                    codigoVendedor: usuario,
+                    compagnia: compagnia,
+                    sincronizado: 0);
+                try {
+                  DatabaseHelper.instance.update(update);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => clienteLista()));
+                } catch (e) {
+                  print('error al actualizar el registro ');
+                }
               },
               icon: const Icon(Icons.save))
         ],

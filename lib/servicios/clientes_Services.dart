@@ -24,30 +24,41 @@ class ClienteSevices extends ChangeNotifier {
     final response =
         await http.get(url, headers: {"Content-Type": "application/json"});
 
-    final Map<String, dynamic> clienteMap = json.decode(response.body);
+    final Map<String, dynamic> clienteMap = json.decode(resp.body);
 
     clienteMap.forEach((key, value) {
-      if (value != "") {
-        final tempCliente = Cliente.fromJson(value);
-        tempCliente.codigo = key;
+      if (value != null) {
+        final tempCliente = Cliente.fromMap(value);
 
-        var insert = Customers(
-            CustomerCode: tempCliente.codigo.toString(),
-            CustomerName: tempCliente.nombre.toString(),
-            CustomerDir: tempCliente.nombre.toString(),
-            Phone1: tempCliente.telefono1.toString(),
-            Phone2: tempCliente.telefono2.toString(),
-            Comment1: tempCliente.comentario.toString(),
-            creadoEn: DateTime.now().toString(),
-            creadoPor: tempCliente.codigoVendedor.toString());
-        DatabaseHelper.instance.customerExists(insert);
+        this.clientes.add(tempCliente);
       }
     });
+
+    clientes.forEach((cliente) {
+      DatabaseHelper.instance.customerExists(cliente);
+    });
+    // print(this.clientes[0].nombre);
+    //
+  }
+}
+      // if (value != "") {
+      //   final tempCliente = Cliente.fromJson(value);
+      //   tempCliente.codigo = key;
+
+        // var insert = Customers(
+        //     CustomerCode: tempCliente.codigo.toString(),
+        //     CustomerName: tempCliente.nombre.toString(),
+        //     CustomerDir: tempCliente.nombre.toString(),
+        //     Phone1: tempCliente.telefono1.toString(),
+        //     Phone2: tempCliente.telefono1.toString(),
+        //     Comment1: tempCliente.comentario.toString(),
+        //     creadoEn: DateTime.now().toString(),
+        //     creadoPor: tempCliente.codigoVendedor.toString());
+        // DatabaseHelper.instance.customerExists(insert);
+    //   }
+    // });
 
     // final Map<String, dynamic> jsonResponse = json.decode(response.body);
     // List jsonResponse = json.decode(response.body);
     // final jsonList = jsonDecode(response.body) as List<dynamic>;
-  }
-
-  SincronizarClientes(var respuesta) {}
-}
+  

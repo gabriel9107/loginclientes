@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/pedidoDetalle.dart';
 import 'package:sigalogin/pantallas/dashboardScreen.dart';
 import 'package:sigalogin/pantallas/home.dart';
 import 'package:sigalogin/pantallas/login/IniciarUsuario.dart';
@@ -12,6 +13,8 @@ import 'package:sigalogin/servicios/clientes_Services.dart';
 import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
 import 'package:sigalogin/servicios/factura_service.dart';
 import 'package:sigalogin/servicios/notifications_service.dart';
+import 'package:sigalogin/servicios/PedidoDetalle_Servicio.dart';
+import 'package:sigalogin/servicios/pedido_servicio.dart';
 import 'package:sigalogin/servicios/productos_services.dart';
 
 class MyHttpOverrides extends HttpOverrides {
@@ -36,6 +39,9 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthServices()),
         ChangeNotifierProvider(create: (_) => ClienteSevices()),
         ChangeNotifierProvider(create: (_) => ProductoServices()),
+        ChangeNotifierProvider(create: (_) => PedidoServicio()),
+        ChangeNotifierProvider(create: (_) => PedidoDetalleServicio()),
+        // ChangeNotifierProvider(create: (_) => PedidoServicio()),
         ChangeNotifierProvider(create: (_) => FacturaServices()),
         ChangeNotifierProvider(create: (_) => FacturaDetalleServices())
       ],

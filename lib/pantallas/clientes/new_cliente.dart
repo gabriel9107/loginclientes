@@ -116,15 +116,15 @@ class MyCustomForm extends StatelessWidget {
             ElevatedButton(
               child: Text('Guardar'),
               onPressed: () async {
-                await DatabaseHelper.instance.Add(Customers(
-                    CustomerCode: customerCodeController.text,
-                    CustomerName: customerNameController.text,
-                    CustomerDir: customerDirController.text,
-                    Phone1: phone1Controller.text,
-                    Phone2: phone2Controller.text,
-                    Comment1: commentController.text,
-                    creadoEn: DateTime.now().toString(),
-                    creadoPor: usuario));
+                // await DatabaseHelper.instance.Add(Customers(
+                //     CustomerCode: customerCodeController.text,
+                //     CustomerName: customerNameController.text,
+                //     CustomerDir: customerDirController.text,
+                //     Phone1: phone1Controller.text,
+                //     Phone2: phone2Controller.text,
+                //     Comment1: commentController.text,
+                //     creadoEn: DateTime.now().toString(),
+                //     creadoPor: usuario));
 
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => clienteLista()));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/ordenDeventa.dart';
+import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
@@ -8,7 +9,7 @@ import '../../clases/global.dart';
 import '../clientes/detalleDelCLiente.dart';
 
 class CartBottomNavBarHistorico extends StatelessWidget {
-  OrdenVenta pedidos;
+  Pedido pedidos;
   CartBottomNavBarHistorico(this.pedidos);
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      pedidos.totals,
+                      pedidos.totalAPagar.toString(),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -68,7 +69,7 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      pedidos.vAT,
+                      pedidos.impuestos.toString(),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -87,7 +88,7 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      ("\$" + pedidos.totals),
+                      ("\$" + pedidos.totalAPagar.toString()),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,

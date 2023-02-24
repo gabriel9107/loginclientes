@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/pedidoDetalle.dart';
+import 'package:sigalogin/clases/pedidos.dart';
 
 import '../../clases/ordenDeventa.dart';
 import '../../servicios/db_helper.dart';
@@ -7,7 +9,7 @@ import '../../servicios/db_helper.dart';
 import 'CartBottomNavBarHistorico.dart';
 
 class PedidoHistorico extends StatefulWidget {
-  OrdenVenta pedidos;
+  Pedido pedidos;
   PedidoHistorico(this.pedidos);
 
   @override
@@ -15,7 +17,7 @@ class PedidoHistorico extends StatefulWidget {
 }
 
 class _mainPage extends State<PedidoHistorico> {
-  OrdenVenta pedidos;
+  Pedido pedidos;
 
   _mainPage(this.pedidos);
 
@@ -24,16 +26,16 @@ class _mainPage extends State<PedidoHistorico> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-              'Pedido de Ventas Cliente ' + this.pedidos.customerID.toString()),
+              'Pedido de Ventas Cliente ' + this.pedidos.clienteId.toString()),
 
           // backgroundColor: Color.fromARGB(255, 25, 28, 228),
         ),
-        body: FutureBuilder<List<OrdenVentaDetalle>>(
-          future:
-              DatabaseHelper.instance.getDetallesporId(pedidos.id.toString()),
+        body: FutureBuilder<List<PedidoDetalle>>(
+          future: DatabaseHelper.instance
+              .getDetallesporId(pedidos.numeroOrden.toString()),
           builder: (BuildContext context,
-              AsyncSnapshot<List<OrdenVentaDetalle>> snapshot) {
-            final List<OrdenVentaDetalle>? detalles = snapshot.data;
+              AsyncSnapshot<List<PedidoDetalle>> snapshot) {
+            final List<PedidoDetalle>? detalles = snapshot.data;
 
             return ListView.builder(
                 itemCount: detalles?.length,
@@ -74,17 +76,17 @@ class _mainPage extends State<PedidoHistorico> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Text(
-                                          detalles![index].productCode,
+                                          detalles![index].codigo,
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          detalles![index].productName,
+                                          detalles![index].nombre,
                                           style: TextStyle(fontSize: 14),
                                         ),
                                         Text(
-                                          detalles![index].price.toString(),
+                                          detalles![index].precio.toString(),
                                           style: TextStyle(
                                               fontSize: 20, color: Colors.red),
                                         )
@@ -113,7 +115,7 @@ class _mainPage extends State<PedidoHistorico> {
                                                 size: 20,
                                               )),
                                           Text(
-                                            detalles[index].qty.toString(),
+                                            detalles[index].cantidad.toString(),
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,

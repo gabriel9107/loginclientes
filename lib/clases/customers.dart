@@ -1,4 +1,6 @@
+import 'package:http/http.dart';
 import 'package:sigalogin/clases/global.dart';
+import 'package:sigalogin/clases/modelos/clientes.dart';
 
 import '../servicios/db_helper.dart';
 
@@ -35,6 +37,17 @@ class Customers {
       creadoEn: json['creadoEn'].toString(),
       creadoPor: json['creadoPor'].toString());
 
+  factory Customers.fromMapToSqlLite(Map<String, dynamic> json) => Customers(
+      id: json['id'],
+      CustomerCode: json['CustomerCode'],
+      CustomerName: json['CustomerName'],
+      CustomerDir: json['CustomerDir'],
+      Phone1: json['Phone1'],
+      Phone2: json['Phone2'],
+      Comment1: json['Comment1'],
+      creadoEn: json['creadoEn'].toString(),
+      creadoPor: json['creadoPor'].toString());
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -51,19 +64,22 @@ class Customers {
 
   static Future getCustomers() async {
     var documento =
-        await DatabaseHelper.instance.getCustomers() as List<Customers>;
+        await DatabaseHelper.instance.getCustomers() as List<Cliente>;
 
     if (ListaClientes == false) {
       documento.forEach((element) {
-        Customers customer = new Customers(
-            CustomerCode: element.CustomerCode,
-            CustomerName: element.CustomerName,
-            CustomerDir: element.CustomerDir,
-            Phone1: element.Phone1,
-            Phone2: element.Phone2,
-            Comment1: element.Comment1,
+        Cliente customer = new Cliente(
+            codigo: element.codigo,
+            nombre: element.nombre,
+            direccion: element.direccion,
+            telefono1: element.telefono1,
+            telefono2: element.telefono2,
+            comentario: element.comentario,
             creadoEn: element.creadoEn,
-            creadoPor: element.creadoPor);
+            codigoVendedor: element.codigoVendedor,
+            activo: 0,
+            compagnia: compagnia,
+            sincronizado: 0);
         TodosLosClientes.add(customer);
       });
       ListaClientes = true;

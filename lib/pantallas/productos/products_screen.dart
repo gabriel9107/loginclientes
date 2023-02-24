@@ -65,13 +65,13 @@ class ProductsListState extends State<ProductsList> {
                             backgroundColor: Colors.blue,
                             child: Icon(Icons.emoji_people),
                           ),
-                          title: Text(producto.productoCodigo.toString()),
+                          title: Text(producto.codigo.toString()),
                           subtitle: Text(producto.nombre.toString()),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Text('En Existencia :  '),
-                              Text(producto.qty.toString())
+                              Text(producto.cantidad.toString())
                             ],
                           ),
                           onTap: () {

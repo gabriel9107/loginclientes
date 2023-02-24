@@ -1,39 +1,77 @@
-import 'package:http/http.dart';
+import 'dart:convert';
+
+Map<String, Cliente> clienteFromMap(String str) => Map.from(json.decode(str))
+    .map((k, v) => MapEntry<String, Cliente>(k, Cliente.fromMap(v)));
+
+String clienteToMap(Map<String, Cliente> data) => json.encode(
+    Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toMap())));
 
 class Cliente {
   Cliente(
-      {this.comentario,
+      {this.id,
+      required this.activo,
       required this.codigo,
       required this.codigoVendedor,
+      required this.comentario,
+      required this.compagnia,
       required this.direccion,
       required this.nombre,
+      required this.sincronizado,
       required this.telefono1,
-      required this.telefono2});
+      required this.telefono2,
+      this.creadoEn});
 
-  String? comentario;
-  String? codigo;
-  String? codigoVendedor;
-  String? direccion;
-  String? nombre;
-  String? telefono1;
-  String? telefono2;
+  int? id;
+  int activo;
+  String codigo;
+  String codigoVendedor;
+  String comentario;
+  int compagnia;
+  String direccion;
+  String nombre;
+  int sincronizado;
+  String telefono1;
+  String telefono2;
+  String? creadoEn;
 
-  factory Cliente.fromJson(Map<String, dynamic> json) => Cliente(
-        comentario: json["comentario "],
-        codigo: json["codigo"].toString(),
-        codigoVendedor: json["codigoVendedor"],
-        direccion: json["direccion"],
-        nombre: json["nombre"],
-        telefono1: json["telefono1"],
-        telefono2: json["telefono2"],
+  factory Cliente.fromMapSql(Map<String, dynamic> json) => new Cliente(
+        id: json["ID"],
+        codigo: json["codigo"].toString().trim(),
+        nombre: json["nombre"].toString().trim(),
+        direccion: json["direccion"].toString().trim(),
+        telefono2: json["telefono2"].toString().trim(),
+        telefono1: json["telefono1"].toString().trim(),
+        comentario: json["comentario"].toString().trim(),
+        codigoVendedor: json["codigoVendedor"].toString().trim(),
+        compagnia: json["compagnia"],
+        sincronizado: json["sincronizado"],
+        activo: json["activo"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "comentario ": comentario,
+  factory Cliente.fromMap(Map<String, dynamic> json) => new Cliente(
+        id: json["ID"],
+        codigo: json["codigo"].toString().trim(),
+        nombre: json["nombre"].toString().trim(),
+        direccion: json["direccion"].toString().trim(),
+        telefono2: json["telefono2"].toString().trim(),
+        telefono1: json["telefono1"].toString().trim(),
+        comentario: json["comentario"].toString().trim(),
+        codigoVendedor: json["codigoVendedor"].toString().trim(),
+        compagnia: int.parse(json["compagnia"]),
+        sincronizado: int.parse(json["sincronizado"]),
+        activo: int.parse(json["activo"]),
+      );
+
+  Map<String, dynamic> toMap() => {
+        "ID": id,
+        "activo": activo,
         "codigo": codigo,
         "codigoVendedor": codigoVendedor,
+        "comentario": comentario,
+        "compagnia": compagnia,
         "direccion": direccion,
         "nombre": nombre,
+        "sincronizado": sincronizado,
         "telefono1": telefono1,
         "telefono2": telefono2,
       };

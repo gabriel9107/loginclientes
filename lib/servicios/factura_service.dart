@@ -26,26 +26,35 @@ class FacturaServices extends ChangeNotifier {
     // final jsonList = jsonDecode(response.body) as List<dynamic>;
 
     // DatabaseHelper.instance.Deleteproducto();
-    final Map<String, dynamic> productosMap = json.decode(response.body);
-    final productomap = Factura.fromJson(productosMap);
+    final Map<String, dynamic> map = json.decode(response.body);
 
-    productosMap.forEach((key, value) {
-      if (value != "") {
-        final temp = Factura.fromJson(value);
-
-        Factura facturas = Factura(
-            id: temp.id,
-            clienteId: temp.clienteId,
-            facturaFecha: temp.facturaFecha,
-            facturaId: temp.facturaId,
-            facturaVencimiento: temp.facturaVencimiento,
-            metodoDePago: temp.metodoDePago,
-            montoFactura: temp.montoFactura,
-            pedidosId: temp.pedidosId,
-            totalPagado: temp.totalPagado);
-
-        DatabaseHelper.instance.SincronizarFactura(facturas);
-      }
+    map.forEach((key, value) {
+      final temp = Factura.fromMap(value);
+      facturas.add(temp);
     });
+
+//agregando las facturas a la base de datos
+
+    facturas.forEach((factura) {
+      DatabaseHelper.instance.AddFactura(factura);
+    });
+
+    // if (value != "") {
+    //   final temp = Factura.fromJson(value);
+
+    //   Factura facturas = Factura(
+    //       id: temp.id,
+    //       clienteId: temp.clienteId,
+    //       facturaFecha: temp.facturaFecha,
+    //       facturaId: temp.facturaId,
+    //       facturaVencimiento: temp.facturaVencimiento,
+    //       metodoDePago: temp.metodoDePago,
+    //       montoFactura: temp.montoFactura,
+    //       pedidosId: temp.pedidosId,
+    //       totalPagado: temp.totalPagado);
+
+    //   DatabaseHelper.instance.SincronizarFactura(facturas);
+    // }
+    // });
   }
 }

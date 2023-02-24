@@ -2,6 +2,8 @@ import 'dart:ffi';
 
 import 'package:flutter/services.dart';
 import 'package:sigalogin/clases/ordenDeventa.dart';
+import 'package:sigalogin/clases/pedidoDetalle.dart';
+import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 import 'formatos.dart';
@@ -128,12 +130,11 @@ class FacturaDetalle {
     facturaDetalle.removeAt(index);
   }
 
-  static void guardarPedido(
-      OrdenVenta orden, List<OrdenVentaDetalle> ordendetalle) {
-    DatabaseHelper.instance.AddSales(orden);
+  static void guardarPedido(Pedido orden, List<PedidoDetalle> ordendetalle) {
+    DatabaseHelper.instance.AgregarPedido(orden);
 
     ordendetalle.forEach((element) {
-      DatabaseHelper.instance.AddSalesDetalle(element);
+      DatabaseHelper.instance.AgregarPedidoDetalle(element);
     });
   }
 }

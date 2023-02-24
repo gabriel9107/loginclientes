@@ -1,10 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
-import 'package:sigalogin/clases/detalledePago.dart';
+
 import 'package:sigalogin/clases/factura.dart';
-import 'package:sigalogin/clases/facturaDetalle.dart';
+
 import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
+import 'package:sigalogin/clases/pedidoDetalle.dart';
+import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -12,6 +14,8 @@ import 'package:path_provider/path_provider.dart';
 
 import '../clases/customers.dart';
 import '../clases/detalleFactura.dart';
+import '../clases/global.dart';
+import '../clases/modelos/clientes.dart';
 import '../clases/modelos/pagodetalle.dart';
 import '../clases/ordenDeventa.dart';
 
@@ -24,198 +28,292 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'sga4.db');
+    String path = join(documentsDirectory.path, 'sigaApp9.db');
     return await openDatabase(
       path,
-      version: 5,
+      version: 6,
       onCreate: _onCreate,
     );
   }
 
   Future _onCreate(Database db, int version) async {
-    await db.execute('''CREATE TABLE Customer(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,  
-      CustomerCode TEXT, 
-      CustomerName TEXT, 
-      CustomerDir TEXT, 
-      Phone1 TEXT, 
-      Phone2 TEXT, 
-      Comment1 TEXT, 
-      creadoPor TEXT, 
-      creadoEn Text
-
+    await db.execute('''CREATE TABLE Clientes(
+   ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        codigo TEXT,
+        nombre TEXT,
+        direccion TEXT,
+        telefono1 TEXT,
+        telefono2 TEXT,
+        comentario TEXT,
+        codigoVendedor TEXT,
+        creadoEn TEXT,
+        sincronizado INTEGER,
+        compagnia INTEGER,
+        activo INTEGER
       )''');
 
-    await db.execute('''CREATE TABLE Usuario(
-           id INTEGER PRIMARY KEY AUTOINCREMENT
-        ,UsuarioNombre TEXT
-        ,UsuarioClave TEXT
-        ,Compagnia TEXT
-        ,Activo TEXT
-        )''');
-
-    await db.execute('''CREATE TABLE InvoiceHeaders(
-           id INTEGER PRIMARY KEY AUTOINCREMENT
-        ,SALESID TEXT
-        ,INVOICEID TEXT
-        ,PAYMENT TEXT
-        ,INVOICEDATE TEXT
-        ,DUEDATE TEXT
-        ,INVOICEAMOUNT TEXT
-        ,INVOICINGNAME TEXT
-        ,PrintCounterDevolution TEXT
-        ,PrintCounterCreditNote TEXT
-        ,INVOICEACCOUNT TEXT
-        ,PayedAmount TEXT
-        )''');
-
-    await db.execute('''CREATE TABLE SalesOrders(
-          ID INTEGER PRIMARY KEY AUTOINCREMENT
-        ,ordenNumero TEXT
-        ,Cash TEXT
-        ,Change TEXT
-        ,CustomerID TEXT
-        ,Date TEXT
-        ,GPID TEXT
-        ,IsDelete TEXT
-        ,Totals TEXT
-        ,VAT TEXT
-        ,UserName TEXT
-        ,Status TEXT
-        ,Commets TEXT
-        )''');
-
-    await db.execute('''CREATE TABLE SalesLines(
-    ID INTEGER PRIMARY KEY AUTOINCREMENT
-        ,SalesOrdersID TEXT
-        ,Price TEXT
-        ,Qty TEXT
-        ,ProductID TEXT
-        ,ProductCode TEXT
-        ,Products_ID TEXT
-        ,ProductName TEXT
-        )''');
-
     await db.execute('''CREATE TABLE Productos(
-        ID INTEGER PRIMARY KEY AUTOINCREMENT
-        ,Nombre TEXT
-        ,ProductoCodigo TEXT
-        ,Qty TEXT
-        ,TypeOfSales TEXT
-        ,OuM TEXT
-        ,Price TEXT
-        ,Compagnia TEXT
-        ,Sincronizado TEXT
-        ,IsDelete TEXT
+        Id  INTEGER PRIMARY KEY AUTOINCREMENT,
+        Codigo TEXT,
+        Nombre TEXT,
+        Cantidad  INTEGER,
+        Precio  REAL, 
+        OuM  TEXT,
+        TipodeVenta TEXT,
+        Compagnia INTEGER,
+        Sincronizado INTEGER,
+        IsDelete INTEGER
         )''');
 
-    await db.execute('''CREATE TABLE PaymentOrders(
-         ID INTEGER PRIMARY KEY AUTOINCREMENT
-        ,VendorID TEXT
-        ,Datetime TEXT
-        ,Amount TEXT
-        ,Method TEXT
-        ,BankName TEXT
-        ,CheckNumber TEXT
-        ,CheckDate TEXT
-        ,IsEnabled TEXT
-        ,Customer_Code TEXT
-        ,IsOpen TEXT
-        ,Imported TEXT
-        )''');
-    await db.execute('''CREATE TABLE PaymentItems(
-         ID INTEGER PRIMARY KEY AUTOINCREMENT
-        ,PaymentOrderId TEXT
-        ,InvoiceNumber TEXT
-        ,AmountApply TEXT
-        ,InvoiveAmountAtMoment TEXT
-        ,IsEnabled TEXT
-        )''');
+    await db.execute('''CREATE TABLE Pedidos(
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        NumeroOrden INTEGER,
+        ClienteId TEXT,
+        FechaOrden TEXT, 
+        Impuestos REAL, 
+        TotalAPagar REAL,
+        Sincronizado INTEGER,
+        Compagnia INTEGER,
+        IsDelete INTEGER
+                )''');
 
-    ///creando 2 tablas Factura y Factura detalle para cambiarle la forma del flujo y que sea mas entendible por los idiomas
-    ///
-
-    ///
+    await db.execute('''CREATE TABLE PedidoDetalle(
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        Precio REAL,
+        Cantidad INTEGER,
+        Codigo TEXT, 
+        Nombre TEXT, 
+        ProductoId INTEGER,
+        PedidoId TEXT, 
+        Sincronizado INTEGER,
+        IsDelete INTEGER,
+        Compagnia INTEGER
+                )''');
     await db.execute('''CREATE TABLE Factura(
-         ID INTEGER PRIMARY KEY AUTOINCREMENT
-        ,FacturaFecha TEXT
-        ,FacturaId TEXT
-        ,FacturaVencimiento TEXT
-        ,MetodoDepago TEXT
-        ,clienteId TEXT
-        ,MontoFactura TEXT
-        ,PedidosId TEXT
-        ,TotalPagado TEXT
-        
+     Id	 INTEGER PRIMARY KEY AUTOINCREMENT
+    ,FacturaId TEXT
+    ,PedidoId TEXT
+    ,clienteId	 TEXT
+    ,clienteNombre TEXT
+    ,FacturaFecha TEXT
+    ,FacturaVencimiento TEXT
+    ,vendedorId TEXT
+    ,MetodoDePago TEXT
+    ,MontoFactura REAL
+    ,totalPagado REAL
+    ,MontoPendiente REAL
+    ,Sincronizado INTEGER
+    ,IsDelete	 INTEGER
+    ,Compagnia	 INTEGER
         )''');
-
-    ///
-    ///
     await db.execute('''CREATE TABLE FacturaDetalle(
-         ID INTEGER PRIMARY KEY AUTOINCREMENT
-        ,FacturaNumero TEXT
-        ,LineaNumero1 TEXT
-        ,Nombre TEXT
-        ,PrecioVenta TEXT
-        ,ProductoCodigo TEXT
-        ,Qty TEXT
-        ,montoLinea TEXT
+        ID	INTEGER PRIMARY KEY AUTOINCREMENT 
+      ,FacturaId	 TEXT
+      ,LineaNumero	  REAL
+      ,ProductoCodigo  TEXT
+      ,Nombre	 TEXT
+      ,Qty	REAL
+      ,PrecioVenta REAL
+      ,montoLinea	 REAL
+      ,Sincronizado INTEGER
+      ,IsDelete	INTEGER
+      ,Compagnia INTEGER
         )''');
 
     await db.execute('''CREATE TABLE Pago(
-         ID INTEGER PRIMARY KEY AUTOINCREMENT
-        ,banco TEXT,
-        clienteId INTEGER,
-        clienteNombre TEXT,
-        fechaCheque TEXT,
-        formadePago TEXT,
+        id  INTEGER PRIMARY KEY AUTOINCREMENT,
+        clienteId TEXT,
+        vendorId TEXT,
         numeroDeCheque TEXT,
-        valordelpago TEXT,
-        vendedor TEXT 
+        fechaDeCheque TEXT,
+        fechaPago TEXT,
+        montoPagado REAL,
+        pendiente INTEGER,
+        sincronizado INTEGER,
+        habilitado INTEGER,
+        compagni INTEGER ,
+        isDelete INTEGER 
         )''');
+    // await db.execute('''CREATE TABLE Usuario(
+    //        id INTEGER PRIMARY KEY AUTOINCREMENT
+    //     ,UsuarioNombre TEXT
+    //     ,UsuarioClave TEXT
+    //     ,Compagnia TEXT
+    //     ,Activo TEXT
+    //     )''');
 
-    await db.execute('''CREATE TABLE DetalleDePago(
-         ID INTEGER PRIMARY KEY AUTOINCREMENT
-        , fechaEmision TEXT 
-        , fechavencimiento TEXT
-        , montoPagado TEXT  
-        , numeroDeFactura TEXT  
-        , pago INTEGER 
-        , valorfactura TEXT  
-        , valorpendiente TEXT  
-        , int activo INTEGER 
-        )''');
+    // await db.execute('''CREATE TABLE InvoiceHeaders(
+    //        id INTEGER PRIMARY KEY AUTOINCREMENT
+    //     ,SALESID TEXT
+    //     ,INVOICEID TEXT
+    //     ,PAYMENT TEXT
+    //     ,INVOICEDATE TEXT
+    //     ,DUEDATE TEXT
+    //     ,INVOICEAMOUNT TEXT
+    //     ,INVOICINGNAME TEXT
+    //     ,PrintCounterDevolution TEXT
+    //     ,PrintCounterCreditNote TEXT
+    //     ,INVOICEACCOUNT TEXT
+    //     ,PayedAmount TEXT
+    //     )''');
+
+    // await db.execute('''CREATE TABLE SalesOrders(
+    //       ID INTEGER PRIMARY KEY AUTOINCREMENT
+    //     ,ordenNumero TEXT
+    //     ,Cash TEXT
+    //     ,Change TEXT
+    //     ,CustomerID TEXT
+    //     ,Date TEXT
+    //     ,GPID TEXT
+    //     ,IsDelete TEXT
+    //     ,Totals TEXT
+    //     ,VAT TEXT
+    //     ,UserName TEXT
+    //     ,Status TEXT
+    //     ,Commets TEXT
+    //     )''');
+
+    // await db.execute('''CREATE TABLE SalesLines(
+    // ID INTEGER PRIMARY KEY AUTOINCREMENT
+    //     ,SalesOrdersID TEXT
+    //     ,Price TEXT
+    //     ,Qty TEXT
+    //     ,ProductID TEXT
+    //     ,ProductCode TEXT
+    //     ,Products_ID TEXT
+    //     ,ProductName TEXT
+    //     )''');
+
+    // await db.execute('''CREATE TABLE PaymentOrders(
+    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
+    //     ,VendorID TEXT
+    //     ,Datetime TEXT
+    //     ,Amount TEXT
+    //     ,Method TEXT
+    //     ,BankName TEXT
+    //     ,CheckNumber TEXT
+    //     ,CheckDate TEXT
+    //     ,IsEnabled TEXT
+    //     ,Customer_Code TEXT
+    //     ,IsOpen TEXT
+    //     ,Imported TEXT
+    //     )''');
+    // await db.execute('''CREATE TABLE PaymentItems(
+    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
+    //     ,PaymentOrderId TEXT
+    //     ,InvoiceNumber TEXT
+    //     ,AmountApply TEXT
+    //     ,InvoiveAmountAtMoment TEXT
+    //     ,IsEnabled TEXT
+    //     )''');
+
+    // ///creando 2 tablas Factura y Factura detalle para cambiarle la forma del flujo y que sea mas entendible por los idiomas
+    // ///
+
+    // ///
+
+    // ///
+    // ///
+    // await db.execute('''CREATE TABLE FacturaDetalle(
+    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
+    //     ,FacturaNumero TEXT
+    //     ,LineaNumero1 TEXT
+    //     ,Nombre TEXT
+    //     ,PrecioVenta TEXT
+    //     ,ProductoCodigo TEXT
+    //     ,Qty TEXT
+    //     ,montoLinea TEXT
+    //     )''');
+
+    // await db.execute('''CREATE TABLE Pago(
+    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
+    //     ,banco TEXT,
+    //     clienteId INTEGER,
+    //     clienteNombre TEXT,
+    //     fechaCheque TEXT,
+    //     formadePago TEXT,
+    //     numeroDeCheque TEXT,
+    //     valordelpago TEXT,
+    //     vendedor TEXT
+    //     )''');
+
+    // await db.execute('''CREATE TABLE DetalleDePago(
+    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
+    //     , fechaEmision TEXT
+    //     , fechavencimiento TEXT
+    //     , montoPagado TEXT
+    //     , numeroDeFactura TEXT
+    //     , pago INTEGER
+    //     , valorfactura TEXT
+    //     , valorpendiente TEXT
+    //     , int activo INTEGER
+    //     )''');
   }
 
-//Clientes
+//Verificar si existe el Cliente antes de sincronizarlo
+  Future<int> customerExists(Cliente cliente) async {
+    String customerCode = cliente.codigo;
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM Clientes WHERE codigo= '$customerCode')");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      Add(cliente);
+    }
+    return 0;
+  }
 
 //Obtener Clientes
-  Future<List<Customers>> getCustomers() async {
+  Future<List<Cliente>> getCustomers() async {
     Database db = await instance.database;
-    var customers = await db.query('Customer', orderBy: 'CustomerName');
-    List<Customers> customersList = customers.isNotEmpty
-        ? customers.map((c) => Customers.fromMap(c)).toList()
+    var customers = await db.query('Clientes', orderBy: 'nombre');
+    List<Cliente> customersList = customers.isNotEmpty
+        ? customers.map((c) => Cliente.fromMap(c)).toList()
         : [];
 
     return customersList;
   }
 
-  Future<List<Customers>> obtenerClientesPorVendedor(String vendedor) async {
+//Agregar Clientes
+  Future<int> Add(Cliente customers) async {
+    Database db = await instance.database;
+    return await db.insert('Clientes', customers.toMap());
+  }
+
+  Future<List<Cliente>> obtenerClientesPorVendedor(String vendedor) async {
     Database db = await instance.database;
     var clientes = await db
-        .rawQuery("SELECT * FROM Customer where creadoPor = '$vendedor'");
+        .rawQuery("SELECT * FROM Clientes where codigoVendedor = '$vendedor'");
 
-    List<Customers> listadeClientes = clientes.isNotEmpty
-        ? clientes.map((e) => Customers.fromMap(e)).toList()
+    List<Cliente> listadeClientes = clientes.isNotEmpty
+        ? clientes.map((e) => Cliente.fromMapSql(e)).toList()
         : [];
 
     return listadeClientes;
   }
 
+  Future<int> update(Cliente customers) async {
+    Database db = await instance.database;
+
+    final data = {
+      'nombre': customers.nombre,
+      'codigo': customers.codigo,
+      'direccion': customers.direccion,
+      'telefono1': customers.telefono1,
+      'telefono2': customers.telefono2,
+      'comentario': customers.comentario
+    };
+
+    final result = await db
+        .update('Clientes', data, where: "id = ?", whereArgs: [customers.id]);
+    return result;
+  }
+
 //Obtener Productos
   Future<List<Producto>> getProductos() async {
     Database db = await instance.database;
-    var productos = await db.query('Productos', orderBy: 'ProductoCodigo');
+    var productos = await db.query('Productos', orderBy: 'Codigo');
 
     List<Producto> productoLista =
         productos.map((c) => Producto.fromMap(c)).toList();
@@ -223,42 +321,12 @@ class DatabaseHelper {
     return productoLista;
   }
 
-//Agregar Clientes
-  Future<int> Add(Customers customers) async {
-    String customerCode = customers.CustomerCode;
-    Database db = await instance.database;
-    return await db.insert('Customer', customers.toMap());
-  }
-
-  Future<int> Deletecustomer(Customers customers) async {
-    String customerCode = customers.CustomerCode;
-    Database db = await instance.database;
-    return await db.delete('Customer');
-  }
-
-  Future<int> Deleteproducto() async {
-    Database db = await instance.database;
-    return await db.delete('Productos');
-  }
+  // Future<int> Deletecustomer(Cliente customers) async {
+  //   Database db = await instance.database;
+  //   return await db.delete('Customer');
+  // }
 
 //Actualizar Clientes
-
-  Future<int> update(Customers customers) async {
-    Database db = await instance.database;
-
-    final data = {
-      'CustomerName': customers.CustomerName,
-      'CustomerCode': customers.CustomerCode,
-      'CustomerDir': customers.CustomerDir,
-      'Phone1': customers.Phone1,
-      'Phone2': customers.Phone2,
-      'Comment1': customers.Comment1
-    };
-
-    final result = await db
-        .update('Customer', data, where: "id = ?", whereArgs: [customers.id]);
-    return result;
-  }
 
   // Future<int> update(Customers customers) async {
   //   Database db = await instance.database;
@@ -268,25 +336,11 @@ class DatabaseHelper {
   //       where: '$id = ?', whereArgs: [id]);
   // }
 
-//Verificar si existe el Cliente antes de sincronizarlo
-  Future<int> customerExists(Customers customers) async {
-    String customerCode = customers.CustomerCode;
-    var dbClient = await instance.database;
-    var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM Customer WHERE CustomerCode= '$customerCode')");
-
-    int? exists = Sqflite.firstIntValue(res);
-    if (exists == 0) {
-      Add(customers);
-    }
-    return 0;
-  }
-
   Future<int> productoExists(Producto producto) async {
-    String codigoProducto = producto.productoCodigo.toString();
+    String codigoProducto = producto.codigo.toString();
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM Productos WHERE ProductoCodigo= '$codigoProducto')");
+        "SELECT EXISTS(SELECT 1 FROM Productos WHERE Codigo= '$codigoProducto')");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {
@@ -335,11 +389,16 @@ class DatabaseHelper {
     return await db.insert('Productos', producto.toMap());
   }
 
+  Future<int> eliminarProducto() async {
+    var db = await instance.database;
+    return await db.delete('Productos');
+  }
+
   Future<bool> aregarProductoSiNoExiste(
       String ProductoCodigo, Producto producto) async {
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT * FROM Productos WHERE ProductoCodigo = '$ProductoCodigo' and IsDelete = 0");
+        "SELECT * FROM Productos WHERE Codigo = '$ProductoCodigo' and IsDelete = 0");
 
     if (res.length < 0) {
       addWProduct(producto);
@@ -353,15 +412,15 @@ class DatabaseHelper {
     return await db.insert('Productos', producto.toMap());
   }
 
-  Future<List<OrdenVenta>> getOrdenes() async {
+  Future<List<Pedido>> getOrdenes() async {
     Database db = await instance.database;
-    var ordenes = await db.query('SalesOrders', orderBy: 'ID');
+    var ordenes = await db.query('Pedidos', orderBy: 'ID');
     // List<OrdenVenta> ordenesLista = ordenes.isNotEmpty
     //     ? ordenes.map((c) => OrdenVenta.fromMap(c)).toList()
     //     : [];
 
-    List<OrdenVenta> ordenesLista = ordenes.isNotEmpty
-        ? ordenes.map((c) => OrdenVenta.fromMap(c)).toList()
+    List<Pedido> ordenesLista = ordenes.isNotEmpty
+        ? ordenes.map((c) => Pedido.fromMapsqlite(c)).toList()
         : [];
     return ordenesLista;
   }
@@ -370,10 +429,20 @@ class DatabaseHelper {
 
 //Pedidos de ventas
 
-  Future<int> AddSales(OrdenVenta pedido) async {
+  Future<int> AgregarPedido(Pedido pedido) async {
     Database db = await instance.database;
-    return await db.insert('SalesOrders', pedido.toMap());
+    return await db.insert('Pedidos', pedido.toMapSqli());
   }
+
+  Future<int> AgregarPedidoDetalle(PedidoDetalle detalle) async {
+    Database db = await instance.database;
+    return await db.insert('PedidoDetalle', detalle.toMap());
+  }
+
+  // Future<int> AddSales(OrdenVenta pedido) async {
+  //   Database db = await instance.database;
+  //   return await db.insert('SalesOrders', pedido.toMap());
+  // }
 
   Future<int> AddSalesWithId(OrdenVenta pedido) async {
     Database db = await instance.database;
@@ -389,8 +458,8 @@ class DatabaseHelper {
 // //obtener el proximo numero de orden
   Future<String> getNextSalesOrders() async {
     Database db = await instance.database;
-    var res = await db
-        .rawQuery("SELECT * FROM SalesOrders ORDER BY ID DESC LIMIT 1; ");
+    var res =
+        await db.rawQuery("SELECT * FROM Pedidos ORDER BY ID DESC LIMIT 1; ");
     if (res.length == 0) {
       return "1";
     }
@@ -410,10 +479,33 @@ class DatabaseHelper {
     var factura = await db
         .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId'");
 
-    List<Factura> facturaList =
-        factura.map((c) => Factura.fromJson(c)).toList();
+    List<Factura> facturaList = factura.map((c) => Factura.fromMap(c)).toList();
+    // Factura.fromJson(c)).toList();
 
     return facturaList;
+  }
+
+  Future<List<FacturaDetalle>> obtenerDetalleDeFactura() async {
+    Database db = await instance.database;
+    var factura = await db.query('FacturaDetalle', orderBy: 'ID');
+
+    List<FacturaDetalle> productoLista =
+        factura.map((e) => FacturaDetalle.fromMap(e)).toList();
+
+    return productoLista;
+  }
+
+  Future<List<FacturaDetalle>> obtenerDetalleDeFacturaPorFacturaId(
+      String facturaId) async {
+    int compa = compagnia;
+    Database db = await instance.database;
+    var detalleFactura = await db
+        .rawQuery("SELECT * FROM FacturaDetalle WHERE FacturaId= '$facturaId'");
+
+    List<FacturaDetalle> productoLista =
+        detalleFactura.map((e) => FacturaDetalle.fromMap(e)).toList();
+
+    return productoLista;
   }
 
   Future<List<Factura>> getFacturas() async {
@@ -421,12 +513,12 @@ class DatabaseHelper {
     var factura = await db.query('Factura', orderBy: 'ID');
 
     List<Factura> productoLista =
-        factura.map((c) => Factura.fromJson(c)).toList();
+        factura.map((e) => Factura.fromMap(e)).toList();
 
     return productoLista;
   }
 
-  Future<int> AddDetalleFactura(FacturaDetalleAsync factura) async {
+  Future<int> AddDetalleFactura(FacturaDetalle factura) async {
     Database db = await instance.database;
     return await db.insert('FacturaDetalle', factura.toMap());
   }
@@ -444,11 +536,12 @@ class DatabaseHelper {
     return 0;
   }
 
-  Future<int> SincronizarDefalleFactura(FacturaDetalleAsync factura) async {
-    String facturaNumero = factura.facturaNumero;
+  Future<int> SincronizarDefalleFactura(FacturaDetalle factura) async {
+    String facturaNumero = factura.facturaId;
+    String productoCodigo = factura.productoCodigo;
     Database db = await instance.database;
     var res = await db.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM facturaDetalle WHERE FacturaNumero= '$facturaNumero')");
+        "SELECT EXISTS(SELECT 1 FROM facturaDetalle WHERE FacturaId= '$facturaNumero' and ProductoCodigo = '$productoCodigo' and IsDelete = 0 )");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {
@@ -496,23 +589,24 @@ class DatabaseHelper {
 //     return ordenesLista;
 //   }
 
-  Future<List<OrdenVentaDetalle>> getDetallesporId(String id) async {
+  Future<List<PedidoDetalle>> getDetallesporId(String id) async {
     Database db = await instance.database;
-    var detalle = await db
-        .rawQuery("SELECT * FROM SalesLines WHERE SalesOrdersID = '$id'");
+    var detalle =
+        await db.rawQuery("SELECT * FROM PedidoDetalle WHERE PedidoId = '$id'");
+    // await db.rawQuery("SELECT * FROM PedidoDetalle");
 
-    List<OrdenVentaDetalle> ordenesDetalleLista = detalle.isNotEmpty
-        ? detalle.map((c) => OrdenVentaDetalle.fromMap(c)).toList()
+    List<PedidoDetalle> ordenesDetalleLista = detalle.isNotEmpty
+        ? detalle.map((c) => PedidoDetalle.fromMap(c)).toList()
         : [];
     return ordenesDetalleLista;
   }
 
-  Future<List<OrdenVentaDetalle>> getDetalles() async {
+  Future<List<PedidoDetalle>> getDetalles() async {
     Database db = await instance.database;
-    var detallesOrden = await db.query('SalesLines', orderBy: 'ID');
+    var detallesOrden = await db.query('PedidoDetalle', orderBy: 'ID');
 
-    List<OrdenVentaDetalle> ordenesDetalleLista = detallesOrden.isNotEmpty
-        ? detallesOrden.map((c) => OrdenVentaDetalle.fromMap(c)).toList()
+    List<PedidoDetalle> ordenesDetalleLista = detallesOrden.isNotEmpty
+        ? detallesOrden.map((c) => PedidoDetalle.fromMap(c)).toList()
         : [];
     return ordenesDetalleLista;
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas%20copy.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
@@ -53,10 +55,10 @@ class _ListaOedidosState extends State<pedidosLista> {
         ),
       ),
       body: Center(
-        child: FutureBuilder<List<OrdenVenta>>(
+        child: FutureBuilder<List<Pedido>>(
           future: DatabaseHelper.instance.getOrdenes(),
           builder:
-              (BuildContext context, AsyncSnapshot<List<OrdenVenta>> snapshot) {
+              (BuildContext context, AsyncSnapshot<List<Pedido>> snapshot) {
             if (!snapshot.hasData) {
               return Center(child: Text('Cargando...'));
             }
@@ -74,12 +76,15 @@ class _ListaOedidosState extends State<pedidosLista> {
                           ),
                           title: Text("Pre orden :" +
                               pedidos.id.toString() +
-                              ' |  Cliente :' +
-                              pedidos.customerID),
-                          subtitle: Text("Fecha Orden" +
-                              pedidos.date.toString() +
+                              ' |  Cliente Numero :' +
+                              pedidos.clienteId),
+                          subtitle: Text("Fecha Orden : " +
+                              DateFormat('dd-MM-yyy')
+                                  .format(pedidos.fechaOrden) +
+
+                              // pedidos.fechaOrden.toString() +
                               ' | Total : ' +
-                              pedidos.totals.toString()),
+                              pedidos.totalAPagar.toString()),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[

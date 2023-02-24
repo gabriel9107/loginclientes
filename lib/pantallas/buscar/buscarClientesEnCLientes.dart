@@ -41,16 +41,16 @@ class MySearchDelegateParaClientesEnClientes extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<Customers> _listaClientes = [];
+    List<Cliente> _listaClientes = [];
 
     Customers.getCustomers().then((value) {
       if (value != null) value.forEach((item) => _listaClientes.add(item));
     });
 
-    _listaClientes = TodosLosClientes.cast<Customers>().toList();
+    _listaClientes = TodosLosClientes.cast<Cliente>().toList();
 
-    List<Customers> suggestions = _listaClientes.where((element) {
-      final result = element.CustomerName.toString().toLowerCase();
+    List<Cliente> suggestions = _listaClientes.where((element) {
+      final result = element.nombre.toString().toLowerCase();
       final input = query.toLowerCase();
       return result.contains(input);
     }).toList();
@@ -61,8 +61,8 @@ class MySearchDelegateParaClientesEnClientes extends SearchDelegate {
         final suggestion = suggestions[index];
 
         return ListTile(
-          title: Text('Cliente No.: ' + suggestion.CustomerCode),
-          subtitle: Text('Nombre  : ' + suggestion.CustomerName),
+          title: Text('Cliente No.: ' + suggestion.codigo),
+          subtitle: Text('Nombre  : ' + suggestion.nombre),
 
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
@@ -75,8 +75,8 @@ class MySearchDelegateParaClientesEnClientes extends SearchDelegate {
                           context,
                           MaterialPageRoute(
                               builder: (context) => CartPage(
-                                  suggestion.CustomerCode.toString(),
-                                  suggestion.CustomerName)));
+                                  suggestion.codigo.toString(),
+                                  suggestion.nombre)));
                       TodosLosClientes = [];
                     },
                     child: const Icon(Icons.add)),
@@ -86,7 +86,7 @@ class MySearchDelegateParaClientesEnClientes extends SearchDelegate {
 
           // Icon(Icons.add),
           onTap: () {
-            query = suggestion.CustomerName;
+            query = suggestion.codigo;
           },
         );
       },
