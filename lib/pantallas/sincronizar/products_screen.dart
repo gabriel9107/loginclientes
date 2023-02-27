@@ -1,10 +1,14 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/pantallas/NavigationDrawer.dart';
 import 'package:sigalogin/pantallas/productos/products_detail.dart';
+import 'package:sigalogin/servicios/detalleDePago_servicio.dart';
 import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
 import 'package:sigalogin/servicios/factura_service.dart';
+import 'package:sigalogin/servicios/pago_servicio.dart';
 import 'package:sigalogin/servicios/pedido_servicio.dart';
 
 import '../../clases/customers.dart';
@@ -42,11 +46,14 @@ class PincronizarListState extends State<PincronizarLista> {
     final servicioFactura = Provider.of<FacturaServices>(context);
     final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
 
+    final servicioPado = Provider.of<PagoServices>(context);
+    // final servicioPagoDetalle = Provider.of<PagoDetalleServicio>(context);
+
     // DBProvider().initializeDB();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Siga Mobile - Lista de Productos'),
-        backgroundColor: Color.fromARGB(255, 61, 64, 238),
+        backgroundColor: const Color.fromARGB(255, 61, 64, 238),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

@@ -63,7 +63,8 @@ class DetalleDelCliente extends StatelessWidget {
             children: [
               ListFactura(
                   const Icon(Icons.directions_car), customerCode.toString()),
-              ListPagos(const Icon(Icons.directions_car)),
+              ListPagos(
+                  const Icon(Icons.directions_car), customerCode.toString()),
               // ListPedidos(const Icon(Icons.directions_car)),
             ],
           ),
@@ -192,14 +193,14 @@ class ListFactura extends StatelessWidget {
 
 class ListPagos extends StatelessWidget {
   Icon ic = const Icon(Icons.abc);
-  ListPagos(this.ic, {Key? key}) : super(key: key);
-
-  String clientesId = '';
+  String? clientesId;
+  ListPagos(this.ic, this.clientesId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Pago>>(
-        future: DatabaseHelper.instance.obtenerPagosPorClientes(clientesId),
+        future: DatabaseHelper.instance
+            .obtenerPagosPorClientes(this.clientesId.toString()),
         builder: (BuildContext context, AsyncSnapshot<List<Pago>> snapshot) {
           if (!snapshot.hasData) {
             return Center(child: Text('Cargando...'));
@@ -216,8 +217,9 @@ class ListPagos extends StatelessWidget {
                             backgroundColor: Colors.blue,
                             child: Icon(Icons.monetization_on),
                           ),
-                          title: Text('Fecha de Pago : '),
-                          subtitle: Text('No. Recibo'),
+                          title: Text('Numero de Pago : ' + pago.id.toString()),
+                          subtitle: Text(
+                              'Fecha del pago :' + pago.fechaPago.toString()),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
@@ -227,7 +229,10 @@ class ListPagos extends StatelessWidget {
                                     children: [Text('Factura : ')],
                                   ),
                                   Column(
-                                    children: [Text('Tipo de Pago : ')],
+                                    children: [
+                                      Text('Forma de Pago : ' +
+                                          pago.metodoDePago.toString())
+                                    ],
                                   ),
                                 ],
                               ),
@@ -235,9 +240,9 @@ class ListPagos extends StatelessWidget {
                                 children: [
                                   Column(
                                     children: [
-                                      Text('Numero de factura'),
+                                      Text('Monto'),
                                       Text(
-                                        pago.clienteId.toString(),
+                                        pago.montoPagado.toString(),
                                       ),
                                     ],
                                   )

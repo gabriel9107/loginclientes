@@ -2,17 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../clases/components/card_custom.dart';
 import '../clases/components/circle_progress.dart';
 import '../clases/components/list_tile_custom.dart';
+import '../clases/modelos/clientes.dart';
 import '../clases/themes.dart';
 import 'NavigationDrawer.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({
-    Key? key,
-  }) : super(key: key);
+  var cantidadDevisitas =
+      0; //DatabaseHelper.instance.CantidadDeClientesPorMes();
+  var fijos = Cliente.obtenerClientesFijos();
+
+  var ventas = 0; //DatabaseHelper.instance.CantidadDeVentas();
+  var cobros = 0; //DatabaseHelper.instance.cantidadDeCobros();
+
+  // const DashboardScreen({
+  //   Key? key,
+  // }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +126,7 @@ class DashboardScreen extends StatelessWidget {
                                 color: purple1),
                             children: const <TextSpan>[
                               TextSpan(
-                                  text: " Esta semana",
+                                  text: " Este Mes",
                                   style: TextStyle(fontWeight: FontWeight.bold))
                             ]),
                       ),
@@ -135,7 +144,7 @@ class DashboardScreen extends StatelessWidget {
                               bgColor: purpleLight,
                               pathIcon: "thumb_up.svg",
                               title: "Visitas",
-                              subTitle: "4,324",
+                              subTitle: cantidadDevisitas.toString(),
                             ),
                           ),
                           CardCustom(
@@ -147,7 +156,7 @@ class DashboardScreen extends StatelessWidget {
                               bgColor: greenLight,
                               pathIcon: "thumb_up.svg",
                               title: "Ventas",
-                              subTitle: "654",
+                              subTitle: ventas.toString(),
                             ),
                           ),
                         ],
@@ -163,7 +172,7 @@ class DashboardScreen extends StatelessWidget {
                               bgColor: yellowLight,
                               pathIcon: "starts.svg",
                               title: "Fijos",
-                              subTitle: "855",
+                              subTitle: fijos.toString(),
                             ),
                           ),
                           CardCustom(
@@ -175,7 +184,7 @@ class DashboardScreen extends StatelessWidget {
                               bgColor: blueLight,
                               pathIcon: "eyes.svg",
                               title: "Cobros",
-                              subTitle: "5,436",
+                              subTitle: cobros.toString(),
                             ),
                           ),
                         ],

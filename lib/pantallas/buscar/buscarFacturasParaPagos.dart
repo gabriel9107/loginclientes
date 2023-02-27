@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/factura.dart';
+import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/product.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
@@ -9,6 +10,7 @@ import '../../clases/detalledePago.dart';
 import '../../clases/facturaDetalle.dart';
 import '../../clases/global.dart';
 import '../../clases/modelos/pagodetalle.dart';
+import '../Pagos/pago.dart';
 
 class BuscarFacturaEnPagos extends SearchDelegate {
   @override
@@ -42,7 +44,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     List<Factura> _ListFactura = [];
 
-    Factura.obtenerFacturas().then((value) {
+    Pago.obtenerFacturas().then((value) {
       if (value != null) value.forEach((item) => _ListFactura.add(item));
     });
 
@@ -74,78 +76,53 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                 width: 80,
                 child: Text('Monto Pendiente'),
               ),
-
               Container(
                 width: 60,
-                child: Text(suggestion.totalPagado.toString()),
+                child: Text(suggestion.montoPendiente.toString()),
               ),
-              // Container(
-              //   child: Text('Prueba'),
-              // ),
-              // Container(
-              //   child: Text('Prueba'),
-              // ),
-              // ),
-
-              // Container(
-              //   color: Colors.red,
-              //   child: Text('Valor Pendiente'),
-              // ),
-
-//  Container(
-//                 width: 100,
-//                 child: TextField(
-//                   controller: textController,
-//                   decoration: InputDecoration(hintText: 'saldo '),
-//                   keyboardType: TextInputType.numberWithOptions(
-//                       signed: false, decimal: true),
-//                   onTap: () {
-//                     query = suggestion.facturaId.toString();
-//                   },
-//                 ),
-//  )
-              // IconButton(onPressed: () {}, icon: Icon(Icons.payment)),
-              // Container(
-              //   width: 100,
-              //   child: TextField(
-              //     controller: textController,
-              //     decoration: InputDecoration(hintText: 'saldo '),
-              //     keyboardType: TextInputType.numberWithOptions(
-              //         signed: false, decimal: true),
-              //     onTap: () {
-              //       query = suggestion.facturaId.toString();
-              //     },
-              //   ),
-              // ),
               Container(
                 alignment: Alignment.topRight,
                 child: ElevatedButton(
                   onPressed: () {
                     var facturafecha = DateTime.now();
                     var facturafechavencimiento = DateTime.now();
-                    double montoFactura = 9692.32;
 
-                    var pago = new Pagodetalle(
-                        activo: 1,
-                        montoPagado: 0,
-                        numeroDeFactura: suggestion.facturaId.toString(),
-                        pago: 0,
-                        valorfactura: montoFactura,
-                        valorpendiente: montoFactura,
-                        fechaEmision: facturafecha,
-                        fechavencimiento: facturafechavencimiento);
+                    var pago = new PagoTemporal(
+                      fechaFactura: suggestion.facturaFecha.toString(),
+                      fechaVencimiento:
+                          suggestion.facturaVencimiento.toString(),
+                      compagni: compagnia,
+                      facturaId: suggestion.facturaId,
+                      id: 0,
+                      isDelete: 0,
+                      montoAplicado: 0.0,
+                      montoDeFacturaAlMomento:
+                          (suggestion.montoFactura - suggestion.totalPagado),
+                      sincronizado: 0,
+                      valorFactura: suggestion.montoFactura,
+                      valorPendiente:
+                          (suggestion.montoFactura - suggestion.totalPagado),
+                    );
 
-                    Pagodetalle.agregarFacturasaPagos(pago);
+                    PagoTemporal.agregarFacturasaPagos(pago);
 
-                    // Factura.addfacturaDetalle(Factura(
-                    //     facturaFecha: suggestion.facturaFecha,
-                    //     facturaId: suggestion.facturaId,
-                    //     facturaVencimiento: suggestion.facturaVencimiento,
-                    //     id: suggestion.id,
-                    //     metodoDePago: suggestion.metodoDePago,
-                    //     montoFactura: suggestion.montoFactura,
-                    //     pedidosId: suggestion.pedidosId,
-                    //     totalPagado: suggestion.totalPagado));
+                    Factura.addfacturaDetalle(Factura(
+                        facturaFecha: suggestion.facturaFecha,
+                        facturaId: suggestion.facturaId,
+                        facturaVencimiento: suggestion.facturaVencimiento,
+                        id: suggestion.id,
+                        metodoDePago: suggestion.metodoDePago,
+                        montoFactura: suggestion.montoFactura,
+                        totalPagado: suggestion.totalPagado,
+                        clienteId: suggestion.clienteId,
+                        clienteNombre: suggestion.clienteNombre,
+                        compagnia: compagnia,
+                        isDelete: 0,
+                        montoPendiente:
+                            (suggestion.montoFactura - suggestion.totalPagado),
+                        pedidoId: suggestion.pedidoId,
+                        sincronizado: 0,
+                        vendedorId: usuario));
 
                     close(context, null);
                     // double price = suggestion.price as double;

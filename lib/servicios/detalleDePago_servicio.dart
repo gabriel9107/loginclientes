@@ -12,15 +12,15 @@ import '../clases/modelos/clientes.dart';
 import '../clases/modelos/pagodetalle.dart';
 import '../clases/modelos/productos.dart';
 
-class detalleDepagoServicio extends ChangeNotifier {
+class PagoDetalleServicio extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
-
-  detalleDepagoServicio() {
+  final List<PagoDetalle> pagos = [];
+  PagoDetalleServicio() {
     this.sincronizar();
   }
 
   Future sincronizar() async {
-    final url = Uri.https(_baseUrl, 'detalledepago.json');
+    final url = Uri.https(_baseUrl, 'PagoDetallle.json');
 
     final resp = await http.get(url);
 
@@ -34,9 +34,9 @@ class detalleDepagoServicio extends ChangeNotifier {
 
     servicioMap.forEach((key, value) {
       // if (value != "") {
-      final pago = Pagodetalle.fromJson(value);
+      final pago = PagoDetalle.fromJson(value);
 
-      DatabaseHelper.instance.aregardetalledePagoAsincronizar(pago);
+      // DatabaseHelper.instance.aregardetalledePagoAsincronizar(pago);
     });
   }
 }

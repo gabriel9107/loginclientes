@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/ordenDeventa.dart';
+import 'package:sigalogin/pantallas/Pagos/pago.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
@@ -15,7 +16,7 @@ import '../clientes/listaClientes.dart';
 class ResumenDePagos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var subtotal = Pagodetalle.obtenerSubtotal();
+    var subtotal = PagoTemporal.obtenerSubtotal();
     var total = Pago.obtenermontodelpago();
 
     return BottomAppBar(
@@ -71,27 +72,6 @@ class ResumenDePagos extends StatelessWidget {
                     )
                   ],
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text(
-                //       "Total del pedido",
-                //       style: TextStyle(
-                //           color: Colors.black,
-                //           fontSize: 22,
-                //           fontWeight: FontWeight.bold),
-                //     ),
-                //     Text(
-                //       ("\$" + pedidos.totals),
-                //       style: TextStyle(
-                //           fontSize: 25,
-                //           fontWeight: FontWeight.bold,
-                //           color: Colors.black
-                //           // color: Color(0xFF4C53A5)
-                //           ),
-                //     )
-                //   ],
-                // ),
                 Container(
                   alignment: Alignment.center,
                   height: 50,
@@ -118,12 +98,22 @@ class ResumenDePagos extends StatelessWidget {
                             color: Colors.white),
                       ),
                       onPressed: (() {
-                        Pago.guardarPago();
+                        if (subtotal != total) {
+                          showAlertDialog(context);
+                        } else {
+                          Pago.guardarPago();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => clienteLista()));
+                        }
 
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => clienteLista()));
+                        //
+
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => clienteLista()));
 
 //Guardar Factura
                         // // Pagos.eliminartodos();
@@ -137,4 +127,31 @@ class ResumenDePagos extends StatelessWidget {
               ],
             )));
   }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Alert"),
+    content: Text("Favor de revisar la distribuacion en los pagos"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

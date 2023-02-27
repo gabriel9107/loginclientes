@@ -10,10 +10,12 @@ import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 import 'package:provider/provider.dart';
 import 'package:sigalogin/servicios/authServices.dart';
 import 'package:sigalogin/servicios/clientes_Services.dart';
+import 'package:sigalogin/servicios/detalleDePago_servicio.dart';
 import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
 import 'package:sigalogin/servicios/factura_service.dart';
 import 'package:sigalogin/servicios/notifications_service.dart';
 import 'package:sigalogin/servicios/PedidoDetalle_Servicio.dart';
+import 'package:sigalogin/servicios/pago_servicio.dart';
 import 'package:sigalogin/servicios/pedido_servicio.dart';
 import 'package:sigalogin/servicios/productos_services.dart';
 
@@ -41,9 +43,10 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProductoServices()),
         ChangeNotifierProvider(create: (_) => PedidoServicio()),
         ChangeNotifierProvider(create: (_) => PedidoDetalleServicio()),
-        // ChangeNotifierProvider(create: (_) => PedidoServicio()),
         ChangeNotifierProvider(create: (_) => FacturaServices()),
-        ChangeNotifierProvider(create: (_) => FacturaDetalleServices())
+        ChangeNotifierProvider(create: (_) => FacturaDetalleServices()),
+        ChangeNotifierProvider(create: (_) => PagoServices()),
+        ChangeNotifierProvider(create: (_) => PagoDetalleServicio())
       ],
       child: MyApp(),
     );
@@ -62,7 +65,7 @@ class MyApp extends StatelessWidget {
       routes: {
         'login': (context) => LoginScreen(),
         'register': (context) => RegisterScreen(),
-        'home': (context) => const DashboardScreen()
+        'home': (context) => DashboardScreen()
       },
       scaffoldMessengerKey: NotificationsService.messengerKey,
       theme: ThemeData(

@@ -49,6 +49,8 @@ dependencies:
   flutter_svg: ^1.1.6
   search_widget: ^1.0.2
   syncfusion_flutter_datagrid: ^20.4.51
+  flutter_localizations:
+    sdk: flutter
   
   
 

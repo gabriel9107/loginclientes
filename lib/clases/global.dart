@@ -3,7 +3,6 @@ import 'dart:core';
 import 'package:sigalogin/clases/modelos/clientes.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
 
-import 'customers.dart';
 import 'factura.dart';
 //compania 1 = Siga, compania 2 = SisaSRl
 

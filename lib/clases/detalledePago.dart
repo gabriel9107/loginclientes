@@ -118,21 +118,7 @@
 //     return pagos;
 //   }
 
-//   static double obtenerSubtotal() {
-//     if (pagos.length > 0) {
-//       double monto = pagos
-//           .map((e) => e.montoPagado)
-//           .reduce((value, element) => value + element);
-//       if (monto != 0) {
-//         return monto;
-//       }
-//     }
-//     return 0;
-
-//     // double pagos = pagos
-//     //     .map((e) => e.montoPagado)
-//     //     .reduce((value, element) => value + element);
-//   }
+//  
 
 //   static double obtenerTotal() {
 //     return 1000;

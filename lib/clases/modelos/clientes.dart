@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../../servicios/db_helper.dart';
+
 Map<String, Cliente> clienteFromMap(String str) => Map.from(json.decode(str))
     .map((k, v) => MapEntry<String, Cliente>(k, Cliente.fromMap(v)));
 
@@ -75,4 +77,38 @@ class Cliente {
         "telefono1": telefono1,
         "telefono2": telefono2,
       };
+
+  static Future obtenerClientesFijos() async {
+    int news = await DatabaseHelper.instance.CantidadDeClientesPorMes();
+    print('Este es la devuelta' + news.toString());
+  }
+
+  // static obtenerClientesFijos() async {
+  //   print('clientes');
+
+  //   int? valor;
+  //   DatabaseHelper.instance.CantidadDeClientesPorMes().then((value) {
+  //     valor = value;
+  //     print(valor);
+
+  //     print(valor);
+
+  //     print(valor);
+  //   });
+
+  //   return valor;
+  // }
+}
+
+class Dashboar {
+  int cantidadVisitas;
+  int cantidadVentas;
+  int fijos;
+  int cobros;
+
+  Dashboar(
+      {required this.cantidadVentas,
+      required this.cantidadVisitas,
+      required this.cobros,
+      required this.fijos});
 }

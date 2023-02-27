@@ -11,6 +11,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/utils/utils.dart';
 
 import '../clases/customers.dart';
 import '../clases/detalleFactura.dart';
@@ -28,7 +29,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'sigaApp9.db');
+    String path = join(documentsDirectory.path, 'sigaApp11.db');
     return await openDatabase(
       path,
       version: 6,
@@ -122,9 +123,11 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE Pago(
         id  INTEGER PRIMARY KEY AUTOINCREMENT,
+        Banco TEXT,
         clienteId TEXT,
         vendorId TEXT,
         numeroDeCheque TEXT,
+        MetodoDePago TEXT,
         fechaDeCheque TEXT,
         fechaPago TEXT,
         montoPagado REAL,
@@ -269,7 +272,7 @@ class DatabaseHelper {
     Database db = await instance.database;
     var customers = await db.query('Clientes', orderBy: 'nombre');
     List<Cliente> customersList = customers.isNotEmpty
-        ? customers.map((c) => Cliente.fromMap(c)).toList()
+        ? customers.map((c) => Cliente.fromMapSql(c)).toList()
         : [];
 
     return customersList;
@@ -354,7 +357,7 @@ class DatabaseHelper {
     return await db.insert('Pago', pago.toJson());
   }
 
-  Future<int> aregardetalledePagoAsincronizar(Pagodetalle pago) async {
+  Future<int> aregardetalledePagoAsincronizar(PagoDetalle pago) async {
     var db = await instance.database;
     return await db.insert('DetalleDePago', pago.toJson());
   }
@@ -367,10 +370,11 @@ class DatabaseHelper {
   Future<List<Pago>> obtenerPagosPorClientes(String cliente) async {
     Database db = await instance.database;
     var pagos =
-        await db.rawQuery("SELECT * FROM Pago where clienteId = '$cliente'");
+        await db.rawQuery("SELECT * FROM Pago where clienteId ='$cliente'");
 
-    List<Pago> listadePagos =
-        pagos.isNotEmpty ? pagos.map((e) => Pago.fromMap(e)).toList() : [];
+    List<Pago> listadePagos = pagos.isNotEmpty
+        ? pagos.map((e) => Pago.fromMapSqlLite(e)).toList()
+        : [];
 
     return listadePagos;
   }
@@ -479,6 +483,7 @@ class DatabaseHelper {
     var factura = await db
         .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId'");
 
+// .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId' and facturaPagada = 1");
     List<Factura> facturaList = factura.map((c) => Factura.fromMap(c)).toList();
     // Factura.fromJson(c)).toList();
 
@@ -506,6 +511,19 @@ class DatabaseHelper {
         detalleFactura.map((e) => FacturaDetalle.fromMap(e)).toList();
 
     return productoLista;
+  }
+
+  Future<List<Factura>> getFacturasById(String clienteId) async {
+    Database db = await instance.database;
+    var facturas = await db
+        .rawQuery("SELECT * FROM Factura where clienteId = '$clienteId' ");
+    // )
+    // var factura = await db.query('Factura', orderBy: 'ID', where: clienteId);
+
+    List<Factura> facturaLista =
+        facturas.map((e) => Factura.fromMap(e)).toList();
+
+    return facturaLista;
   }
 
   Future<List<Factura>> getFacturas() async {
@@ -640,4 +658,45 @@ class DatabaseHelper {
   // }
 
 //Panel
+
+  Future<int> CantidadDeClientesPorMes() async {
+    var user = usuario;
+    var compania = compagnia;
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT COUNT(*) FROM Clientes WHERE codigoVendedor = '$user' and compagnia = '$compania'");
+
+    int count = res.length;
+    return count;
+  }
+
+  Future<int> CantidadDeVentas() async {
+    var user = usuario;
+    var compania = compagnia;
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery("SELECT COUNT(*) FROM Pedidos");
+    int count = res.length;
+    return count;
+  }
+
+  Future<int> cantidadDeCobros() async {
+    var user = usuario;
+    var compania = compagnia;
+    var dbClient = await instance.database;
+    var res = await dbClient
+        .rawQuery("SELECT COUNT(*) FROM Pago WHERE vendorId = '$user'");
+
+    int count = res.length;
+    return count;
+  }
+
+  Future<int> Puntajes() async {
+    var user = usuario;
+    var compania = compagnia;
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT SUM(montoPagado) FROM Pago  WHERE vendorId = '$user'");
+    int count = res.length;
+    return count;
+  }
 }
