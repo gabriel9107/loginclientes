@@ -79,8 +79,9 @@ class Cliente {
       };
 
   static Future obtenerClientesFijos() async {
-    int news = await DatabaseHelper.instance.CantidadDeClientesPorMes();
-    print('Este es la devuelta' + news.toString());
+    int result = await DatabaseHelper.instance.CantidadDeClientesPorMes();
+    print(result);
+    return result;
   }
 
   // static obtenerClientesFijos() async {

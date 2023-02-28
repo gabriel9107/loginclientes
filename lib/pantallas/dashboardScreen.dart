@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,17 +13,61 @@ import '../clases/modelos/clientes.dart';
 import '../clases/themes.dart';
 import 'NavigationDrawer.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
+  @override
+  createState() => DashboardScreenState();
+}
+
+class DashboardScreenState extends State<DashboardScreen> {
   var cantidadDevisitas =
       0; //DatabaseHelper.instance.CantidadDeClientesPorMes();
-  var fijos = Cliente.obtenerClientesFijos();
-
-  var ventas = 0; //DatabaseHelper.instance.CantidadDeVentas();
-  var cobros = 0; //DatabaseHelper.instance.cantidadDeCobros();
+  int fijos = 503;
+  late var ventas = 422; //DatabaseHelper.instance.CantidadDeVentas();
+  var cobros = 125; //DatabaseHelper.instance.cantidadDeCobros();
 
   // const DashboardScreen({
   //   Key? key,
   // }) : super(key: key);
+
+  Future obtenerCantidadesDeCleintes() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.CantidadDeClientesPorMes().then((result) {
+      print(result);
+      setState(() {
+        fijos = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  Future obtenerCantidadDeventas() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.CantidadDeVentas().then((result) {
+      print(result);
+      setState(() {
+        ventas = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  Future obtenerCantidadDeCobros() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.cantidadDeCobros().then((result) {
+      print(result);
+      setState(() {
+        cobros = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  @override
+  void initState() {
+    obtenerCantidadesDeCleintes();
+    // Clients = Client.getClients();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -276,6 +322,7 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
       ),
+
       // bottomNavigationBar: BottomNavigationBar(
       //   elevation: 0,
       //   backgroundColor: Colors.transparent,

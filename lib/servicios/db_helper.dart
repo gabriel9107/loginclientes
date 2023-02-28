@@ -728,7 +728,7 @@ class DatabaseHelper {
     var compania = compagnia;
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT COUNT(*) FROM Clientes WHERE codigoVendedor = '$user' and compagnia = '$compania'");
+        "SELECT COUNT(*) FROM Clientes WHERE codigoVendedor = '$user' ");
 
     int count = res.length;
     return count;
