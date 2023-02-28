@@ -82,4 +82,15 @@ class PedidoDetalle {
         "Codigo": codigo,
         "Nombre": nombre,
       };
+  Map<String, dynamic> toMapInsert() => {
+        "Cantidad": cantidad,
+        "Compagnia": compagnia,
+        "IsDelete": isDelete,
+        "PedidoId": pedidoId,
+        "Precio": precio,
+        "ProductoId": productoId,
+        "Sincronizado": sincronizado,
+        "Codigo": codigo,
+        "Nombre": nombre,
+      };
 }

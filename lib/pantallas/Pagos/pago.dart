@@ -560,6 +560,7 @@ import 'package:sigalogin/clases/global.dart';
 import 'dart:math' as math;
 import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/pantallas/Pagos/resumenDePago.dart';
+import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../../clases/modelos/pago.dart';
 import '../../clases/modelos/pagodetalle.dart';
@@ -588,6 +589,25 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
   List<PagoDetalle> facturas = [];
   List<PagoTemporal> facturaTemp = [];
 
+  String? _selectedValue;
+  String? _selectedValueFormaDePago;
+  List<String> ListaDeBancos = [
+    'POPULAR',
+    'BHD',
+    'Banreserva',
+    'Scotia Bank',
+    'APAP',
+    'Banco Caribe',
+    'Banco Cibao',
+    'Banco de Ahorro y Credito Caribe',
+    'Otros'
+  ];
+  List<String> ListaFormaDepago = [
+    'Efectivo',
+    'Cheque',
+    'Transferencia',
+    'Otros'
+  ];
   // List<Factura> facturas = [];
   Future _refresh() async {
     setState(() {
@@ -635,44 +655,59 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
             child: Form(
                 child: Column(children: <Widget>[
-              DropdownButtonFormField(
-                value: 0,
-                items: [
-                  DropdownMenuItem(
-                    child: Text("-Seleccionar una forma de pago"),
-                    value: 0,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Efectivo"),
-                    value: 1,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Cheque"),
-                    value: 2,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Transferencia"),
-                    value: 3,
-                  ),
-                ],
+              // DropdownButtonFormField(
+              //   value: 0,
+              //   items: [
+              //     DropdownMenuItem(
+              //       child: Text("-Seleccionar una forma de pago"),
+              //       value: 0,
+              //     ),
+              //     DropdownMenuItem(
+              //       child: Text("Efectivo"),
+              //       value: 1,
+              //     ),
+              //     DropdownMenuItem(
+              //       child: Text("Cheque"),
+              //       value: 2,
+              //     ),
+              //     DropdownMenuItem(
+              //       child: Text("Transferencia"),
+              //       value: 3,
+              //     ),
+              //   ],
+              //   onChanged: (value) => {
+              //     if (value == 1)
+              //       {
+              //         formadelpagoController.text = 'Efectivo',
+              //         this.efectivo = true,
+              //         print(formadelpagoController.text)
+              //       },
+              //     if (value == 2)
+              //       {
+              //         formadelpagoController.text = 'Cheque',
+              //         this.efectivo = false
+              //       },
+              //     if (value == 3)
+              //       {
+              //         formadelpagoController.text = 'Transferencia',
+              //         this.efectivo = false
+              //       }
+              //   },
+              // ),
+              DropdownButtonFormField<String>(
+                disabledHint: Text("-Seleccionar una forma de Pago"),
+                value: _selectedValueFormaDePago,
                 onChanged: (value) => {
-                  if (value == 1)
-                    {
-                      formadelpagoController.text = 'Efectivo',
-                      this.efectivo = true,
-                      print(formadelpagoController.text)
-                    },
-                  if (value == 2)
-                    {
-                      formadelpagoController.text = 'Cheque',
-                      this.efectivo = false
-                    },
-                  if (value == 3)
-                    {
-                      formadelpagoController.text = 'Transferencia',
-                      this.efectivo = false
-                    }
+                  if (value == 'Efectivo')
+                    {this.efectivo = true, print(this.efectivo)},
+                  setState(() => _selectedValueFormaDePago = value)
                 },
+                items: ListaFormaDepago.map<DropdownMenuItem<String>>((item) {
+                  return DropdownMenuItem(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
               ),
               TextFormField(
                 inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
@@ -682,88 +717,106 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
                   labelText: 'Valor del pago	',
                 ),
               ),
-              DropdownButtonFormField(
-                value: 0,
-                items: [
-                  DropdownMenuItem(
-                    child: Text("-Seleccionar un banco"),
-                    value: 0,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("POPULAR"),
-                    value: 1,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("BHD"),
-                    value: 2,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Banreserva"),
-                    value: 3,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Scotia Bank"),
-                    value: 4,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("APAP"),
-                    value: 5,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Banco Caribe"),
-                    value: 6,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Banco Cibao"),
-                    value: 7,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Banco de Ahorro y Credito Caribe"),
-                    value: 9,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Otros"),
-                    value: 9,
-                  ),
-                ],
+              DropdownButtonFormField<String>(
+                disabledHint: Text("-Seleccionar un banco"),
+                value: _selectedValue,
                 onChanged: this.efectivo
                     ? null
-                    : (value) {
-                        switch (value) {
-                          case 1:
-                            bancodelpagoController.text = 'POPULAR';
-                            break;
-                          case 2:
-                            bancodelpagoController.text = 'BHD';
-                            break;
-                          case 3:
-                            bancodelpagoController.text = 'Banreserva';
-                            break;
-                          case 4:
-                            bancodelpagoController.text = 'Scotia Bank';
-                            break;
-                          case 5:
-                            bancodelpagoController.text = 'APAP';
-                            break;
-                          case 6:
-                            bancodelpagoController.text = 'Banco Caribe';
-                            break;
-                          case 7:
-                            bancodelpagoController.text = 'Banco Cibao';
-                            break;
-                          case 8:
-                            bancodelpagoController.text =
-                                'Banco de Ahorro y Credito Caribe';
-                            break;
-                          default:
-                        }
-                      },
-                // onChanged: this.efectivo
-                //     ? (value) => setState(() => {this.efectivo = true})
+                    : (value) => {setState(() => _selectedValue = value)},
+                //  this.efectivo
+                //     ? (value) => setState(() => _selectedValue = value)
                 //     : null,
-                // hint: Text("Select Your Technology"),
-                // disabledHint: Text("First Select Your Field"),
+                items: ListaDeBancos.map<DropdownMenuItem<String>>((item) {
+                  return DropdownMenuItem(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
               ),
+
+              // DropdownButtonFormField(
+              //     value: 0,
+              //     items: [
+              //       DropdownMenuItem(
+              //         child: Text("-Seleccionar un banco"),
+              //         value: 0,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("POPULAR"),
+              //         value: 1,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("BHD"),
+              //         value: 2,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("Banreserva"),
+              //         value: 3,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("Scotia Bank"),
+              //         value: 4,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("APAP"),
+              //         value: 5,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("Banco Caribe"),
+              //         value: 6,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("Banco Cibao"),
+              //         value: 7,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("Banco de Ahorro y Credito Caribe"),
+              //         value: 9,
+              //       ),
+              //       DropdownMenuItem(
+              //         child: Text("Otros"),
+              //         value: 9,
+              //       ),
+              //     ],
+              //     onChanged: this.efectivo
+              //         ? null
+              //         : (value) {
+              //             switch (value) {
+              //               case 1:
+              //                 bancodelpagoController.text = 'POPULAR';
+              //                 break;
+              //               case 2:
+              //                 bancodelpagoController.text = 'BHD';
+              //                 break;
+              //               case 3:
+              //                 bancodelpagoController.text = 'Banreserva';
+              //                 break;
+              //               case 4:
+              //                 bancodelpagoController.text = 'Scotia Bank';
+              //                 break;
+              //               case 5:
+              //                 bancodelpagoController.text = 'APAP';
+              //                 break;
+              //               case 6:
+              //                 bancodelpagoController.text = 'Banco Caribe';
+              //                 break;
+              //               case 7:
+              //                 bancodelpagoController.text = 'Banco Cibao';
+              //                 break;
+              //               case 8:
+              //                 bancodelpagoController.text =
+              //                     'Banco de Ahorro y Credito Caribe';
+              //                 break;
+              //               default:
+              //             }
+              //           }
+
+              //     // onChanged: this.efectivo
+              //     //     ? (value) => setState(() => {this.efectivo = true})
+              //     //     : null,
+              //     // hint: Text("Select Your Technology"),
+              //     // disabledHint: Text("First Select Your Field"),
+              //     ),
               TextFormField(
                 controller: numerodechequeController,
                 decoration: InputDecoration(labelText: 'Num. Cheque	'),
@@ -775,15 +828,15 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
                   decoration: InputDecoration(labelText: 'Fecha Cheque'),
                   enabled: this.efectivo ? false : true,
                   onTap: () async {
-                    DateTime date = DateTime(1900);
+                    DateTime? date = DateTime(1900);
                     FocusScope.of(context).requestFocus(new FocusNode());
 
-                    date = (await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime(2100)))!;
-                    fechaChequeController.text = date.toIso8601String();
+                    // date = (await showDatePicker(
+                    //     context: context,
+                    //     initialDate: DateTime.now(),
+                    //     firstDate: DateTime(1900),
+                    //     lastDate: DateTime(2100)));
+                    // fechaChequeController.text = date as String;
                   }),
               Container(
                 alignment: Alignment.topLeft,
@@ -793,7 +846,8 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
                       if (valordelpago != null) {
                         Pago.actualizarmontodelpago(
                             valordelpagoController.value.text);
-                        Pago.actualizarpago(this.clienteid.toString());
+                        Pago.actualizarpago(this.clienteid.toString(),
+                            _selectedValueFormaDePago);
 
                         await showSearch(
                             context: context, delegate: BuscarFacturaEnPagos());
@@ -866,13 +920,13 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    'Fecha Emsión	',
+                                    'Fecha Emisión	',
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    facturaTemp[index].fechaFactura,
+                                    facturaTemp[index].fechaFactura.toString(),
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ],
@@ -892,7 +946,9 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    facturaTemp[index].fechaVencimiento,
+                                    facturaTemp[index]
+                                        .fechaVencimiento
+                                        .toString(),
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ],
@@ -912,7 +968,9 @@ class _realizarPagoPageState extends State<RealizarPagodeprueba> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    facturaTemp[index].valorFactura.toString(),
+                                    facturaTemp[index]
+                                        .valorFactura
+                                        .toStringAsFixed(2),
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ],
@@ -1089,6 +1147,23 @@ class PagoTemporal {
 
   static List<PagoTemporal> getDetalleFactura() {
     return pagos;
+  }
+
+  static void guardarDetallePago(int pagoId, String formaPago) {
+    pagos.forEach((element) {
+      var detale = PagoDetalle(
+          pagoId: pagoId,
+          formaDePago: formaPago,
+          compagni: element.compagni,
+          facturaId: element.facturaId,
+          id: 0,
+          activo: 0,
+          isDelete: 0,
+          montoAplicado: element.montoAplicado,
+          sincronizado: 0,
+          montoDeFacturaAlMomento: element.montoDeFacturaAlMomento);
+      DatabaseHelper.instance.aregardetalledePagoAsincronizar(detale);
+    });
   }
 
   static eliminarpago(int index) {

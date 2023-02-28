@@ -132,15 +132,16 @@ class _editClienteScreenState extends State<EditarCliente> {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
                   decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Descuento',
-                  ),
+                      border: UnderlineInputBorder(),
+                      labelText: 'Descuento',
+                      enabled: false),
                 ),
               ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
+                  maxLines: 3,
                   controller: commentController,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),

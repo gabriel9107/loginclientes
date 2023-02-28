@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../clases/detalleFactura.dart';
+import '../clases/modelos/resumen.dart';
 
 class FacturaDetalleServices extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
@@ -36,23 +37,9 @@ class FacturaDetalleServices extends ChangeNotifier {
     detalles.forEach((element) {
       DatabaseHelper.instance.SincronizarDefalleFactura(element);
     });
-    // print(detalles[0].facturaId.toString());
-    // final facturamap = Factura.fromJson(facturaMap);
 
-    // facturaMap.forEach((key, value) {
-    //   // if (value != "") {
-    //   final temp = FacturaDetalleAsync.fromJson(value);
-
-    //   FacturaDetalleAsync detalleAsync = FacturaDetalleAsync(
-    //       facturaNumero: temp.facturaNumero,
-    //       lineaNumero: temp.lineaNumero,
-    //       nombre: temp.nombre,
-    //       precioDeventa: temp.precioDeventa,
-    //       productoCodigo: temp.productoCodigo,
-    //       qty: temp.qty,
-    //       montoLinea: temp.montoLinea);
-
-    //   DatabaseHelper.instance.SincronizarDefalleFactura(detalleAsync);
-    // });
+    Resumen.resumentList.add(Resumen(
+        accion: 'Facturas Detalle Sincronizados',
+        cantidad: detalles.length.toString()));
   }
 }

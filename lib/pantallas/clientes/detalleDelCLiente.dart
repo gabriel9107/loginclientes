@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/factura.dart';
+import 'package:sigalogin/clases/modelos/pagodetalle.dart';
+import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/clases/themes.dart';
 
 import 'package:sigalogin/pantallas/Pagos/realizarPago.dart';
@@ -13,6 +15,7 @@ import '../Pagos/pago.dart';
 import '../Pagos/pagodeprueba.dart';
 import '../alertas.dart';
 import 'new_cliente.dart';
+import 'package:intl/intl.dart';
 
 class DetalleDelCliente extends StatelessWidget {
   String? customerCode;
@@ -24,11 +27,12 @@ class DetalleDelCliente extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             bottom: const TabBar(
               tabs: [
+                Tab(icon: Icon(Icons.card_giftcard), text: 'Pedidos'),
                 Tab(
                   icon: Icon(Icons.inventory),
                   text: 'Facturas',
@@ -61,6 +65,9 @@ class DetalleDelCliente extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
+              // ListadoPedidos(const Icon(Icons.send), customerCode.toString()),
+              ListadoPedidos(
+                  const Icon(Icons.directions_car), customerCode.toString()),
               ListFactura(
                   const Icon(Icons.directions_car), customerCode.toString()),
               ListPagos(
@@ -70,6 +77,104 @@ class DetalleDelCliente extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ListadoPedidos extends StatelessWidget {
+  Icon ic = const Icon(Icons.send);
+  String customerCode;
+  ListadoPedidos(this.ic, this.customerCode, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Pedido>>(
+      future:
+          DatabaseHelper.instance.obtenerPedidosPorClient(this.customerCode),
+      builder: (BuildContext context, AsyncSnapshot<List<Pedido>> snapshot) {
+        Future<void> _showMyDialog() async {
+          return showDialog<void>(
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Country List'),
+              );
+            },
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return Center(child: Text('Cargando...'));
+        }
+        return snapshot.data!.isEmpty
+            ? Center(child: Text('No existen Facturas en el momento...'))
+            : ListView(
+                children: snapshot.data!.map((pedido) {
+                  return Card(
+                    color: Colors.white,
+                    elevation: 2.0,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Icon(Icons.inventory),
+                      ),
+                      title:
+                          Text('Pedido Numero :' + ' ' + pedido.id.toString()),
+                      subtitle: Text(
+                        'Fecha Numero' + pedido.fechaOrden.toString(),
+                        textAlign: TextAlign.left,
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Column(
+                                children: [
+                                  Text('Monto pedido  : ',
+                                      textAlign: TextAlign.left)
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text('Estado : ', textAlign: TextAlign.left)
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    pedido.totalAPagar.toString(),
+                                  ),
+                                  Text(('Pendiente').toString(),
+                                      style:
+                                          TextStyle(color: Colors.deepOrange),
+                                      textAlign: TextAlign.left),
+                                ],
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        // _showMyDialog();
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             DetalleDeFactura(pedidos.facturaId))
+                        // );
+                      },
+                    ),
+                  );
+                }).toList(),
+              );
+      },
     );
   }
 }
@@ -144,17 +249,27 @@ class ListFactura extends StatelessWidget {
                       title: Text('Factura Numero :' +
                           ' ' +
                           factura.facturaId.toString()),
-                      subtitle: Text('Pedido Numero' + ' ' + factura.pedidoId),
+                      subtitle: Text(
+                        'Pedido Numero' + ' ' + factura.pedidoId,
+                        textAlign: TextAlign.left,
+                      ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Column(
-                                children: [Text('Monto Pagado : ')],
+                                children: [
+                                  Text('Monto Pagado : ',
+                                      textAlign: TextAlign.left)
+                                ],
                               ),
                               Column(
-                                children: [Text('Monto Pendiente : ')],
+                                children: [
+                                  Text('Monto Pendiente : ',
+                                      textAlign: TextAlign.left)
+                                ],
                               ),
                             ],
                           ),
@@ -166,8 +281,10 @@ class ListFactura extends StatelessWidget {
                                     factura.montoFactura.toString(),
                                   ),
                                   Text(
-                                    factura.totalPagado.toString(),
-                                  ),
+                                      ((factura.montoFactura -
+                                              factura.totalPagado))
+                                          .toString(),
+                                      textAlign: TextAlign.left),
                                 ],
                               )
                             ],
@@ -198,10 +315,11 @@ class ListPagos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Pago>>(
+    return FutureBuilder<List<PagoDetalleLista>>(
         future: DatabaseHelper.instance
-            .obtenerPagosPorClientes(this.clientesId.toString()),
-        builder: (BuildContext context, AsyncSnapshot<List<Pago>> snapshot) {
+            .obtenerDetalleDePagoPorCliente(this.clientesId.toString()),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<PagoDetalleLista>> snapshot) {
           if (!snapshot.hasData) {
             return Center(child: Text('Cargando...'));
           }
@@ -217,16 +335,24 @@ class ListPagos extends StatelessWidget {
                             backgroundColor: Colors.blue,
                             child: Icon(Icons.monetization_on),
                           ),
+
                           title: Text('Numero de Pago : ' + pago.id.toString()),
-                          subtitle: Text(
-                              'Fecha del pago :' + pago.fechaPago.toString()),
+
+                          subtitle: Text('Fecha del pago : ' +
+                              DateFormat('dd-MM-yyy').format(pago.fechaPago)),
+                          // subtitle: Text(
+                          //     'Fecha del pago :' + pago.fechaPago.toString()),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Column(
-                                    children: [Text('Factura : ')],
+                                    children: [
+                                      Text('Factura : ' +
+                                          pago.facturaId.toString())
+                                    ],
                                   ),
                                   Column(
                                     children: [
@@ -234,20 +360,29 @@ class ListPagos extends StatelessWidget {
                                           pago.metodoDePago.toString())
                                     ],
                                   ),
-                                ],
-                              ),
-                              Column(
-                                children: [
                                   Column(
                                     children: [
-                                      Text('Monto'),
-                                      Text(
-                                        pago.montoPagado.toString(),
-                                      ),
+                                      Text('Monto : ' +
+                                          pago.montoPagado.toString())
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
+                              Container(
+                                height: 10,
+                              ),
+                              // Column(
+                              //   children: [
+                              //     Column(
+                              //       children: [
+                              //         Text('Monto'),
+                              //         Text(
+                              //           pago.montoPagado.toString(),
+                              //         ),
+                              //       ],
+                              //     )
+                              //   ],
+                              // ),
                             ],
                           ),
                         ));

@@ -95,9 +95,9 @@ class MyCustomForm extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextFormField(
             decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Descuento',
-            ),
+                border: UnderlineInputBorder(),
+                labelText: 'Descuento',
+                enabled: true),
           ),
         ),
         Padding(

@@ -91,6 +91,9 @@
 
 import 'dart:convert';
 
+import '../../servicios/db_helper.dart';
+import '../global.dart';
+
 class Producto {
   Producto({
     this.id,
@@ -145,4 +148,28 @@ class Producto {
         "Sincronizado": sincronizado,
         "TipodeVenta": tipodeVenta,
       };
+
+  static Future obtenerProductos() async {
+    var documento =
+        await DatabaseHelper.instance.getProductos() as List<Producto>;
+
+    if (ListaProducto == false) {
+      documento.forEach((element) {
+        Producto producto = new Producto(
+            cantidad: element.cantidad,
+            codigo: element.codigo,
+            compagnia: element.compagnia,
+            isDelete: element.isDelete,
+            nombre: element.nombre,
+            ouM: element.ouM,
+            precio: element.precio,
+            sincronizado: element.sincronizado,
+            tipodeVenta: element.tipodeVenta,
+            id: element.id);
+        TodosProductos.add(producto);
+      });
+      ListaProducto = true;
+    }
+    return documento;
+  }
 }

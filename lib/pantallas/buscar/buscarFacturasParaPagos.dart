@@ -99,7 +99,8 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                       montoDeFacturaAlMomento:
                           (suggestion.montoFactura - suggestion.totalPagado),
                       sincronizado: 0,
-                      valorFactura: suggestion.montoFactura,
+                      valorFactura:
+                          (suggestion.montoFactura * 100).round() / 100.0,
                       valorPendiente:
                           (suggestion.montoFactura - suggestion.totalPagado),
                     );

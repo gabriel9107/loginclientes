@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sigalogin/clases/factura.dart';
 
+import '../clases/modelos/resumen.dart';
 import 'db_helper.dart';
 
 class FacturaServices extends ChangeNotifier {
@@ -39,6 +40,9 @@ class FacturaServices extends ChangeNotifier {
       DatabaseHelper.instance.AddFactura(factura);
     });
 
+    Resumen.resumentList.add(Resumen(
+        accion: 'Facturas Sincronizados',
+        cantidad: facturas.length.toString()));
     // if (value != "") {
     //   final temp = Factura.fromJson(value);
 

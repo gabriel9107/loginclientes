@@ -17,7 +17,7 @@ class FacturaMaster {
   String subtotal;
   String montoDescuento;
   String montoImpuesto;
-  String totalApagar;
+  double totalApagar;
 
   FacturaMaster(
       {required this.iD,
@@ -55,7 +55,7 @@ class FacturaMaster {
           montoDescuento: numberFormat(descuento),
           montoImpuesto: numberFormat(0),
           subtotal: numberFormat(subtotal),
-          totalApagar: numberFormat(totalApagar));
+          totalApagar: totalApagar);
     }
     cantidadArticulos = FacturaDetalle.getFacturaDetalle()
         .map((e) => e.cantidadProducto)
@@ -85,7 +85,7 @@ class FacturaMaster {
         montoDescuento: numberFormat(descuento),
         montoImpuesto: numberFormat(impuesto),
         subtotal: numberFormat(subtotal),
-        totalApagar: numberFormat(totalApagar));
+        totalApagar: totalApagar);
   }
 
   int impuestoPorEmpleador() {

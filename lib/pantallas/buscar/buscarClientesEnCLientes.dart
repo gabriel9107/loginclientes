@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/modelos/clientes.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
+import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
+import 'package:sigalogin/pantallas/pedidos/pedidos.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../../clases/customers.dart';
@@ -44,13 +46,14 @@ class MySearchDelegateParaClientesEnClientes extends SearchDelegate {
     List<Cliente> _listaClientes = [];
 
     Customers.getCustomers().then((value) {
-      if (value != null) value.forEach((item) => _listaClientes.add(item));
+      value.forEach((item) => _listaClientes.add(item));
     });
 
     _listaClientes = TodosLosClientes.cast<Cliente>().toList();
 
     List<Cliente> suggestions = _listaClientes.where((element) {
-      final result = element.nombre.toString().toLowerCase();
+      final result = element.nombre.toString().toLowerCase() +
+          element.codigo.toString().toLowerCase();
       final input = query.toLowerCase();
       return result.contains(input);
     }).toList();
@@ -77,7 +80,7 @@ class MySearchDelegateParaClientesEnClientes extends SearchDelegate {
                               builder: (context) => CartPage(
                                   suggestion.codigo.toString(),
                                   suggestion.nombre)));
-                      TodosLosClientes = [];
+                      // TodosLosClientes = [];
                     },
                     child: const Icon(Icons.add)),
               )
@@ -86,7 +89,13 @@ class MySearchDelegateParaClientesEnClientes extends SearchDelegate {
 
           // Icon(Icons.add),
           onTap: () {
-            query = suggestion.codigo;
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetalleDelCliente(
+                        suggestion.codigo.toString(), suggestion.nombre)));
+
+            // query = suggestion.nombre;
           },
         );
       },

@@ -117,41 +117,62 @@ String pagoDetalleToJson(Map<String, PagoDetalle> data) => json.encode(
     Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
 
 class PagoDetalle {
-  PagoDetalle({
-    required this.compagni,
-    required this.facturaId,
-    required this.id,
-    required this.isDelete,
-    required this.montoAplicado,
-    required this.sincronizado,
-    required this.montoDeFacturaAlMomento,
-  });
+  PagoDetalle(
+      {this.id,
+      this.pagoId,
+      required this.formaDePago,
+      required this.facturaId,
+      required this.montoAplicado,
+      required this.montoDeFacturaAlMomento,
+      required this.sincronizado,
+      required this.compagni,
+      required this.isDelete,
+      required this.activo,
+      this.estado});
 
-  int compagni;
+  int? id;
+  int? pagoId;
   String facturaId;
-  int id;
-  int isDelete;
+  String formaDePago;
   double montoAplicado;
-  int sincronizado;
   double montoDeFacturaAlMomento;
+  int sincronizado;
+  int compagni;
+  int isDelete;
+  int activo;
+  int? estado;
+
+  Map<String, dynamic> toJsonsqlinsert() => {
+        "pagoId": pagoId,
+        "facturaId": facturaId,
+        "formaDePago": formaDePago,
+        "montoAplicado": montoAplicado,
+        "montoDeFacturaAlMomento": montoDeFacturaAlMomento,
+        "sincronizado": sincronizado,
+        "compagni": compagni,
+        "isDelete": isDelete,
+      };
 
   factory PagoDetalle.fromJson(Map<String, dynamic> json) => PagoDetalle(
-        compagni: json["Compagni"],
-        facturaId: json["FacturaId"],
         id: json["Id"],
-        isDelete: json["IsDelete"],
-        montoAplicado: json["MontoAplicado"]?.toDouble(),
-        sincronizado: json["Sincronizado"],
+        facturaId: json["facturaId"],
+        pagoId: json["pagoId"],
+        montoAplicado: json["montoAplicado"]?.toDouble(),
         montoDeFacturaAlMomento: json["montoDeFacturaAlMomento"]?.toDouble(),
+        sincronizado: json["sincronizado"],
+        compagni: json["compagni"],
+        isDelete: json["isDelete"],
+        activo: 0,
+        formaDePago: json["FormaDePago"],
       );
 
   Map<String, dynamic> toJson() => {
+        "pagoId": pagoId,
         "Compagni": compagni,
-        "FacturaId": facturaId,
-        "Id": id,
+        "facturaId": facturaId,
         "IsDelete": isDelete,
-        "MontoAplicado": montoAplicado,
-        "Sincronizado": sincronizado,
+        "montoAplicado": montoAplicado,
+        "sincronizado": sincronizado,
         "montoDeFacturaAlMomento": montoDeFacturaAlMomento,
       };
 
@@ -188,4 +209,33 @@ class PagoDetalle {
     }
     return 0;
   }
+}
+
+class PagoDetalleLista {
+  PagoDetalleLista(
+      {this.id,
+      this.facturaId,
+      required this.fechaPago,
+      this.metodoDePago,
+      this.montoPagado});
+
+  int? id;
+  DateTime fechaPago;
+  String? facturaId;
+  String? metodoDePago;
+  double? montoPagado;
+
+  factory PagoDetalleLista.fromMapSqlLiteWitId(Map<String, dynamic> json) =>
+      PagoDetalleLista(
+          id: json["id"],
+          fechaPago: DateTime.parse(json["fechaPago"]),
+          metodoDePago: json["MetodoDePago"],
+          montoPagado: json["montoPagado"]?.toDouble(),
+          facturaId: json["facturaId"]);
+
+  // int sincronizado;
+  // int compagni;
+  // int isDelete;
+  // int activo;
+  // int? estado;
 }

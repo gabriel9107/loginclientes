@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:sigalogin/clases/customers.dart';
+import 'package:sigalogin/clases/modelos/resumen.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 import '../clases/modelos/clientes.dart';
 
@@ -37,6 +38,10 @@ class ClienteSevices extends ChangeNotifier {
     clientes.forEach((cliente) {
       DatabaseHelper.instance.customerExists(cliente);
     });
+
+    Resumen.resumentList.add(Resumen(
+        accion: 'Clientes Sincronizados',
+        cantidad: clientes.length.toString()));
     // print(this.clientes[0].nombre);
     //
   }

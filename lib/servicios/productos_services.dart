@@ -9,6 +9,7 @@ import 'package:sigalogin/clases/customers.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 import '../clases/modelos/clientes.dart';
 import '../clases/modelos/productos.dart';
+import '../clases/modelos/resumen.dart';
 
 class ProductoServices extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
@@ -41,5 +42,11 @@ class ProductoServices extends ChangeNotifier {
     productos.forEach((producto) {
       DatabaseHelper.instance.addProduct(producto);
     });
+
+    Resumen.resumentList.add(Resumen(
+        accion: 'Productos Sincronizados',
+        cantidad: productos.length.toString()));
+    // print(this.clientes[0].nombre);
+    //
   }
 }

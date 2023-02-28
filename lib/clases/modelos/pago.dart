@@ -225,6 +225,21 @@ class Pago {
         "habilitado": habilitado,
         "NumeroDeCheque": numeroDeCheque,
       };
+  Map<String, dynamic> toJsonsqlinsert() => {
+        "Banco": banco,
+        "ClienteId": clienteId,
+        "Compagni": compagni,
+        "FechaDeCheque": fechaDeCheque,
+        "FechaPago": fechaPago,
+        "IsDelete": isDelete,
+        "MetodoDePago": metodoDePago,
+        "MontoPagado": montoPagado,
+        "Pendiente": pendiente,
+        "Sincronizado": sincronizado,
+        "VendorID": vendorId,
+        "habilitado": habilitado,
+        "NumeroDeCheque": numeroDeCheque,
+      };
 
   factory Pago.fromMap(Map<String, dynamic> json) => Pago(
         id: json["ID"],
@@ -235,14 +250,30 @@ class Pago {
         fechaPago: json["FechaPago"],
         metodoDePago: json["MetodoDePago"]!,
         montoPagado: json["MontoPagado"]?.toDouble(),
-        pendiente: json["Pendiente"],
+        pendiente: json["Pendiente"] ? 1 : 0,
         vendorId: json["VendorID"],
         compagni: json["Compagni"],
-        habilitado: json["habilitado"],
+        habilitado: json["habilitado"] ? 1 : 0,
         sincronizado: json["Sincronizado"],
         isDelete: json["IsDelete"],
       );
 
+  factory Pago.fromMapSqlLiteWitId(Map<String, dynamic> json) => Pago(
+        id: json["Id"],
+        clienteId: json["clienteId"],
+        banco: json["banco"],
+        numeroDeCheque: json["numeroDeCheque"],
+        fechaDeCheque: json["fechaDeCheque"],
+        fechaPago: json["fechaPago"],
+        metodoDePago: json["MetodoDePago"],
+        montoPagado: json["montoPagado"]?.toDouble(),
+        pendiente: 0,
+        vendorId: json["vendorId"],
+        compagni: json["compagni"],
+        habilitado: json["habilitado"],
+        sincronizado: json["sincronizado"],
+        isDelete: json["isDelete"],
+      );
   factory Pago.fromMapSqlLite(Map<String, dynamic> json) => Pago(
         clienteId: json["clienteId"],
         banco: json["banco"],
@@ -273,8 +304,11 @@ class Pago {
       vendorId: 'vendorId',
       habilitado: 0);
 // 22301591404
-  static actualizarpago(String clienteId) {
+  static actualizarpago(String clienteId, metodoDePago) {
     pago.clienteId = clienteId;
+    pago.metodoDePago = metodoDePago;
+    pago.vendorId = usuario;
+
     // pago.clienteNombre = update.clienteId;
     // pago.formadePago = update.;
     // pago.banco = update.banco;
@@ -352,12 +386,12 @@ class Pago {
   }
 
   static void guardarPago() {
-    // DatabaseHelper.instance.AgregarPagosWithId(pago).then((value) =>
-    // PagoTemporal(compagni: compagni, fechaFactura: fechaFactura, fechaVencimiento: fechaVencimiento, facturaId: facturaId, id: id, isDelete: isDelete, montoAplicado: montoAplicado, sincronizado: sincronizado, valorFactura: valorFactura, montoDeFacturaAlMomento: montoDeFacturaAlMomento)
-
-    // );
+    var formaDePago = pago.metodoDePago.toString();
+    DatabaseHelper.instance
+        .agregarPagoconID(pago)
+        .then((value) => PagoTemporal.guardarDetallePago(value, formaDePago));
 
     // Pagodetalle.ActualizarFacutas();
-    // pagos.clear();
+    pagos.clear();
   }
 }

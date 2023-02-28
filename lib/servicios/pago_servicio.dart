@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:sigalogin/clases/factura.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 
+import '../clases/modelos/resumen.dart';
 import 'db_helper.dart';
 
 class PagoServices extends ChangeNotifier {
@@ -42,22 +43,7 @@ class PagoServices extends ChangeNotifier {
       DatabaseHelper.instance.agregarPago(pago);
     });
 
-    // if (value != "") {
-    //   final temp = Factura.fromJson(value);
-
-    //   Factura facturas = Factura(
-    //       id: temp.id,
-    //       clienteId: temp.clienteId,
-    //       facturaFecha: temp.facturaFecha,
-    //       facturaId: temp.facturaId,
-    //       facturaVencimiento: temp.facturaVencimiento,
-    //       metodoDePago: temp.metodoDePago,
-    //       montoFactura: temp.montoFactura,
-    //       pedidosId: temp.pedidosId,
-    //       totalPagado: temp.totalPagado);
-
-    //   DatabaseHelper.instance.SincronizarFactura(facturas);
-    // }
-    // });
+    Resumen.resumentList.add(Resumen(
+        accion: 'Pagos Sincronizados', cantidad: pagos.length.toString()));
   }
 }

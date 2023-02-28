@@ -29,7 +29,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'sigaApp11.db');
+    String path = join(documentsDirectory.path, 'sigaApp17.db');
     return await openDatabase(
       path,
       version: 6,
@@ -68,6 +68,7 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE Pedidos(
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        
         NumeroOrden INTEGER,
         ClienteId TEXT,
         FechaOrden TEXT, 
@@ -75,6 +76,7 @@ class DatabaseHelper {
         TotalAPagar REAL,
         Sincronizado INTEGER,
         Compagnia INTEGER,
+        Estado TEXT,
         IsDelete INTEGER
                 )''');
 
@@ -137,6 +139,20 @@ class DatabaseHelper {
         compagni INTEGER ,
         isDelete INTEGER 
         )''');
+
+    await db.execute('''CREATE TABLE PagoDetalle(
+          ID INTEGER PRIMARY KEY AUTOINCREMENT
+         ,pagoId INTEGER
+         ,facturaId TEXT
+         ,formaDePago TEXT
+         ,montoAplicado REAL
+         ,montoDeFacturaAlMomento REAL
+         ,sincronizado INTEGER
+         ,compagni INTEGER
+         ,isDelete INTEGER
+         ,activo INTEGER
+             )''');
+
     // await db.execute('''CREATE TABLE Usuario(
     //        id INTEGER PRIMARY KEY AUTOINCREMENT
     //     ,UsuarioNombre TEXT
@@ -359,12 +375,36 @@ class DatabaseHelper {
 
   Future<int> aregardetalledePagoAsincronizar(PagoDetalle pago) async {
     var db = await instance.database;
-    return await db.insert('DetalleDePago', pago.toJson());
+    return await db.insert('PagoDetalle', pago.toJson());
+  }
+
+  Future<int> aregardetalledePago(PagoDetalle pago) async {
+    var db = await instance.database;
+    return await db.insert('PagoDetalle', pago.toJson());
+  }
+
+  Future<int> agregarPagoconID(Pago pago) async {
+    Database db = await instance.database;
+    int id = await db.insert('Pago', pago.toJsonsqlinsert());
+    return id;
   }
 
   Future<int> agregarPago(Pago pago) async {
     var db = await instance.database;
     return await db.insert('Pago', pago.toJson());
+  }
+
+  Future<List<PagoDetalleLista>> obtenerDetalleDePagoPorCliente(
+      String cliente) async {
+    Database db = await instance.database;
+    var detalle = await db.rawQuery(
+        "SELECT Pago.id, pago.fechaPago, PagoDetalle.facturaId, Pago.MetodoDePago, Pago.montoPagado FROM Pago INNER JOIN PagoDetalle ON Pago.Id = PagoDetalle.pagoId Where clienteId ='$cliente'");
+
+    List<PagoDetalleLista> listadePagos = detalle.isNotEmpty
+        ? detalle.map((e) => PagoDetalleLista.fromMapSqlLiteWitId(e)).toList()
+        : [];
+
+    return listadePagos;
   }
 
   Future<List<Pago>> obtenerPagosPorClientes(String cliente) async {
@@ -373,7 +413,20 @@ class DatabaseHelper {
         await db.rawQuery("SELECT * FROM Pago where clienteId ='$cliente'");
 
     List<Pago> listadePagos = pagos.isNotEmpty
-        ? pagos.map((e) => Pago.fromMapSqlLite(e)).toList()
+        ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
+        : [];
+
+    return listadePagos;
+  }
+
+  Future<List<Pago>> obtenerPagosPorClientesConNumeroDeFactura(
+      String cliente) async {
+    Database db = await instance.database;
+    var pagos = await db
+        .rawQuery("SELECT * FROM Pago inner join where clienteId ='$cliente'");
+
+    List<Pago> listadePagos = pagos.isNotEmpty
+        ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
         : [];
 
     return listadePagos;
@@ -416,6 +469,17 @@ class DatabaseHelper {
     return await db.insert('Productos', producto.toMap());
   }
 
+  Future<List<Pedido>> obtenerPedidosPorClient(String clienteid) async {
+    Database db = await instance.database;
+
+    var res = await db
+        .rawQuery("SELECT * FROM Pedidos where clienteId = '$clienteid'");
+
+    List<Pedido> ordenesLista =
+        res.isNotEmpty ? res.map((c) => Pedido.fromMapsqlite(c)).toList() : [];
+    return ordenesLista;
+  }
+
   Future<List<Pedido>> getOrdenes() async {
     Database db = await instance.database;
     var ordenes = await db.query('Pedidos', orderBy: 'ID');
@@ -448,15 +512,15 @@ class DatabaseHelper {
   //   return await db.insert('SalesOrders', pedido.toMap());
   // }
 
-  Future<int> AddSalesWithId(OrdenVenta pedido) async {
+  Future<int> AddSalesWithId(Pedido pedido) async {
     Database db = await instance.database;
-    int id = await db.insert('SalesOrders', pedido.toMap());
+    int id = await db.insert('Pedidos', pedido.toMapSql());
     return id;
   }
 
-  Future<int> AddSalesDetalle(OrdenVentaDetalle detallePedido) async {
+  Future<int> AddSalesDetalle(PedidoDetalle detallePedido) async {
     Database db = await instance.database;
-    return await db.insert('SalesLines', detallePedido.toMap());
+    return await db.insert('PedidoDetalle', detallePedido.toMapInsert());
   }
 
 // //obtener el proximo numero de orden

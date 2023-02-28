@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:sigalogin/clases/pedidoDetalle.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
+import '../clases/modelos/resumen.dart';
+
 class PedidoDetalleServicio extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
   final List<PedidoDetalle> detalle = [];
@@ -28,9 +30,12 @@ class PedidoDetalleServicio extends ChangeNotifier {
       this.detalle.add(temp);
     });
 
-    print(this.detalle[0].pedidoId);
     detalle.forEach((pedido) {
       DatabaseHelper.instance.AgregarPedidoDetalle(pedido);
     });
+
+    Resumen.resumentList.add(Resumen(
+        accion: 'Pedidos Detalle Sincronizados',
+        cantidad: detalle.length.toString()));
   }
 }

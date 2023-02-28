@@ -8,7 +8,7 @@ class Resumen {
 
   static List<Resumen> resumentList = [];
 
-  static List<Resumen> obtenerResumen(Resumen resumen) {
+  static List<Resumen> obtenerResumen() {
     return resumentList.toList();
   }
 

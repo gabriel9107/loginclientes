@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/ordenDeventa.dart';
+import 'package:sigalogin/clases/pedidoDetalle.dart';
+import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
@@ -146,34 +148,51 @@ class CartBottomNavBar extends StatelessWidget {
                             color: Colors.white),
                       ),
                       onPressed: (() {
-                        OrdenVenta orden = OrdenVenta(
-                            cash: totales.totalApagar.toString(),
-                            ordenNumero: "1",
-                            change: "0",
-                            customerID: idCliente.toString(),
-                            date: DateTime.now().toString(),
-                            gPID: "",
-                            isDelete: "0",
-                            totals: totales.totalApagar,
-                            userName: usuario,
-                            vAT: totales.montoImpuesto,
-                            status: "Activo",
-                            commets: 'NO comentario');
+                        Pedido pedido = Pedido(
+                            clienteId: this.idCliente.toString().trim(),
+                            fechaOrden: DateTime.now(),
+                            totalAPagar: totales.totalApagar,
+                            compagnia: compagnia,
+                            sincronizado: 0,
+                            isDelete: 0,
+                            estado: 'Pendiente');
+                        // Pedi orden = OrdenVenta(
+                        //     cash: totales.totalApagar.toString(),
+                        //     ordenNumero: "1",
+                        //     change: "0",
+                        //     customerID: idCliente.toString(),
+                        //     date: DateTime.now().toString(),
+                        //     gPID: "",
+                        //     isDelete: "0",
+                        //     totals: totales.totalApagar,
+                        //     userName: usuario,
+                        //     vAT: totales.montoImpuesto,
+                        //     status: "Activo",
+                        //     commets: 'NO comentario');
 
                         DatabaseHelper.instance
-                            .AddSalesWithId(orden)
+                            .AddSalesWithId(pedido)
                             .then((value) => {
                                   detalle.forEach((element) {
-                                    OrdenVentaDetalle detalleventa =
-                                        new OrdenVentaDetalle(
-                                            salesOrdersID: value.toString(),
-                                            price: element.montoproducto,
-                                            qty: element.cantidadProducto,
-                                            productCode: element.codigoProducto,
-                                            productName:
-                                                element.nombreProducto);
+                                    PedidoDetalle detalle = new PedidoDetalle(
+                                        codigo: element.codigoProducto,
+                                        nombre: element.nombreProducto,
+                                        cantidad: element.cantidadProducto,
+                                        precio: element.montoproducto,
+                                        pedidoId: value.toString(),
+                                        compagnia: compagnia,
+                                        isDelete: 0,
+                                        sincronizado: 0);
+                                    // OrdenVentaDetalle detalleventa =
+                                    //     new OrdenVentaDetalle(
+                                    //         salesOrdersID: value.toString(),
+                                    //         price: element.montoproducto,
+                                    //         qty: element.cantidadProducto,
+                                    //         productCode: element.codigoProducto,
+                                    //         productName:
+                                    //             element.nombreProducto);
                                     DatabaseHelper.instance
-                                        .AddSalesDetalle(detalleventa);
+                                        .AddSalesDetalle(detalle);
                                   })
                                 });
 

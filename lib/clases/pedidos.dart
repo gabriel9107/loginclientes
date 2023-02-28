@@ -10,14 +10,14 @@ class Contact {
 
 class pedidos {
   late String Id;
-  String OrdenNumero;
+  String NumeroOrden;
   String IdCliente;
   String CodigoProducto;
   String Cantidad;
   String Precio;
   String Descuento;
 
-  pedidos(this.OrdenNumero, this.IdCliente, this.CodigoProducto, this.Cantidad,
+  pedidos(this.NumeroOrden, this.IdCliente, this.CodigoProducto, this.Cantidad,
       this.Precio, this.Descuento);
 }
 
@@ -26,17 +26,17 @@ class pedidos {
 //     final pedido = pedidoFromMap(jsonString);
 
 class Pedido {
-  Pedido({
-    this.id,
-    required this.clienteId,
-    required this.fechaOrden,
-    this.numeroOrden,
-    this.impuestos,
-    required this.totalAPagar,
-    required this.compagnia,
-    required this.sincronizado,
-    required this.isDelete,
-  });
+  Pedido(
+      {this.id,
+      required this.clienteId,
+      required this.fechaOrden,
+      this.numeroOrden,
+      this.impuestos,
+      required this.totalAPagar,
+      required this.compagnia,
+      required this.sincronizado,
+      required this.isDelete,
+      this.estado});
 
   int? id;
   String clienteId;
@@ -47,6 +47,7 @@ class Pedido {
   int sincronizado;
   int isDelete;
   int compagnia;
+  String? estado;
 
   factory Pedido.fromJson(String str) => Pedido.fromMap(json.decode(str));
 
@@ -68,7 +69,7 @@ class Pedido {
         clienteId: json["ClienteId"].toString().trim(),
         compagnia: json["Compagnia"],
         fechaOrden: DateTime.parse(json["FechaOrden"]),
-        impuestos: json["Impuestos"].toDouble(),
+        impuestos: json["Impuestos"],
         isDelete: json["IsDelete"],
         numeroOrden: json["NumeroOrden"],
         sincronizado: json["Sincronizado"],
@@ -85,6 +86,18 @@ class Pedido {
         "NumeroOrden": numeroOrden,
         "Sincronizado": sincronizado,
         "totalAPagar": totalAPagar,
+      };
+
+  Map<String, dynamic> toMapSql() => {
+        "ClienteId": clienteId,
+        "Compagnia": compagnia,
+        "FechaOrden": fechaOrden.toIso8601String(),
+        "Impuestos": impuestos,
+        "IsDelete": isDelete,
+        "NumeroOrden": numeroOrden,
+        "Sincronizado": sincronizado,
+        "totalAPagar": totalAPagar,
+        "Estado": estado
       };
 
   Map<String, dynamic> toMapSqli() => {

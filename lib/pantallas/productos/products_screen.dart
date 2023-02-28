@@ -11,6 +11,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../clases/customers.dart';
 import '../../clases/product.dart';
 import '../../servicios/db_helper.dart';
+import '../busquedas/busquedaProductosenProducto.dart';
 
 class ProductsList extends StatefulWidget {
   @override
@@ -38,7 +39,10 @@ class ProductsListState extends State<ProductsList> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () => {},
+            onPressed: () => {
+              showSearch(
+                  context: context, delegate: MySearchDelegateParaProductos())
+            },
           )
         ],
       ),

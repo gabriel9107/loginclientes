@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/product.dart';
+import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../../clases/facturaDetalle.dart';
+import '../../clases/global.dart';
+import '../../clases/modelos/productos.dart';
 
 class MySearchDelegateParaProductos extends SearchDelegate {
   @override
@@ -35,8 +39,18 @@ class MySearchDelegateParaProductos extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<Productos> suggestions = Productos.getProductos().where((element) {
-      final result = element.nombreProducto.toLowerCase();
+    List<Producto> listaProductos = [];
+
+    Producto.obtenerProductos().then((value) {
+      value.forEach((item) => listaProductos.add(item));
+    });
+    if (listaProductos.length == 0) {
+      listaProductos = TodosProductos;
+    }
+
+    List<Producto> suggestions = listaProductos.where((element) {
+      final result =
+          element.nombre.toLowerCase() + element.codigo.toLowerCase();
       final input = query.toLowerCase();
 
       return result.contains(input);
@@ -47,50 +61,55 @@ class MySearchDelegateParaProductos extends SearchDelegate {
       itemBuilder: (context, index) {
         final suggestion = suggestions[index];
         return ListTile(
-          title: Text('Nombre: ' + suggestion.descripcionProducto),
-          subtitle: Text('Costo : ' + suggestion.precioProducto.toString()),
+          title: Text(
+            'Articulo: ' + suggestion.nombre.toString(),
+            style: TextStyle(
+                fontSize: 16, color: Colors.black, fontStyle: FontStyle.italic),
+          ),
+          subtitle: Text('Costo : ' + suggestion.precio.toString()),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.production_quantity_limits)),
-              Container(
-                width: 100,
-                child: TextField(
-                  controller: textController,
-                  decoration: InputDecoration(hintText: 'Cantidad'),
-                  keyboardType: TextInputType.numberWithOptions(
-                      signed: false, decimal: true),
-                  onTap: () {
-                    query = suggestion.nombreProducto;
-                  },
-                ),
-              ),
-              Container(
-                alignment: Alignment.topRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    int valor = int.parse(textController.text.toString());
+              // IconButton(
+              //     onPressed: () {},
+              //     icon: Icon(Icons.production_quantity_limits)),
+              // Container(
+              //   width: 100,
+              //   child: TextField(
+              //     controller: textController,
+              //     decoration: InputDecoration(hintText: 'Cantidad'),
+              //     keyboardType: TextInputType.numberWithOptions(
+              //         signed: false, decimal: true),
+              //     onTap: () {
+              //       query = suggestion.nombre;
+              //     },
+              //   ),
+              // ),
+              // Container(
+              //   alignment: Alignment.topRight,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       int valor = int.parse(textController.text.toString());
 
-                    if (valor != null) {
-                      FacturaDetalle.addfacturaDetalle(FacturaDetalle(
-                          facturaNumero: "1",
-                          codigoProducto: suggestion.codigoProducto,
-                          montoproducto: suggestion.precioProducto,
-                          nombreProducto: suggestion.nombreProducto,
-                          cantidadProducto:
-                              int.parse(textController.text.toString())));
-                      close(context, null);
-                    }
-                  },
-                  child: Text('Agregar'),
-                ),
-              )
+              //       if (valor != null) {
+              //         FacturaDetalle.addfacturaDetalle(FacturaDetalle(
+              //             facturaNumero: "1",
+              //             codigoProducto: suggestion.codigo,
+              //             montoproducto: suggestion.precio,
+              //             nombreProducto: suggestion.nombre,
+              //             cantidadProducto:
+              //                 int.parse(textController.text.toString())));
+              //         close(context, null);
+              //       }
+              //     },
+              //     child: Text('Agregar'),
+              //   ),
+              // )
             ],
           ),
           onTap: () {
-            query = suggestion.nombreProducto;
+            query = suggestion.nombre;
+            listaProductos = [];
           },
         );
       },

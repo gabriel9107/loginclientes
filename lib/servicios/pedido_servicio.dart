@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sigalogin/servicios/db_helper.dart';
 
+import '../clases/modelos/resumen.dart';
+
 class PedidoServicio extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
   final List<Pedido> pedidos = [];
@@ -32,5 +34,9 @@ class PedidoServicio extends ChangeNotifier {
     pedidos.forEach((pedido) {
       DatabaseHelper.instance.AgregarPedido(pedido);
     });
+    Resumen.resumentList.add(Resumen(
+        accion: 'Pedidos Sincronizados', cantidad: pedidos.length.toString()));
+    // print(this.clientes[0].nombre);
+    //
   }
 }
