@@ -84,13 +84,16 @@ class _ListaOedidosState extends State<pedidosLista> {
 
                               // pedidos.fechaOrden.toString() +
                               ' | Total : ' +
-                              pedidos.totalAPagar.toString()),
+                              pedidos.totalAPagar.toStringAsFixed(2)),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               IconButton(
                                 icon: Icon(
                                   Icons.check,
+                                  color: pedidos.sincronizado == 1
+                                      ? Colors.red
+                                      : Colors.blue,
                                 ),
                                 onPressed: () {
                                   print("debe de sincronizar la orden");

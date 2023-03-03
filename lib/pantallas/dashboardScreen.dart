@@ -20,8 +20,8 @@ class DashboardScreen extends StatefulWidget {
 
 class DashboardScreenState extends State<DashboardScreen> {
   var cantidadDevisitas =
-      0; //DatabaseHelper.instance.CantidadDeClientesPorMes();
-  int fijos = 503;
+      305; //DatabaseHelper.instance.CantidadDeClientesPorMes();
+  int fijos = 105;
   late var ventas = 422; //DatabaseHelper.instance.CantidadDeVentas();
   var cobros = 125; //DatabaseHelper.instance.cantidadDeCobros();
 
@@ -64,7 +64,7 @@ class DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    obtenerCantidadesDeCleintes();
+    // obtenerCantidadesDeCleintes();
     // Clients = Client.getClients();
     super.initState();
   }
@@ -105,11 +105,11 @@ class DashboardScreenState extends State<DashboardScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "345",
+                                      "93",
                                       style: textBold,
                                     ),
                                     Text(
-                                      "REACH",
+                                      "Meta",
                                       style: textSemiBold,
                                     ),
                                     Row(
@@ -217,7 +217,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                             child: ListTileCustom(
                               bgColor: yellowLight,
                               pathIcon: "starts.svg",
-                              title: "Fijos",
+                              title: "Nuevos Clientes",
                               subTitle: fijos.toString(),
                             ),
                           ),

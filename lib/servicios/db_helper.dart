@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 
 import 'package:sigalogin/clases/factura.dart';
 
@@ -29,7 +28,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'sigaApp17.db');
+    String path = join(documentsDirectory.path, 'sigaApp25.db');
     return await openDatabase(
       path,
       version: 6,
@@ -48,6 +47,7 @@ class DatabaseHelper {
         comentario TEXT,
         codigoVendedor TEXT,
         creadoEn TEXT,
+        
         sincronizado INTEGER,
         compagnia INTEGER,
         activo INTEGER
@@ -69,7 +69,7 @@ class DatabaseHelper {
     await db.execute('''CREATE TABLE Pedidos(
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
         
-        NumeroOrden INTEGER,
+        NumeroOrden TEXT,
         ClienteId TEXT,
         FechaOrden TEXT, 
         Impuestos REAL, 
@@ -271,7 +271,7 @@ class DatabaseHelper {
 
 //Verificar si existe el Cliente antes de sincronizarlo
   Future<int> customerExists(Cliente cliente) async {
-    String customerCode = cliente.codigo;
+    String customerCode = cliente.codigo.trim();
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
         "SELECT EXISTS(SELECT 1 FROM Clientes WHERE codigo= '$customerCode')");
@@ -297,7 +297,24 @@ class DatabaseHelper {
 //Agregar Clientes
   Future<int> Add(Cliente customers) async {
     Database db = await instance.database;
-    return await db.insert('Clientes', customers.toMap());
+    return await db.insert('Clientes', customers.toMapsql());
+  }
+
+  Future<int> agregarNuevoCLiente(Cliente customers) async {
+    Database db = await instance.database;
+    return await db.insert('Clientes', customers.toMapNewInsert());
+  }
+
+  Future<List<Cliente>> obtenerClientesNuevos() async {
+    Database db = await instance.database;
+    var clientes =
+        await db.rawQuery("SELECT * FROM Clientes where sincronizado   = '1'");
+
+    List<Cliente> listadeClientes = clientes.isNotEmpty
+        ? clientes.map((e) => Cliente.fromMapSql(e)).toList()
+        : [];
+
+    return listadeClientes;
   }
 
   Future<List<Cliente>> obtenerClientesPorVendedor(String vendedor) async {
@@ -469,6 +486,30 @@ class DatabaseHelper {
     return await db.insert('Productos', producto.toMap());
   }
 
+  Future<List<Pedido>> obtenerPedidosPendienteDeSincornizacion() async {
+    Database db = await instance.database;
+
+    var res = await db.rawQuery(
+        "SELECT * FROM Pedidos where Sincronizado = 1 and  IsDelete = 1");
+
+    List<Pedido> ordenesLista =
+        res.isNotEmpty ? res.map((c) => Pedido.fromMapsqlite(c)).toList() : [];
+    return ordenesLista;
+  }
+
+  Future<List<PedidoDetalle>>
+      obtenerDetallePedidosPendienteDeSincornizacion() async {
+    Database db = await instance.database;
+
+    var res = await db.rawQuery(
+        "SELECT * FROM PedidoDetalle where Sincronizado = 1 and  IsDelete = 1");
+
+    List<PedidoDetalle> ordenesLista = res.isNotEmpty
+        ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()
+        : [];
+    return ordenesLista;
+  }
+
   Future<List<Pedido>> obtenerPedidosPorClient(String clienteid) async {
     Database db = await instance.database;
 
@@ -507,10 +548,44 @@ class DatabaseHelper {
     return await db.insert('PedidoDetalle', detalle.toMap());
   }
 
-  // Future<int> AddSales(OrdenVenta pedido) async {
-  //   Database db = await instance.database;
-  //   return await db.insert('SalesOrders', pedido.toMap());
-  // }
+  Future<int> actualizarClientesCargado(String id) async {
+    Database db = await instance.database;
+    final data = {
+      'sincronizado': 0,
+      // 'description': descrption,
+      // 'createdAt': DateTime.now().toString()
+    };
+
+    final result =
+        await db.update('Clientes', data, where: "ID = ?", whereArgs: [id]);
+    return result;
+  }
+
+  Future<int> actualizarPedidoCargado(int id) async {
+    Database db = await instance.database;
+    final data = {
+      'Sincronizado': 0,
+      // 'description': descrption,
+      // 'createdAt': DateTime.now().toString()
+    };
+
+    final result =
+        await db.update('Pedidos', data, where: "ID = ?", whereArgs: [id]);
+    return result;
+  }
+
+  Future<int> actualizarPedidoDetalleCargado(int id) async {
+    Database db = await instance.database;
+    final data = {
+      'Sincronizado': 0,
+      // 'description': descrption,
+      // 'createdAt': DateTime.now().toString()
+    };
+
+    final result = await db
+        .update('PedidoDetalle', data, where: "PedidoId = ?", whereArgs: [id]);
+    return result;
+  }
 
   Future<int> AddSalesWithId(Pedido pedido) async {
     Database db = await instance.database;
@@ -623,7 +698,7 @@ class DatabaseHelper {
     String productoCodigo = factura.productoCodigo;
     Database db = await instance.database;
     var res = await db.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM facturaDetalle WHERE FacturaId= '$facturaNumero' and ProductoCodigo = '$productoCodigo' and IsDelete = 0 )");
+        "SELECT EXISTS(SELECT 1 FROM facturaDetalle WHERE FacturaId= '$facturaNumero' and ProductoCodigo = '$productoCodigo' and IsDelete = 1 )");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {

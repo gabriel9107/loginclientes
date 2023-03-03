@@ -18,6 +18,8 @@ import 'package:sigalogin/servicios/PedidoDetalle_Servicio.dart';
 import 'package:sigalogin/servicios/pago_servicio.dart';
 import 'package:sigalogin/servicios/pedido_servicio.dart';
 import 'package:sigalogin/servicios/productos_services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -28,7 +30,11 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   HttpOverrides.global = MyHttpOverrides();
   runApp(AppState());
 }

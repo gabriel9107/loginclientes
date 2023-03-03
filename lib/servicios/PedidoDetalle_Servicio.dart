@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 
 import 'dart:async';
@@ -16,7 +17,8 @@ class PedidoDetalleServicio extends ChangeNotifier {
   final List<PedidoDetalle> detalle = [];
 
   PedidoDetalleServicio() {
-    this.sincronizar();
+    // this.sincronizar();
+    cargarDetallePedidos();
   }
 
   Future sincronizar() async {
@@ -37,5 +39,41 @@ class PedidoDetalleServicio extends ChangeNotifier {
     Resumen.resumentList.add(Resumen(
         accion: 'Pedidos Detalle Sincronizados',
         cantidad: detalle.length.toString()));
+  }
+
+  Future cargarDetallePedidos() async {
+    print('este es un reporte');
+    var clientes = await DatabaseHelper.instance
+        .obtenerDetallePedidosPendienteDeSincornizacion()
+        .then((value) => sincronizaClienteFire(value));
+  }
+
+  sincronizaClienteFire(List<PedidoDetalle> pedidoLista) async {
+    // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
+    // CollectionReference users =
+    //     FirebaseFirestore.instance.collection('Pedidos');
+    final databaseReference = FirebaseDatabase.instance.ref('PedidosDetalle');
+
+    pedidoLista.forEach((element) async {
+      await databaseReference
+          .child(element.id.toString() + '- ' + element.pedidoId)
+          .set({
+        "Cantidad": element.cantidad,
+        "Compagnia": element.compagnia,
+        "Id": element.id,
+        "IsDelete": element.isDelete,
+        "PedidoId": element.pedidoId,
+        "Precio": element.precio,
+        "ProductoId": element.productoId,
+        "Sincronizado": element.sincronizado,
+        "Codigo": element.codigo,
+        "Nombre": element.nombre,
+      });
+
+      DatabaseHelper.instance.actualizarPedidoCargado(element.id as int);
+    });
+
+    Resumen.resumentList.add(Resumen(
+        accion: 'Pedidos Subidos', cantidad: pedidoLista.length.toString()));
   }
 }

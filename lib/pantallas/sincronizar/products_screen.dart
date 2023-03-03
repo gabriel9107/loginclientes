@@ -46,7 +46,7 @@ class PincronizarListState extends State<PincronizarLista> {
     final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
 
     final servicioFactura = Provider.of<FacturaServices>(context);
-    final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
+    // final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
 
     // final servicioPago = Provider.of<PagoServices>(context);
     // final servicioPagoDetalle = Provider.of<PagoDetalleServicio>(context);

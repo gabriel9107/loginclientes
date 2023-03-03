@@ -50,7 +50,7 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      pedidos.totalAPagar.toString(),
+                      "\$ " + pedidos.totalAPagar.toStringAsFixed(2),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      pedidos.impuestos.toString(),
+                      "\$ " + pedidos.impuestos!.toStringAsFixed(2),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -88,7 +88,7 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      ("\$" + pedidos.totalAPagar.toString()),
+                      ("\$ " + pedidos.totalAPagar.toStringAsFixed(2)),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -124,6 +124,9 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                             color: Colors.white),
                       ),
                       onPressed: (() {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            // builder: (context) => pedidop(),
+                            builder: (context) => pedidosLista()));
 //Guardar Factura
 
                         // DetalleDelCliente(totales.idClienteFactura)));

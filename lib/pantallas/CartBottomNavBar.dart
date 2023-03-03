@@ -93,7 +93,7 @@ class CartBottomNavBar extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      ("\$" + totales.montoImpuesto.toString()),
+                      ("\$" + totales.montoImpuesto.toStringAsFixed(2)),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -112,7 +112,7 @@ class CartBottomNavBar extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      ("\$" + totales.totalApagar.toString()),
+                      ("\$" + totales.totalApagar.toStringAsFixed(2)),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -151,10 +151,11 @@ class CartBottomNavBar extends StatelessWidget {
                         Pedido pedido = Pedido(
                             clienteId: this.idCliente.toString().trim(),
                             fechaOrden: DateTime.now(),
+                            impuestos: totales.montoImpuesto,
                             totalAPagar: totales.totalApagar,
                             compagnia: compagnia,
-                            sincronizado: 0,
-                            isDelete: 0,
+                            sincronizado: 1,
+                            isDelete: 1,
                             estado: 'Pendiente');
                         // Pedi orden = OrdenVenta(
                         //     cash: totales.totalApagar.toString(),
@@ -182,7 +183,7 @@ class CartBottomNavBar extends StatelessWidget {
                                         pedidoId: value.toString(),
                                         compagnia: compagnia,
                                         isDelete: 0,
-                                        sincronizado: 0);
+                                        sincronizado: 1);
                                     // OrdenVentaDetalle detalleventa =
                                     //     new OrdenVentaDetalle(
                                     //         salesOrdersID: value.toString(),

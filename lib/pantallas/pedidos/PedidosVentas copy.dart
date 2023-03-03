@@ -31,8 +31,8 @@ class _mainPage extends State<PedidoHistorico> {
           // backgroundColor: Color.fromARGB(255, 25, 28, 228),
         ),
         body: FutureBuilder<List<PedidoDetalle>>(
-          future: DatabaseHelper.instance
-              .getDetallesporId(pedidos.numeroOrden.toString()),
+          future:
+              DatabaseHelper.instance.getDetallesporId(pedidos.id.toString()),
           builder: (BuildContext context,
               AsyncSnapshot<List<PedidoDetalle>> snapshot) {
             final List<PedidoDetalle>? detalles = snapshot.data;

@@ -43,7 +43,7 @@ class Pedido {
   DateTime fechaOrden;
   double? impuestos;
   double totalAPagar;
-  int? numeroOrden;
+  String? numeroOrden;
   int sincronizado;
   int isDelete;
   int compagnia;
@@ -62,7 +62,7 @@ class Pedido {
         isDelete: json["IsDelete"],
         numeroOrden: json["NumeroOrden"],
         sincronizado: json["Sincronizado"],
-        totalAPagar: json["totalAPagar"],
+        totalAPagar: json["TotalAPagar"],
       );
   factory Pedido.fromMapsqlite(Map<String, dynamic> json) => Pedido(
         id: json["ID"],
@@ -86,6 +86,7 @@ class Pedido {
         "NumeroOrden": numeroOrden,
         "Sincronizado": sincronizado,
         "totalAPagar": totalAPagar,
+        "Estado": estado
       };
 
   Map<String, dynamic> toMapSql() => {
@@ -107,7 +108,8 @@ class Pedido {
         "Impuestos": impuestos,
         "IsDelete": isDelete,
         "NumeroOrden": numeroOrden,
-        "Sincronizado": sincronizado,
+        "Sincronizado": 0,
         "totalAPagar": totalAPagar,
+        "Estado": estado
       };
 }

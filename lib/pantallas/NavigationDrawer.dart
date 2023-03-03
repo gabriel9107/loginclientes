@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/pantallas/DashboardScreen.dart';
@@ -9,7 +11,10 @@ import 'package:sigalogin/pantallas/productos/products_screen.dart';
 import 'package:sigalogin/pantallas/sincronizar/products_screen.dart';
 import 'package:sigalogin/pantallas/user_screen.dart';
 
+import '../clases/modelos/clientes.dart';
+import '../clases/modelos/resumen.dart';
 import '../clases/themes.dart';
+import '../servicios/db_helper.dart';
 import 'clientes/listaClientes.dart';
 import 'login/IniciarUsuario.dart';
 
@@ -105,7 +110,9 @@ class navegacions extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.padding_outlined),
             title: const Text('Reporte'),
-            onTap: () {},
+            onTap: () {
+              cargarClientes();
+            },
           ),
           const Divider(color: Colors.black54),
           ListTile(
@@ -135,4 +142,39 @@ class navegacions extends StatelessWidget {
           ),
         ],
       ));
+}
+
+Future cargarClientes() async {
+  print('este es un reporte');
+  var clientes = await DatabaseHelper.instance
+      .obtenerClientesNuevos()
+      .then((value) => sincronizaClienteFire(value));
+}
+
+sincronizaClienteFire(List<Cliente> clienteList) async {
+  print(clienteList);
+
+  // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
+  CollectionReference users = FirebaseFirestore.instance.collection('Clientes');
+  final databaseReference = FirebaseDatabase.instance.ref('Clientes');
+
+  clienteList.forEach((element) async {
+    await databaseReference.child(element.id.toString()).set({
+      "ID": element.id,
+      "activo": element.activo.toString(),
+      "codigo": element.codigo,
+      "codigoVendedor": element.codigoVendedor,
+      "comentario": "n/a",
+      "compagnia": element.compagnia,
+      "direccion": element.direccion,
+      "nombre": element.nombre,
+      "sincronizado": "1",
+      "telefono1": element.telefono1,
+      "telefono2": element.telefono1,
+    });
+  });
+
+  Resumen.resumentList.add(Resumen(
+      accion: 'Clientes Sincronizados',
+      cantidad: clienteList.length.toString()));
 }

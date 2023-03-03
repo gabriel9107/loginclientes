@@ -37,7 +37,7 @@ class FacturaServices extends ChangeNotifier {
 //agregando las facturas a la base de datos
 
     facturas.forEach((factura) {
-      DatabaseHelper.instance.AddFactura(factura);
+      DatabaseHelper.instance.SincronizarFactura(factura);
     });
 
     Resumen.resumentList.add(Resumen(

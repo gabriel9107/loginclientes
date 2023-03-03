@@ -1,23 +1,30 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:sigalogin/clases/customers.dart';
 import 'package:sigalogin/clases/modelos/resumen.dart';
+import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 import '../clases/modelos/clientes.dart';
 
 class ClienteSevices extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
-  final List<Cliente> clientes = [];
+  late List<Cliente> clientes = [];
+  final databaseReference = FirebaseDatabase.instance.reference();
 
   ClienteSevices() {
+    this.descargarClientes();
     this.cargarClientes();
   }
 
-  Future cargarClientes() async {
+// clientes.
+
+  Future descargarClientes() async {
     final url = Uri.https(_baseUrl, 'Clientes.json');
 
     final resp = await http.get(url);
@@ -29,7 +36,7 @@ class ClienteSevices extends ChangeNotifier {
 
     clienteMap.forEach((key, value) {
       if (value != null) {
-        final tempCliente = Cliente.fromMap(value);
+        final tempCliente = Cliente.fromMapfromJson(value);
 
         this.clientes.add(tempCliente);
       }
@@ -40,30 +47,44 @@ class ClienteSevices extends ChangeNotifier {
     });
 
     Resumen.resumentList.add(Resumen(
-        accion: 'Clientes Sincronizados',
-        cantidad: clientes.length.toString()));
+        accion: 'Clientes Descargados', cantidad: clientes.length.toString()));
     // print(this.clientes[0].nombre);
     //
   }
+
+  Future cargarClientes() async {
+    print('este es un reporte');
+    var clientes = await DatabaseHelper.instance
+        .obtenerClientesNuevos()
+        .then((value) => sincronizaClienteFire(value));
+  }
+
+  sincronizaClienteFire(List<Cliente> clienteList) async {
+    print(clienteList);
+
+    // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
+    CollectionReference users =
+        FirebaseFirestore.instance.collection('Clientes');
+    final databaseReference = FirebaseDatabase.instance.ref('Clientes');
+
+    clienteList.forEach((element) async {
+      await databaseReference.child(element.id.toString()).set({
+        "ID": element.id,
+        "activo": element.activo.toString(),
+        "codigo": element.codigo,
+        "codigoVendedor": element.codigoVendedor,
+        "comentario": "n/a",
+        "compagnia": element.compagnia,
+        "direccion": element.direccion,
+        "nombre": element.nombre,
+        "sincronizado": "1",
+        "telefono1": element.telefono1,
+        "telefono2": element.telefono1,
+      });
+      DatabaseHelper.instance.actualizarClientesCargado(element.id.toString());
+    });
+
+    Resumen.resumentList.add(Resumen(
+        accion: 'Clientes Subidos', cantidad: clienteList.length.toString()));
+  }
 }
-      // if (value != "") {
-      //   final tempCliente = Cliente.fromJson(value);
-      //   tempCliente.codigo = key;
-
-        // var insert = Customers(
-        //     CustomerCode: tempCliente.codigo.toString(),
-        //     CustomerName: tempCliente.nombre.toString(),
-        //     CustomerDir: tempCliente.nombre.toString(),
-        //     Phone1: tempCliente.telefono1.toString(),
-        //     Phone2: tempCliente.telefono1.toString(),
-        //     Comment1: tempCliente.comentario.toString(),
-        //     creadoEn: DateTime.now().toString(),
-        //     creadoPor: tempCliente.codigoVendedor.toString());
-        // DatabaseHelper.instance.customerExists(insert);
-    //   }
-    // });
-
-    // final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    // List jsonResponse = json.decode(response.body);
-    // final jsonList = jsonDecode(response.body) as List<dynamic>;
-  

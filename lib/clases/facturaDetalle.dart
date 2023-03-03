@@ -16,7 +16,7 @@ class FacturaMaster {
   int cantidadArticulos;
   String subtotal;
   String montoDescuento;
-  String montoImpuesto;
+  double montoImpuesto;
   double totalApagar;
 
   FacturaMaster(
@@ -53,7 +53,7 @@ class FacturaMaster {
           iD: 1,
           idClienteFactura: "1",
           montoDescuento: numberFormat(descuento),
-          montoImpuesto: numberFormat(0),
+          montoImpuesto: impuesto,
           subtotal: numberFormat(subtotal),
           totalApagar: totalApagar);
     }
@@ -83,7 +83,7 @@ class FacturaMaster {
         iD: 1,
         idClienteFactura: "1",
         montoDescuento: numberFormat(descuento),
-        montoImpuesto: numberFormat(impuesto),
+        montoImpuesto: impuesto,
         subtotal: numberFormat(subtotal),
         totalApagar: totalApagar);
   }

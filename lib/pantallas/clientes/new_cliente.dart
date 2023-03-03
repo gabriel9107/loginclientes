@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/global.dart';
+import 'package:sigalogin/clases/modelos/clientes.dart';
 import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
 
 import '../../clases/customers.dart';
@@ -116,6 +117,21 @@ class MyCustomForm extends StatelessWidget {
             ElevatedButton(
               child: Text('Guardar'),
               onPressed: () async {
+                DatabaseHelper.instance.agregarNuevoCLiente(Cliente(
+                    codigo: customerCodeController.text,
+                    codigoVendedor: usuario,
+                    comentario: commentController.text,
+                    compagnia: compagnia,
+                    direccion: customerDirController.text,
+                    nombre: customerNameController.text,
+                    telefono1: phone1Controller.text,
+                    telefono2: phone2Controller.text,
+                    sincronizado: 0,
+                    activo: 0,
+                    creadoEn: DateTime.now().toIso8601String()));
+
+                // DatabaseHelpe
+
                 // await DatabaseHelper.instance.Add(Customers(
                 //     CustomerCode: customerCodeController.text,
                 //     CustomerName: customerNameController.text,

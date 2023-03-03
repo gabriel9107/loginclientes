@@ -151,7 +151,7 @@ class ListadoPedidos extends StatelessWidget {
                                   Text(
                                     pedido.totalAPagar.toString(),
                                   ),
-                                  Text(('Pendiente').toString(),
+                                  Text(pedido.estado.toString(),
                                       style:
                                           TextStyle(color: Colors.deepOrange),
                                       textAlign: TextAlign.left),
