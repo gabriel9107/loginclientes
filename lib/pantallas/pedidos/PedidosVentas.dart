@@ -182,14 +182,14 @@ class _mainPage extends State<CartPage> {
                                     child: Icon(
                                       CupertinoIcons.plus,
                                       color: Colors.white,
-                                      size: 20,
+                                      size: 32,
                                     )),
                                 Text(
                                   detalleFactura[index]
                                       .cantidadProducto
                                       .toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
                                 ),
@@ -207,7 +207,7 @@ class _mainPage extends State<CartPage> {
                                     child: Icon(
                                       CupertinoIcons.minus,
                                       color: Colors.white,
-                                      size: 20,
+                                      size: 35,
                                     )),
                               ],
                             ),

@@ -14,10 +14,10 @@ class FacturaServices extends ChangeNotifier {
   final List<Factura> facturas = [];
 
   FacturaServices() {
-    this.cargarFacturas();
+    this.descargarFacturas();
   }
 
-  Future cargarFacturas() async {
+  Future descargarFacturas() async {
     final url = Uri.https(_baseUrl, 'Factura.json');
 
     final resp = await http.get(url);

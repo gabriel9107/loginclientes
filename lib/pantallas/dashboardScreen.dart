@@ -19,12 +19,13 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class DashboardScreenState extends State<DashboardScreen> {
+  var nuevosclientes = 0;
   var cantidadDevisitas =
-      305; //DatabaseHelper.instance.CantidadDeClientesPorMes();
+      0; //DatabaseHelper.instance.CantidadDeClientesPorMes();
   int fijos = 105;
-  late var ventas = 422; //DatabaseHelper.instance.CantidadDeVentas();
-  var cobros = 125; //DatabaseHelper.instance.cantidadDeCobros();
-
+  late var ventas = 0; //DatabaseHelper.instance.CantidadDeVentas();
+  var cobros = 0; //DatabaseHelper.instance.cantidadDeCobros();
+  var puntaje = 0;
   // const DashboardScreen({
   //   Key? key,
   // }) : super(key: key);
@@ -32,6 +33,17 @@ class DashboardScreenState extends State<DashboardScreen> {
   Future obtenerCantidadesDeCleintes() async {
     //here you can call the function and handle the output(return value) as result
     DatabaseHelper.instance.CantidadDeClientesPorMes().then((result) {
+      print(result);
+      setState(() {
+        nuevosclientes = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  Future obtenerCantidadesDevisitas() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.CantidadDevisitas().then((result) {
       print(result);
       setState(() {
         fijos = result;
@@ -62,8 +74,22 @@ class DashboardScreenState extends State<DashboardScreen> {
     }); //you can call handleError method show an alert or to try again
   }
 
+  Future obtenerpuntaje() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.Puntajes().then((result) {
+      print(result);
+      setState(() {
+        puntaje = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
   @override
   void initState() {
+    obtenerCantidadDeCobros();
+    obtenerCantidadDeventas();
+    obtenerCantidadesDeCleintes();
     // obtenerCantidadesDeCleintes();
     // Clients = Client.getClients();
     super.initState();
@@ -105,7 +131,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "93",
+                                      puntaje.toString(),
                                       style: textBold,
                                     ),
                                     Text(
@@ -124,7 +150,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                                           size: 14,
                                         ),
                                         Text(
-                                          "8.1%",
+                                          "0.1%",
                                           style: textSemiBold,
                                         ),
                                       ],
@@ -138,7 +164,9 @@ class DashboardScreenState extends State<DashboardScreen> {
                               style: textBold2,
                             ),
                             Text(
-                              "Mejor Vendedor",
+                              puntaje > 100
+                                  ? "Mejor Vendedor"
+                                  : "Sigue avanzando",
                               style: textBold3,
                             ),
                           ],
@@ -218,7 +246,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                               bgColor: yellowLight,
                               pathIcon: "starts.svg",
                               title: "Nuevos Clientes",
-                              subTitle: fijos.toString(),
+                              subTitle: nuevosclientes.toString(),
                             ),
                           ),
                           CardCustom(
@@ -235,85 +263,45 @@ class DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ],
                       ),
-                      CardCustom(
-                          mLeft: 0,
-                          mRight: 0,
-                          width: size.width - 40,
-                          height: 211,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 9.71,
-                                      height: 9.71,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: purple2),
-                                    ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      "Visits",
-                                      style: label,
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                    Container(
-                                      width: 9.71,
-                                      height: 9.71,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle, color: green),
-                                    ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      "Likes",
-                                      style: label,
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                    Container(
-                                      width: 9.71,
-                                      height: 9.71,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle, color: red),
-                                    ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      "Conversions",
-                                      style: label,
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                  ],
-                                ),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Column(children: [
+                                RichText(
+                                  text: TextSpan(
+                                      text: "Top 10 Productos vendidos ",
+                                      style: GoogleFonts.montserrat().copyWith(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 18,
+                                          color: purple1),
+                                      children: const <TextSpan>[
+                                        TextSpan(
+                                            text: " ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold))
+                                      ]),
+                                )
+                              ])),
+                          Expanded(
+                            child: SizedBox(
+                              height: 200.0,
+                              child: new ListView.builder(
+                                // scrollDirection: Axis.horizontal,
+                                itemCount: 1,
+                                itemBuilder: (BuildContext ctxt, int index) {
+                                  return new Text('Productos');
+                                },
                               ),
-                              Container(
-                                width: size.width - 40,
-                                height: 144.35,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(15),
-                                      bottomRight: Radius.circular(15),
-                                    ),
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            "assets/images/graph.png"),
-                                        fit: BoxFit.fill)),
-                              )
-                            ],
-                          )),
+                            ),
+                          ),
+                          new IconButton(
+                            icon: Icon(Icons.remove_circle),
+                            onPressed: () {},
+                          ),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      )
                     ],
                   ),
                 ),
@@ -322,56 +310,6 @@ class DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-
-      // bottomNavigationBar: BottomNavigationBar(
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      //   showSelectedLabels: false,
-      //   showUnselectedLabels: false,
-      //   currentIndex: 0,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/home.svg"),
-      //       ),
-      //       label: "Home",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/chart.svg"),
-      //       ),
-      //       label: "Chart",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/bell.svg"),
-      //       ),
-      //       label: "Bell",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/maps.svg"),
-      //       ),
-      //       label: "Maps",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/profile.svg"),
-      //       ),
-      //       label: "Profile",
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sigalogin/clases/modelos/clientes.dart';
 import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas%20copy.dart';
-import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
+import 'package:sigalogin/servicios/PedidoDetalle_Servicio.dart';
 
-import '../clases/ordenDeventa.dart';
+import '../clases/modelos/resumen.dart';
+import '../clases/pedidoDetalle.dart';
 import '../servicios/db_helper.dart';
 import 'NavigationDrawer.dart';
+import 'package:http/http.dart' as http;
 
 class pedidosLista extends StatefulWidget {
   @override
@@ -32,14 +37,28 @@ class _ListaOedidosState extends State<pedidosLista> {
 
         // backgroundColor: Color.fromARGB(255, 25, 28, 228),
 
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.search),
-        //     onPressed: () => {
-        //       // showSearch(context: context, delegate: MySearchDelegate())
-        //     },
-        //   )
-        // ],
+        actions: [
+          IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: () => {
+                    DatabaseHelper.instance
+                        .obtenerPedidosPendienteDeSincornizacion()
+                        .then((value) async {
+                      value.forEach((element) {
+                        crearPedido(element);
+                      });
+                    }),
+                    DatabaseHelper.instance
+                        .obtenerDetallePedidosPendienteDeSincornizacion()
+                        .then(
+                      (value) {
+                        value.forEach((pedidoLista) async {
+                          crearDetallePedido(pedidoLista);
+                        });
+                      },
+                    )
+                  })
+        ],
       ),
       drawer: navegacions(),
       floatingActionButton: FloatingActionButton(
@@ -56,7 +75,7 @@ class _ListaOedidosState extends State<pedidosLista> {
       ),
       body: Center(
         child: FutureBuilder<List<Pedido>>(
-          future: DatabaseHelper.instance.getOrdenes(),
+          future: DatabaseHelper.instance.getOrdenesPorvendedor(),
           builder:
               (BuildContext context, AsyncSnapshot<List<Pedido>> snapshot) {
             if (!snapshot.hasData) {
@@ -97,11 +116,6 @@ class _ListaOedidosState extends State<pedidosLista> {
                                 ),
                                 onPressed: () {
                                   print("debe de sincronizar la orden");
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-
-                                  //         builder: (context) => CartPage())
                                 },
                               ),
                             ],
@@ -124,4 +138,59 @@ class _ListaOedidosState extends State<pedidosLista> {
       ),
     );
   }
+}
+
+Future<String> crearDetallePedido(PedidoDetalle detalle) async {
+  cargarClientes();
+  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
+  final resp = await http.post(url, body: detalle.toJson());
+
+  final decodeData = resp.body;
+
+  print(decodeData);
+
+  if (decodeData.isNotEmpty) {
+    DatabaseHelper.instance.actualizarPedidoDetalleCargado(detalle.id as int);
+  }
+
+  return '';
+}
+
+Future<String> crearPedido(Pedido pedido) async {
+  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final url = Uri.https(_baseUrl, 'Pedidos.json');
+  final resp = await http.post(url, body: pedido.toJson());
+
+  final decodeData = resp.body;
+
+  print(decodeData);
+
+  if (decodeData.isNotEmpty) {
+    DatabaseHelper.instance.actualizarPedidoCargado(pedido.id as int);
+  }
+
+  return '';
+}
+
+Future cargarClientes() async {
+  print('sincronizando clientes');
+  var clientes = await DatabaseHelper.instance
+      .obtenerClientesNuevos()
+      .then((value) => sincronizaClienteFire(value));
+}
+
+sincronizaClienteFire(List<Cliente> clienteList) async {
+  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final url = Uri.https(_baseUrl, 'Clientes.json');
+  clienteList.forEach((element) async {
+    final resp = await http.post(url, body: json.encode(element.toJsonUp()));
+    final decodeData = resp.body;
+    print(decodeData);
+    if (decodeData.isNotEmpty) {
+      DatabaseHelper.instance.actualizarClientesCargado(element.id as int);
+    }
+  });
+  Resumen.resumentList.add(Resumen(
+      accion: 'Clientes Subidos', cantidad: clienteList.length.toString()));
 }

@@ -37,7 +37,7 @@ class PedidoDetalle {
   factory PedidoDetalle.fromMap(Map<String, dynamic> json) => new PedidoDetalle(
         cantidad: json["Cantidad"],
         compagnia: json["Compagnia"],
-        id: json["Id"],
+        id: json["ID"],
         isDelete: json["IsDelete"],
         pedidoId: json["PedidoId"].toString(),
         precio: json["Precio"].toDouble(),
@@ -57,6 +57,7 @@ class PedidoDetalle {
         sincronizado: json["Sincronizado"],
         codigo: json["Codigo"],
         nombre: json["Nombre"],
+        id: json["ID"],
       );
   factory PedidoDetalle.fromMapSql(Map<String, dynamic> json) => PedidoDetalle(
         cantidad: json["Cantidad"],

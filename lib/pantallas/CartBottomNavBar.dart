@@ -63,25 +63,6 @@ class CartBottomNavBar extends StatelessWidget {
                     )
                   ],
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text(
-                //       "Descuentos",
-                //       style: TextStyle(
-                //           color: Colors.black,
-                //           fontSize: 22,
-                //           fontWeight: FontWeight.bold),
-                //     ),
-                //     Text(
-                //       ("\$" + totales.montoDescuento.toString()),
-                //       style: TextStyle(
-                //           fontSize: 25,
-                //           fontWeight: FontWeight.bold,
-                //           color: Color(0xFF4C53A5)),
-                //     )
-                //   ],
-                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -148,61 +129,63 @@ class CartBottomNavBar extends StatelessWidget {
                             color: Colors.white),
                       ),
                       onPressed: (() {
-                        Pedido pedido = Pedido(
-                            clienteId: this.idCliente.toString().trim(),
-                            fechaOrden: DateTime.now(),
-                            impuestos: totales.montoImpuesto,
-                            totalAPagar: totales.totalApagar,
-                            compagnia: compagnia,
-                            sincronizado: 1,
-                            isDelete: 1,
-                            estado: 'Pendiente');
-                        // Pedi orden = OrdenVenta(
-                        //     cash: totales.totalApagar.toString(),
-                        //     ordenNumero: "1",
-                        //     change: "0",
-                        //     customerID: idCliente.toString(),
-                        //     date: DateTime.now().toString(),
-                        //     gPID: "",
-                        //     isDelete: "0",
-                        //     totals: totales.totalApagar,
-                        //     userName: usuario,
-                        //     vAT: totales.montoImpuesto,
-                        //     status: "Activo",
-                        //     commets: 'NO comentario');
+                        if (totales.totalApagar > 1) {
+                          Pedido pedido = Pedido(
+                              clienteId: this.idCliente.toString().trim(),
+                              fechaOrden: DateTime.now(),
+                              impuestos: totales.montoImpuesto,
+                              totalAPagar: totales.totalApagar,
+                              compagnia: compagnia,
+                              sincronizado: 1,
+                              vendorId: usuario,
+                              isDelete: 1,
+                              estado: 'Pendiente');
 
-                        DatabaseHelper.instance
-                            .AddSalesWithId(pedido)
-                            .then((value) => {
-                                  detalle.forEach((element) {
-                                    PedidoDetalle detalle = new PedidoDetalle(
-                                        codigo: element.codigoProducto,
-                                        nombre: element.nombreProducto,
-                                        cantidad: element.cantidadProducto,
-                                        precio: element.montoproducto,
-                                        pedidoId: value.toString(),
-                                        compagnia: compagnia,
-                                        isDelete: 0,
-                                        sincronizado: 1);
-                                    // OrdenVentaDetalle detalleventa =
-                                    //     new OrdenVentaDetalle(
-                                    //         salesOrdersID: value.toString(),
-                                    //         price: element.montoproducto,
-                                    //         qty: element.cantidadProducto,
-                                    //         productCode: element.codigoProducto,
-                                    //         productName:
-                                    //             element.nombreProducto);
-                                    DatabaseHelper.instance
-                                        .AddSalesDetalle(detalle);
-                                  })
-                                });
+                          DatabaseHelper.instance
+                              .AddSalesWithId(pedido)
+                              .then((value) => {
+                                    detalle.forEach((element) {
+                                      PedidoDetalle detalle = new PedidoDetalle(
+                                          codigo: element.codigoProducto,
+                                          nombre: element.nombreProducto,
+                                          cantidad: element.cantidadProducto,
+                                          precio: element.montoproducto,
+                                          pedidoId: value.toString(),
+                                          compagnia: compagnia,
+                                          isDelete: 1,
+                                          sincronizado: 1);
 
-//Guardar Factura
+                                      DatabaseHelper.instance
+                                          .AddSalesDetalle(detalle);
+                                    })
+                                  });
 
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            // builder: (context) => pedidop(), pedidosLista
-                            builder: (context) => pedidosLista()));
-                        // DetalleDelCliente(totales.idClienteFactura)));
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              // builder: (context) => pedidop(), pedidosLista
+                              builder: (context) => pedidosLista()));
+
+//limpiar lista
+                          ListaProducto = false;
+                          TodosProductos.clear();
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                      title: const Text("Notificación :"),
+                                      content: const Text(
+                                          "No existe detalle en el pedido, favor de agregar"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(ctx).pop();
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(14),
+                                            child: const Text("Ok"),
+                                          ),
+                                        )
+                                      ]));
+                        }
                       }),
                     )
                   ]),

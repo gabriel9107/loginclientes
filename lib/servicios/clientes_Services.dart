@@ -15,7 +15,6 @@ import '../clases/modelos/clientes.dart';
 class ClienteSevices extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
   late List<Cliente> clientes = [];
-  final databaseReference = FirebaseDatabase.instance.reference();
 
   ClienteSevices() {
     this.descargarClientes();
@@ -53,38 +52,63 @@ class ClienteSevices extends ChangeNotifier {
   }
 
   Future cargarClientes() async {
-    print('este es un reporte');
+    print('sincronizando clientes');
     var clientes = await DatabaseHelper.instance
         .obtenerClientesNuevos()
         .then((value) => sincronizaClienteFire(value));
   }
 
   sincronizaClienteFire(List<Cliente> clienteList) async {
-    print(clienteList);
-
-    // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
-    CollectionReference users =
-        FirebaseFirestore.instance.collection('Clientes');
-    final databaseReference = FirebaseDatabase.instance.ref('Clientes');
-
+    final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+    final url = Uri.https(_baseUrl, 'Clientes.json');
     clienteList.forEach((element) async {
-      await databaseReference.child(element.id.toString()).set({
-        "ID": element.id,
-        "activo": element.activo.toString(),
-        "codigo": element.codigo,
-        "codigoVendedor": element.codigoVendedor,
-        "comentario": "n/a",
-        "compagnia": element.compagnia,
-        "direccion": element.direccion,
-        "nombre": element.nombre,
-        "sincronizado": "1",
-        "telefono1": element.telefono1,
-        "telefono2": element.telefono1,
-      });
-      DatabaseHelper.instance.actualizarClientesCargado(element.id.toString());
+      final resp = await http.post(url, body: json.encode(element.toJsonUp()));
+      final decodeData = resp.body;
+      print(decodeData);
+      if (decodeData.isNotEmpty) {
+        DatabaseHelper.instance.actualizarClientesCargado(element.id as int);
+      }
     });
-
     Resumen.resumentList.add(Resumen(
         accion: 'Clientes Subidos', cantidad: clienteList.length.toString()));
+
+    //   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+    // final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
+    // final resp = await http.post(url, body: detalle.toJson());
+
+    // final decodeData = resp.body;
+
+    // print(decodeData);
+
+    // if (decodeData.isNotEmpty) {
+    //   DatabaseHelper.instance.actualizarPedidoCargado(detalle.id as int);
+    // }
+
+    // print(clienteList);
+
+    // // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
+    // CollectionReference users =
+    //     FirebaseFirestore.instance.collection('Clientes');
+    // final databaseReference = FirebaseDatabase.instance.ref('Clientes');
+
+    // clienteList.forEach((element) async {
+    //   await databaseReference.child(element.id.toString()).set({
+    //     "ID": element.id,
+    //     "activo": element.activo.toString(),
+    //     "codigo": element.codigo,
+    //     "codigoVendedor": element.codigoVendedor,
+    //     "comentario": "n/a",
+    //     "compagnia": element.compagnia,
+    //     "direccion": element.direccion,
+    //     "nombre": element.nombre,
+    //     "sincronizado": "1",
+    //     "telefono1": element.telefono1,
+    //     "telefono2": element.telefono1,
+    //   });
+    //   DatabaseHelper.instance.actualizarClientesCargado(element.id.toString());
+    // });
+
+    // Resumen.resumentList.add(Resumen(
+    //     accion: 'Clientes Subidos', cantidad: clienteList.length.toString()));
   }
 }

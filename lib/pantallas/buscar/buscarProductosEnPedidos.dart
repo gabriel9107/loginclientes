@@ -86,6 +86,9 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
       itemBuilder: (context, index) {
         final suggestion = suggestions[index];
         return ListTile(
+          tileColor: suggestion.seleccionado == true
+              ? Color.fromARGB(255, 147, 194, 231)
+              : null,
           title: Text('Nombre: ' + suggestion.nombre.toString()),
           subtitle: Text('Costo : ' + suggestion.precio.toString()),
           trailing: Row(
@@ -112,6 +115,8 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
                   onPressed: () {
                     // double price = suggestion.price as double;
                     if (textController.text.isEmpty) {
+                      suggestions[index].seleccionado = true;
+
                       FacturaDetalle.addfacturaDetalle(FacturaDetalle(
                           facturaNumero: "1",
                           codigoProducto: suggestion.codigo.toString(),
@@ -119,8 +124,9 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
                               double.parse(suggestion.precio.toString()),
                           nombreProducto: suggestion.nombre.toString(),
                           cantidadProducto: 1));
-                      close(context, null);
+                      // close(context, null);
                     } else {
+                      suggestions[index].seleccionado = true;
                       FacturaDetalle.addfacturaDetalle(FacturaDetalle(
                           facturaNumero: "1",
                           codigoProducto: suggestion.codigo.toString(),
@@ -128,7 +134,7 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
                               double.parse(suggestion.precio.toString()),
                           nombreProducto: suggestion.nombre.toString(),
                           cantidadProducto: int.parse(textController.text)));
-                      close(context, null);
+                      // close(context, null);
                     }
                   },
                   child: Text('Agregar'),
@@ -162,7 +168,7 @@ class Productos {
     var documento =
         await DatabaseHelper.instance.getProductos() as List<Producto>;
 
-    if (ListaProducto == false) {
+    if (ListaProducto == false && TodosProductos.length >= 0) {
       documento.forEach((element) {
         Producto a = new Producto(
             compagnia: element.compagnia,

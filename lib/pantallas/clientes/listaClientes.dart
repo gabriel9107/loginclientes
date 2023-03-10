@@ -80,7 +80,9 @@ class CustomerListState extends State<clienteLista> {
                         elevation: 2.0,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: customer.sincronizado == 0
+                                ? Colors.blue
+                                : Colors.red,
                             child: Icon(Icons.emoji_people),
                           ),
                           title:

@@ -14,6 +14,8 @@ class EditarCliente extends StatefulWidget {
   State<EditarCliente> createState() => _editClienteScreenState(clientes);
 }
 
+String? selectedValue;
+
 class _editClienteScreenState extends State<EditarCliente> {
   Cliente _clientes;
   _editClienteScreenState(this._clientes);
@@ -23,6 +25,7 @@ class _editClienteScreenState extends State<EditarCliente> {
   final phone1Controller = TextEditingController();
   final phone2Controller = TextEditingController();
   final commentController = TextEditingController();
+  final descuentoController = TextEditingController();
 
   @override
   void initState() {
@@ -33,7 +36,16 @@ class _editClienteScreenState extends State<EditarCliente> {
     phone1Controller.text = _clientes.telefono1.toString();
     phone2Controller.text = _clientes.telefono2.toString();
     commentController.text = _clientes.comentario.toString();
+    descuentoController.text = _clientes.descuento.toString();
+    selectedValue = _clientes.descuento.toString() == ""
+        ? '20'
+        : _clientes.descuento.toString();
   }
+
+  final List<String> items = [
+    '20',
+    '25',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +93,9 @@ class _editClienteScreenState extends State<EditarCliente> {
                     border: UnderlineInputBorder(),
                     labelText: 'RNC',
                   ),
+                  validator: (value) {
+                    return 'No puede ser nulo';
+                  },
                 ),
               ),
               Padding(
@@ -92,6 +107,9 @@ class _editClienteScreenState extends State<EditarCliente> {
                     border: UnderlineInputBorder(),
                     labelText: 'Nombre Cliente',
                   ),
+                  validator: (value) {
+                    return 'No puede ser nulo';
+                  },
                 ),
               ),
               Padding(
@@ -103,6 +121,9 @@ class _editClienteScreenState extends State<EditarCliente> {
                     border: UnderlineInputBorder(),
                     labelText: 'Direccion',
                   ),
+                  validator: (value) {
+                    return 'No puede ser nulo';
+                  },
                 ),
               ),
               Padding(
@@ -128,15 +149,28 @@ class _editClienteScreenState extends State<EditarCliente> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Descuento',
-                      enabled: false),
-                ),
-              ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      return 'No puede ser nulo';
+                    },
+                    hint: Text('Descuento del cliente'),
+                    elevation: 4,
+                    isDense: true,
+                    isExpanded: true,
+                    iconSize: 60.0,
+                    // onChanged: selectedValue,
+                    value: selectedValue,
+                    items: <String>['20', '30']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                          child: Text(value), value: value);
+                    }).toList(),
+                    onChanged: (String? value) {
+                      descuentoController.text = value as String;
+                    },
+                  )),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),

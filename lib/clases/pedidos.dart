@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:sigalogin/clases/global.dart';
+
 class Contact {
   Contact({required this.id, required this.name, required this.mobile});
 
@@ -36,7 +38,8 @@ class Pedido {
       required this.compagnia,
       required this.sincronizado,
       required this.isDelete,
-      this.estado});
+      this.estado,
+      this.vendorId});
 
   int? id;
   String clienteId;
@@ -48,6 +51,7 @@ class Pedido {
   int isDelete;
   int compagnia;
   String? estado;
+  String? vendorId;
 
   factory Pedido.fromJson(String str) => Pedido.fromMap(json.decode(str));
 
@@ -65,16 +69,16 @@ class Pedido {
         totalAPagar: json["TotalAPagar"],
       );
   factory Pedido.fromMapsqlite(Map<String, dynamic> json) => Pedido(
-        id: json["ID"],
-        clienteId: json["ClienteId"].toString().trim(),
-        compagnia: json["Compagnia"],
-        fechaOrden: DateTime.parse(json["FechaOrden"]),
-        impuestos: json["Impuestos"],
-        isDelete: json["IsDelete"],
-        numeroOrden: json["NumeroOrden"],
-        sincronizado: json["Sincronizado"],
-        totalAPagar: json["TotalAPagar"],
-      );
+      id: json["ID"],
+      clienteId: json["ClienteId"].toString().trim(),
+      compagnia: json["Compagnia"],
+      fechaOrden: DateTime.parse(json["FechaOrden"]),
+      impuestos: json["Impuestos"],
+      isDelete: json["IsDelete"],
+      numeroOrden: json["NumeroOrden"],
+      sincronizado: json["Sincronizado"],
+      totalAPagar: json["TotalAPagar"],
+      vendorId: json["vendorId"]);
 
   Map<String, dynamic> toMap() => {
         "ClienteId": clienteId,
@@ -98,7 +102,8 @@ class Pedido {
         "NumeroOrden": numeroOrden,
         "Sincronizado": sincronizado,
         "totalAPagar": totalAPagar,
-        "Estado": estado
+        "Estado": estado,
+        "vendorId": usuario,
       };
 
   Map<String, dynamic> toMapSqli() => {
@@ -110,6 +115,7 @@ class Pedido {
         "NumeroOrden": numeroOrden,
         "Sincronizado": 0,
         "totalAPagar": totalAPagar,
-        "Estado": estado
+        "Estado": estado,
+        "vendorId": usuario,
       };
 }

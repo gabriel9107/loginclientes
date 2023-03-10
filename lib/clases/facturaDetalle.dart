@@ -114,7 +114,10 @@ class FacturaDetalle {
   static List<FacturaDetalle> facturaDetalle = <FacturaDetalle>[];
 
   static void addfacturaDetalle(FacturaDetalle detalle) {
-    facturaDetalle.add(detalle);
+    var contain = facturaDetalle
+            .any((element) => element.codigoProducto == detalle.codigoProducto)
+        ? facturaDetalle.add(detalle)
+        : print('nada?');
   }
 
   static List<FacturaDetalle> getFacturaDetalle() {

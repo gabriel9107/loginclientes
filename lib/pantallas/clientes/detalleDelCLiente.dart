@@ -50,13 +50,37 @@ class DetalleDelCliente extends StatelessWidget {
           drawer: navegacions(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RealizarPagodeprueba(
-                        this.nombredelcliente.toString(),
-                        this.customerCode.toString())),
-              );
+              var existenPendientes = DatabaseHelper.instance
+                  .obtenerFacturasPendientesdepago(customerCode.toString());
+
+              if (existenPendientes == true) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RealizarPagodeprueba(
+                          this.nombredelcliente.toString(),
+                          this.customerCode.toString())),
+                );
+              } else {
+                // print('No existen facturas pendientes de pago');
+                showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                            title: const Text("Notificación :"),
+                            content: const Text(
+                                "No existen facturas pendientes de pago"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(14),
+                                  child: const Text("Ok"),
+                                ),
+                              )
+                            ]));
+              }
             },
             tooltip: 'Agregar',
             child: const Icon(
@@ -122,7 +146,8 @@ class ListadoPedidos extends StatelessWidget {
                       title:
                           Text('Pedido Numero :' + ' ' + pedido.id.toString()),
                       subtitle: Text(
-                        'Fecha Numero' + pedido.fechaOrden.toString(),
+                        'Fecha ' +
+                            DateFormat('dd-MM-yyy').format(pedido.fechaOrden),
                         textAlign: TextAlign.left,
                       ),
                       trailing: Row(
@@ -149,11 +174,16 @@ class ListadoPedidos extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    pedido.totalAPagar.toString(),
+                                    pedido.totalAPagar.toStringAsFixed(2),
                                   ),
-                                  Text(pedido.estado.toString(),
-                                      style:
-                                          TextStyle(color: Colors.deepOrange),
+                                  Text(
+                                      pedido.sincronizado == 1
+                                          ? 'Pendiente'
+                                          : 'Recibido',
+                                      style: TextStyle(
+                                          color: pedido.sincronizado == 1
+                                              ? Colors.deepOrange
+                                              : Colors.blue),
                                       textAlign: TextAlign.left),
                                 ],
                               )
@@ -407,13 +437,4 @@ class ListPagos extends StatelessWidget {
     );
   }
 //
-//
-//
-//           return snapshot.data!.isEmpty
-//             ? Center(child: Text('No existen Facturas en el momento...'))
-//             : ListView(
-
-//             ));
-//       }
-//   }
 }

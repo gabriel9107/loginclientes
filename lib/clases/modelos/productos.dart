@@ -91,22 +91,24 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../servicios/db_helper.dart';
 import '../global.dart';
 
 class Producto {
-  Producto({
-    this.id,
-    required this.nombre,
-    required this.cantidad,
-    required this.codigo,
-    required this.compagnia,
-    required this.isDelete,
-    required this.ouM,
-    required this.precio,
-    required this.sincronizado,
-    required this.tipodeVenta,
-  });
+  Producto(
+      {this.id,
+      required this.nombre,
+      required this.cantidad,
+      required this.codigo,
+      required this.compagnia,
+      required this.isDelete,
+      required this.ouM,
+      required this.precio,
+      required this.sincronizado,
+      required this.tipodeVenta,
+      this.seleccionado});
 
   int? id;
   String codigo;
@@ -118,6 +120,7 @@ class Producto {
   int sincronizado;
   int compagnia;
   int isDelete;
+  bool? seleccionado;
 
   factory Producto.fromJson(String str) => Producto.fromMap(json.decode(str));
 

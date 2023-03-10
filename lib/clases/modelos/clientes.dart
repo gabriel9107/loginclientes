@@ -21,7 +21,8 @@ class Cliente {
       required this.sincronizado,
       required this.telefono1,
       required this.telefono2,
-      this.creadoEn});
+      this.creadoEn,
+      this.descuento});
 
   int? id;
   int activo;
@@ -35,20 +36,21 @@ class Cliente {
   String telefono1;
   String telefono2;
   String? creadoEn;
+  String? descuento;
 
   factory Cliente.fromMapSql(Map<String, dynamic> json) => new Cliente(
-        id: json["ID"],
-        codigo: json["codigo"].toString().trim(),
-        nombre: json["nombre"].toString().trim(),
-        direccion: json["direccion"].toString().trim(),
-        telefono2: json["telefono2"].toString().trim(),
-        telefono1: json["telefono1"].toString().trim(),
-        comentario: json["comentario"].toString().trim(),
-        codigoVendedor: json["codigoVendedor"].toString().trim(),
-        compagnia: json["compagnia"],
-        sincronizado: json["sincronizado"],
-        activo: json["activo"],
-      );
+      id: json["ID"],
+      codigo: json["codigo"].toString().trim(),
+      nombre: json["nombre"].toString().trim(),
+      direccion: json["direccion"].toString().trim(),
+      telefono2: json["telefono2"].toString().trim(),
+      telefono1: json["telefono1"].toString().trim(),
+      comentario: json["comentario"].toString().trim(),
+      codigoVendedor: json["codigoVendedor"].toString().trim(),
+      compagnia: json["compagnia"],
+      sincronizado: json["sincronizado"],
+      activo: json["activo"],
+      descuento: json["descuento"]);
 
   factory Cliente.fromMapfromJson(Map<String, dynamic> json) => new Cliente(
         codigo: json["codigo"].toString().trim(),
@@ -115,16 +117,30 @@ class Cliente {
         "sincronizado": sincronizado,
         "telefono1": telefono1,
         "telefono2": telefono2,
-        "creadoEn": creadoEn
+        "creadoEn": creadoEn,
+        "descuento": descuento
       };
 
+  Map<String, dynamic> toJsonUp() => {
+        "ID": id,
+        "activo": activo.toString(),
+        "codigo": codigo,
+        "codigoVendedor": codigoVendedor,
+        "comentario": comentario,
+        "compagnia": compagnia.toString(),
+        "direccion": direccion,
+        "nombre": nombre,
+        "sincronizado": sincronizado.toString(),
+        "telefono1": telefono1,
+        "telefono2": telefono2,
+      };
   Map<String, dynamic> toJson() => {
         "ID": id,
         "activo": activo,
         "codigo": codigo,
         "codigoVendedor": codigoVendedor,
         "comentario": comentario,
-        "compagnia": compagnia as String,
+        "compagnia": compagnia,
         "direccion": direccion,
         "nombre": nombre,
         "sincronizado": sincronizado,

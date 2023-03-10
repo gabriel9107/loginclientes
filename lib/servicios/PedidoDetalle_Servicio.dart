@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:sigalogin/clases/pedidoDetalle.dart';
+import 'package:sigalogin/pantallas/pedidos/pedidos.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../clases/modelos/resumen.dart';
@@ -49,31 +50,43 @@ class PedidoDetalleServicio extends ChangeNotifier {
   }
 
   sincronizaClienteFire(List<PedidoDetalle> pedidoLista) async {
-    // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
-    // CollectionReference users =
-    //     FirebaseFirestore.instance.collection('Pedidos');
-    final databaseReference = FirebaseDatabase.instance.ref('PedidosDetalle');
-
     pedidoLista.forEach((element) async {
-      await databaseReference
-          .child(element.id.toString() + '- ' + element.pedidoId)
-          .set({
-        "Cantidad": element.cantidad,
-        "Compagnia": element.compagnia,
-        "Id": element.id,
-        "IsDelete": element.isDelete,
-        "PedidoId": element.pedidoId,
-        "Precio": element.precio,
-        "ProductoId": element.productoId,
-        "Sincronizado": element.sincronizado,
-        "Codigo": element.codigo,
-        "Nombre": element.nombre,
-      });
+      final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
+      final resp = await http.post(url, body: element.toJson());
 
-      DatabaseHelper.instance.actualizarPedidoCargado(element.id as int);
+      final decodeData = resp.body;
+
+      print(decodeData);
+
+      if (decodeData.isNotEmpty) {
+        DatabaseHelper.instance.actualizarPedidoCargado(element.id as int);
+      }
+      Resumen.resumentList.add(Resumen(
+          accion: 'Pedidos Subidos', cantidad: pedidoLista.length.toString()));
     });
 
-    Resumen.resumentList.add(Resumen(
-        accion: 'Pedidos Subidos', cantidad: pedidoLista.length.toString()));
+    // // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
+    // // CollectionReference users =
+    // //     FirebaseFirestore.instance.collection('Pedidos');
+    // final databaseReference = FirebaseDatabase.instance.ref('PedidoDetalle');
+
+    // pedidoLista.forEach((element) async {
+    //   await databaseReference.child(element.id.toString()).set({
+    //     "Cantidad": element.cantidad,
+    //     "Compagnia": element.compagnia,
+    //     "Id": element.id,
+    //     "IsDelete": element.isDelete,
+    //     "PedidoId": element.pedidoId,
+    //     "Precio": element.precio,
+    //     "ProductoId": element.productoId,
+    //     "Sincronizado": element.sincronizado,
+    //     "Codigo": element.codigo,
+    //     "Nombre": element.nombre,
+    //   });
+
+    // DatabaseHelper.instance.actualizarPedidoCargado(element.id as int);
+
+    // Resumen.resumentList.add(Resumen(
+    //     accion: 'Pedidos Subidos', cantidad: pedidoLista.length.toString()));
   }
 }

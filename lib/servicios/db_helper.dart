@@ -14,6 +14,7 @@ import 'package:sqflite/utils/utils.dart';
 
 import '../clases/customers.dart';
 import '../clases/detalleFactura.dart';
+import '../clases/formatos.dart';
 import '../clases/global.dart';
 import '../clases/modelos/clientes.dart';
 import '../clases/modelos/pagodetalle.dart';
@@ -28,10 +29,10 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'sigaApp25.db');
+    String path = join(documentsDirectory.path, 'sigaApp30.db');
     return await openDatabase(
       path,
-      version: 6,
+      version: 7,
       onCreate: _onCreate,
     );
   }
@@ -47,7 +48,7 @@ class DatabaseHelper {
         comentario TEXT,
         codigoVendedor TEXT,
         creadoEn TEXT,
-        
+        descuento TEXT,
         sincronizado INTEGER,
         compagnia INTEGER,
         activo INTEGER
@@ -77,6 +78,7 @@ class DatabaseHelper {
         Sincronizado INTEGER,
         Compagnia INTEGER,
         Estado TEXT,
+        vendorId TEXT,
         IsDelete INTEGER
                 )''');
 
@@ -501,8 +503,8 @@ class DatabaseHelper {
       obtenerDetallePedidosPendienteDeSincornizacion() async {
     Database db = await instance.database;
 
-    var res = await db.rawQuery(
-        "SELECT * FROM PedidoDetalle where Sincronizado = 1 and  IsDelete = 1");
+    var res =
+        await db.rawQuery("SELECT * FROM PedidoDetalle where Sincronizado = 1");
 
     List<PedidoDetalle> ordenesLista = res.isNotEmpty
         ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()
@@ -534,6 +536,20 @@ class DatabaseHelper {
     return ordenesLista;
   }
 
+  Future<List<Pedido>> getOrdenesPorvendedor() async {
+    Database db = await instance.database;
+    var ordenes = await db.query('Pedidos',
+        orderBy: 'ID', where: 'vendorId = ?', whereArgs: [usuario]);
+    // List<OrdenVenta> ordenesLista = ordenes.isNotEmpty
+    //     ? ordenes.map((c) => OrdenVenta.fromMap(c)).toList()
+    //     : [];
+
+    List<Pedido> ordenesLista = ordenes.isNotEmpty
+        ? ordenes.map((c) => Pedido.fromMapsqlite(c)).toList()
+        : [];
+    return ordenesLista;
+  }
+
   // void addProduct(Producto producto) {}
 
 //Pedidos de ventas
@@ -548,7 +564,7 @@ class DatabaseHelper {
     return await db.insert('PedidoDetalle', detalle.toMap());
   }
 
-  Future<int> actualizarClientesCargado(String id) async {
+  Future<int> actualizarClientesCargado(int id) async {
     Database db = await instance.database;
     final data = {
       'sincronizado': 0,
@@ -627,6 +643,18 @@ class DatabaseHelper {
     // Factura.fromJson(c)).toList();
 
     return facturaList;
+  }
+
+  Future<bool> obtenerFacturasPendientesdepago(String clienteId) async {
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT count(*) FROM Factura WHERE clienteId= '$clienteId' and montoPendiente > 0.0 ");
+    int count = res.length;
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<List<FacturaDetalle>> obtenerDetalleDeFactura() async {
@@ -799,43 +827,71 @@ class DatabaseHelper {
 //Panel
 
   Future<int> CantidadDeClientesPorMes() async {
+    var mes =
+        obtenerMes(DateTime.now().month); // DateTime.now().month.toString();
     var user = usuario;
     var compania = compagnia;
     var dbClient = await instance.database;
-    var res = await dbClient.rawQuery(
-        "SELECT COUNT(*) FROM Clientes WHERE codigoVendedor = '$user' ");
+    int count = Sqflite.firstIntValue(await dbClient.rawQuery(
+        // "SELECT COUNT(*) from  Clientes  WHERE   codigoVendedor ='$user'")) ??
+        "SELECT COUNT(*) from  Clientes  WHERE   codigoVendedor ='$user' and  strftime('%m', creadoEn) = '$mes'")) ?? 0;
 
-    int count = res.length;
+    // var res = await dbClient.rawQuery(
+    //     "SELECT COUNT(*) FROM Pedidos  WHERE vendorId ='$user' and  strftime('%m', FechaOrden) = '$mes'");
+    // int count = Sqflite.firstIntValue(res);
+    return count;
+  }
+
+  Future<int> CantidadDevisitas() async {
+    var mes = obtenerMes(DateTime.now().month - 1); //DateTime.now().month;
+    // var mesactual = mes - 1;
+    var user = usuario;
+    var compania = compagnia;
+    var dbClient = await instance.database;
+    int count = Sqflite.firstIntValue(await dbClient.rawQuery(
+            "SELECT * from Clientes INNER JOIN Pedidos  ON Clientes.codigo = Pedidos.ClienteId  WHERE   codigoVendedor ='$user' and  strftime('%m', creadoEn) = '$mes'")) ??
+        0;
+
+    // var res = await dbClient.rawQuery(
+    //     "SELECT COUNT(*) FROM Pedidos  WHERE vendorId ='$user' and  strftime('%m', FechaOrden) = '$mes'");
+    // int count = Sqflite.firstIntValue(res);
     return count;
   }
 
   Future<int> CantidadDeVentas() async {
+    var mes = obtenerMes(DateTime.now().month); //DateTime.now().month;
     var user = usuario;
     var compania = compagnia;
     var dbClient = await instance.database;
-    var res = await dbClient.rawQuery("SELECT COUNT(*) FROM Pedidos");
-    int count = res.length;
+    int count = Sqflite.firstIntValue(await dbClient.rawQuery(
+            "SELECT COUNT(*) from  Pedidos  WHERE vendorId LIKE '%$user%' and  strftime('%m', FechaOrden) = '$mes' ")) ??
+        0;
+
     return count;
   }
 
   Future<int> cantidadDeCobros() async {
+    var mes = obtenerMes(DateTime.now().month);
+
     var user = usuario;
     var compania = compagnia;
     var dbClient = await instance.database;
-    var res = await dbClient
-        .rawQuery("SELECT COUNT(*) FROM Pago WHERE vendorId = '$user'");
-
-    int count = res.length;
+    int count = Sqflite.firstIntValue(await dbClient.rawQuery(
+            "SELECT COUNT(*) FROM Pago WHERE vendorId LIKE '%$user%' and  strftime('%m', fechaPago) = '$mes'")) ??
+        0;
     return count;
   }
 
   Future<int> Puntajes() async {
+    var mes = obtenerMes(DateTime.now().month);
     var user = usuario;
     var compania = compagnia;
     var dbClient = await instance.database;
-    var res = await dbClient.rawQuery(
-        "SELECT SUM(montoPagado) FROM Pago  WHERE vendorId = '$user'");
-    int count = res.length;
+    int count = Sqflite.firstIntValue(await dbClient.rawQuery(
+            "SELECT COUNT(*) FROM Pago WHERE vendorId = '$user' and  strftime('%m', fechaPago) = '$mes'")) ??
+        0;
+
+    var resultado = count / 1105200.00 * 100;
     return count;
   }
 }
