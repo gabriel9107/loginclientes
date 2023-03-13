@@ -40,7 +40,7 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute('''CREATE TABLE Clientes(
    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        codigo TEXT,
+        codigo INTEGER,
         nombre TEXT,
         direccion TEXT,
         telefono1 TEXT,
@@ -575,6 +575,19 @@ class DatabaseHelper {
     final result =
         await db.update('Clientes', data, where: "ID = ?", whereArgs: [id]);
     return result;
+  }
+
+  Future<List<PedidoDetalle>> obtenerPedidoDetalleEspecificoASincronizar(
+      int id) async {
+    Database db = await instance.database;
+
+    var res = await db.rawQuery(
+        "SELECT * FROM PedidoDetalle where Sincronizado = 1 and PedidoId =$id");
+
+    List<PedidoDetalle> ordenesLista = res.isNotEmpty
+        ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()
+        : [];
+    return ordenesLista;
   }
 
   Future<int> actualizarPedidoCargado(int id) async {
