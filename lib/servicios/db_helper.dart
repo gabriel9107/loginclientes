@@ -29,7 +29,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'sigaApp30.db');
+    String path = join(documentsDirectory.path, '33.db');
     return await openDatabase(
       path,
       version: 7,
@@ -273,7 +273,7 @@ class DatabaseHelper {
 
 //Verificar si existe el Cliente antes de sincronizarlo
   Future<int> customerExists(Cliente cliente) async {
-    String customerCode = cliente.codigo.trim();
+    int customerCode = cliente.codigo;
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
         "SELECT EXISTS(SELECT 1 FROM Clientes WHERE codigo= '$customerCode')");
@@ -311,6 +311,17 @@ class DatabaseHelper {
     Database db = await instance.database;
     var clientes =
         await db.rawQuery("SELECT * FROM Clientes where sincronizado   = '1'");
+
+    List<Cliente> listadeClientes = clientes.isNotEmpty
+        ? clientes.map((e) => Cliente.fromMapSql(e)).toList()
+        : [];
+
+    return listadeClientes;
+  }
+
+  Future<List<Cliente>> obtenerCliente(String vendedor) async {
+    Database db = await instance.database;
+    var clientes = await db.rawQuery("SELECT * FROM Clientes ");
 
     List<Cliente> listadeClientes = clientes.isNotEmpty
         ? clientes.map((e) => Cliente.fromMapSql(e)).toList()
@@ -648,8 +659,7 @@ class DatabaseHelper {
 
   Future<List<Factura>> getFacturasporClientes(String clienteId) async {
     Database db = await instance.database;
-    var factura = await db
-        .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId'");
+    var factura = await db.rawQuery("SELECT * FROM Factura ");
 
 // .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId' and facturaPagada = 1");
     List<Factura> facturaList = factura.map((c) => Factura.fromMap(c)).toList();

@@ -64,7 +64,7 @@ class MySearchDelegateParaClientesEnClientes extends SearchDelegate {
         final suggestion = suggestions[index];
 
         return ListTile(
-          title: Text('Cliente No.: ' + suggestion.codigo),
+          title: Text('Cliente No.: ' + suggestion.codigo.toString()),
           subtitle: Text('Nombre  : ' + suggestion.nombre),
 
           trailing: Row(

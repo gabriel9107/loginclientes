@@ -65,7 +65,8 @@ class CustomerListState extends State<clienteLista> {
       ),
       body: Center(
         child: FutureBuilder<List<Cliente>>(
-          future: DatabaseHelper.instance.obtenerClientesPorVendedor(usuario),
+          // future: DatabaseHelper.instance.obtenerClientesPorVendedor(usuario),
+          future: DatabaseHelper.instance.obtenerCliente(usuario),
           builder:
               (BuildContext context, AsyncSnapshot<List<Cliente>> snapshot) {
             if (!snapshot.hasData) {
@@ -85,8 +86,9 @@ class CustomerListState extends State<clienteLista> {
                                 : Colors.red,
                             child: Icon(Icons.emoji_people),
                           ),
-                          title:
-                              Text(customer.codigo + ' | ' + customer.nombre),
+                          title: Text(customer.codigo.toString() +
+                              ' | ' +
+                              customer.nombre),
                           subtitle: Text(
                               customer.direccion + ' | ' + customer.telefono1),
                           trailing: Row(

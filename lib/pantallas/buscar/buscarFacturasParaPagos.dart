@@ -3,6 +3,7 @@ import 'package:sigalogin/clases/factura.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/product.dart';
+import 'package:sigalogin/pantallas/Pagos/pagosForm.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
@@ -10,7 +11,6 @@ import '../../clases/detalledePago.dart';
 import '../../clases/facturaDetalle.dart';
 import '../../clases/global.dart';
 import '../../clases/modelos/pagodetalle.dart';
-import '../Pagos/pago.dart';
 
 class BuscarFacturaEnPagos extends SearchDelegate {
   @override
@@ -84,6 +84,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                 alignment: Alignment.topRight,
                 child: ElevatedButton(
                   onPressed: () {
+                    PagoTemporal.prueba();
                     var facturafecha = DateTime.now();
                     var facturafechavencimiento = DateTime.now();
 
@@ -107,23 +108,23 @@ class BuscarFacturaEnPagos extends SearchDelegate {
 
                     PagoTemporal.agregarFacturasaPagos(pago);
 
-                    Factura.addfacturaDetalle(Factura(
-                        facturaFecha: suggestion.facturaFecha,
-                        facturaId: suggestion.facturaId,
-                        facturaVencimiento: suggestion.facturaVencimiento,
-                        id: suggestion.id,
-                        metodoDePago: suggestion.metodoDePago,
-                        montoFactura: suggestion.montoFactura,
-                        totalPagado: suggestion.totalPagado,
-                        clienteId: suggestion.clienteId,
-                        clienteNombre: suggestion.clienteNombre,
-                        compagnia: compagnia,
-                        isDelete: 0,
-                        montoPendiente:
-                            (suggestion.montoFactura - suggestion.totalPagado),
-                        pedidoId: suggestion.pedidoId,
-                        sincronizado: 0,
-                        vendedorId: usuario));
+                    // PagoTemporal.addfacturaDetalle(Factura(
+                    //     facturaFecha: suggestion.facturaFecha,
+                    //     facturaId: suggestion.facturaId,
+                    //     facturaVencimiento: suggestion.facturaVencimiento,
+                    //     id: suggestion.id,
+                    //     metodoDePago: suggestion.metodoDePago,
+                    //     montoFactura: suggestion.montoFactura,
+                    //     totalPagado: suggestion.totalPagado,
+                    //     clienteId: suggestion.clienteId,
+                    //     clienteNombre: suggestion.clienteNombre,
+                    //     compagnia: compagnia,
+                    //     isDelete: 0,
+                    //     montoPendiente:
+                    //         (suggestion.montoFactura - suggestion.totalPagado),
+                    //     pedidoId: suggestion.pedidoId,
+                    //     sincronizado: 0,
+                    //     vendedorId: usuario));
 
                     close(context, null);
                     // double price = suggestion.price as double;

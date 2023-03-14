@@ -26,7 +26,7 @@ class Cliente {
 
   int? id;
   int activo;
-  String codigo;
+  int codigo;
   String codigoVendedor;
   String comentario;
   int compagnia;
@@ -40,7 +40,7 @@ class Cliente {
 
   factory Cliente.fromMapSql(Map<String, dynamic> json) => new Cliente(
       id: json["ID"],
-      codigo: json["codigo"].toString().trim(),
+      codigo: json["codigo"],
       nombre: json["nombre"].toString().trim(),
       direccion: json["direccion"].toString().trim(),
       telefono2: json["telefono2"].toString().trim(),
@@ -53,7 +53,7 @@ class Cliente {
       descuento: json["descuento"]);
 
   factory Cliente.fromMapfromJson(Map<String, dynamic> json) => new Cliente(
-        codigo: json["codigo"].toString().trim(),
+        codigo: json["codigo"],
         nombre: json["nombre"].toString().trim(),
         direccion: json["direccion"].toString().trim(),
         telefono2: json["telefono2"].toString().trim(),
@@ -61,13 +61,13 @@ class Cliente {
         comentario: json["comentario"].toString().trim(),
         codigoVendedor: json["codigoVendedor"].toString().trim(),
         compagnia: 0,
-        sincronizado: 0,
-        activo: int.parse(json["activo"]),
+        sincronizado: json["sincronizado"],
+        activo: json["activo"],
       );
 
   factory Cliente.fromMap(Map<String, dynamic> json) => new Cliente(
         id: json["ID"],
-        codigo: json["codigo"].toString().trim(),
+        codigo: json["codigo"],
         nombre: json["nombre"].toString().trim(),
         direccion: json["direccion"].toString().trim(),
         telefono2: json["telefono2"].toString().trim(),
@@ -132,6 +132,7 @@ class Cliente {
         "nombre": nombre,
         "sincronizado": sincronizado.toString(),
         "telefono1": telefono1,
+        "descuento": descuento,
         "telefono2": telefono2,
       };
   Map<String, dynamic> toJson() => {

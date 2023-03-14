@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/ordenDeventa.dart';
 import 'package:sigalogin/pantallas/Pagos/pago.dart';
+import 'package:sigalogin/pantallas/Pagos/pagosForm.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 

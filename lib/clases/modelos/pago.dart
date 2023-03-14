@@ -134,6 +134,7 @@ import 'dart:convert';
 
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/pantallas/Pagos/pago.dart';
+import 'package:sigalogin/pantallas/Pagos/pagosForm.dart';
 
 import '../../servicios/db_helper.dart';
 import '../factura.dart';
@@ -321,11 +322,15 @@ class Pago {
     pagos.add(pago);
   }
 
-  static actualizarmontodelpago(String monto) {
-    double valor = double.parse(monto);
-    // pago.metodoDePago
-    pago.montoPagado = valor;
+  static actualizarmontodelpago(double monto) {
+    pago.montoPagado = monto;
   }
+
+  // static actualizarmontodelpago(String monto) {
+  //   double valor = double.parse(monto);
+  //   // pago.metodoDePago
+  //   pago.montoPagado = valor;
+  // }
 
   static obtenermontodelpago() {
     if (pago.montoPagado == 0.0) {

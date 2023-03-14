@@ -3,6 +3,7 @@ import 'package:sigalogin/clases/factura.dart';
 import 'package:sigalogin/clases/modelos/pagodetalle.dart';
 import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/clases/themes.dart';
+import 'package:sigalogin/pantallas/Pagos/pagosForm.dart';
 
 import 'package:sigalogin/pantallas/Pagos/realizarPago.dart';
 import 'package:sigalogin/pantallas/clientes/detalleDeFactura.dart';
@@ -50,37 +51,39 @@ class DetalleDelCliente extends StatelessWidget {
           drawer: navegacions(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              var existenPendientes = DatabaseHelper.instance
-                  .obtenerFacturasPendientesdepago(customerCode.toString());
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyCustomForm()));
+              // var existenPendientes = DatabaseHelper.instance
+              //     .obtenerFacturasPendientesdepago(customerCode.toString());
 
-              if (existenPendientes == true) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RealizarPagodeprueba(
-                          this.nombredelcliente.toString(),
-                          this.customerCode.toString())),
-                );
-              } else {
-                // print('No existen facturas pendientes de pago');
-                showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                            title: const Text("Notificación :"),
-                            content: const Text(
-                                "No existen facturas pendientes de pago"),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(ctx).pop();
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(14),
-                                  child: const Text("Ok"),
-                                ),
-                              )
-                            ]));
-              }
+              // if (existenPendientes == false) {
+              //   Navigator.push(context,
+              //       MaterialPageRoute(builder: (context) => MyCustomForm())
+
+              //       // RealizarPagodeprueba(
+              //       //     this.nombredelcliente.toString(),
+              //       //     this.customerCode.toString())),
+              //       );
+              // } else {
+              //   // print('No existen facturas pendientes de pago');
+              //   showDialog(
+              //       context: context,
+              //       builder: (ctx) => AlertDialog(
+              //               title: const Text("Notificación :"),
+              //               content: const Text(
+              //                   "No existen facturas pendientes de pago"),
+              //               actions: <Widget>[
+              //                 TextButton(
+              //                   onPressed: () {
+              //                     Navigator.of(ctx).pop();
+              //                   },
+              //                   child: Container(
+              //                     padding: const EdgeInsets.all(14),
+              //                     child: const Text("Ok"),
+              //                   ),
+              //                 )
+              //               ]));
+              // }
             },
             tooltip: 'Agregar',
             child: const Icon(
