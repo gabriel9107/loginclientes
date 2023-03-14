@@ -29,7 +29,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '33.db');
+    String path = join(documentsDirectory.path, '34.db');
     return await openDatabase(
       path,
       version: 7,
@@ -659,7 +659,8 @@ class DatabaseHelper {
 
   Future<List<Factura>> getFacturasporClientes(String clienteId) async {
     Database db = await instance.database;
-    var factura = await db.rawQuery("SELECT * FROM Factura ");
+    var factura = await db
+        .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId'");
 
 // .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId' and facturaPagada = 1");
     List<Factura> facturaList = factura.map((c) => Factura.fromMap(c)).toList();

@@ -10,15 +10,18 @@ import '../../clases/factura.dart';
 import '../buscar/buscarFacturasParaPagos.dart';
 
 class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({super.key});
+  String? clienteId;
+  MyCustomForm(this.clienteId, {super.key});
 
   @override
-  State<MyCustomForm> createState() => _MyCustomFormState();
+  State<MyCustomForm> createState() => _MyCustomFormState(this.clienteId);
 }
 
 // Define a corresponding State class.
 // This class holds data related to the Form.
 class _MyCustomFormState extends State<MyCustomForm> {
+  String? clienteId;
+  _MyCustomFormState(this.clienteId);
 //   // Create a text controller and use it to retrieve the current value
 //   // of the TextField.
 //   final myController = TextEditingController();
@@ -84,7 +87,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Realizar Pagos'),
+        title: Text('Realizar Pagos  A : ' + this.clienteId.toString()),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30),
@@ -116,8 +119,9 @@ class _MyCustomFormState extends State<MyCustomForm> {
               }).toList(),
             ),
             TextFormField(
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
               controller: valordelpagoControler,
-              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Valor del pago	',
               ),
@@ -147,6 +151,11 @@ class _MyCustomFormState extends State<MyCustomForm> {
               child: ElevatedButton(
                   child: Text('Buscar Factura'),
                   onPressed: () async {
+                    Pago.actualizarmontodelpago(
+                        double.parse(valordelpagoControler.text));
+                    Pago.actualizarpago(
+                        this.clienteId.toString(), _selectedValueFormaDePago);
+
                     await showSearch(
                         context: context, delegate: BuscarFacturaEnPagos());
                     setState(() {

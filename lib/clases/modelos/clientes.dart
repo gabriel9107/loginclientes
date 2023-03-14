@@ -61,8 +61,8 @@ class Cliente {
         comentario: json["comentario"].toString().trim(),
         codigoVendedor: json["codigoVendedor"].toString().trim(),
         compagnia: 0,
-        sincronizado: json["sincronizado"],
-        activo: json["activo"],
+        sincronizado: 0,
+        activo: 0,
       );
 
   factory Cliente.fromMap(Map<String, dynamic> json) => new Cliente(

@@ -51,8 +51,10 @@ class DetalleDelCliente extends StatelessWidget {
           drawer: navegacions(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MyCustomForm()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MyCustomForm(this.customerCode)));
               // var existenPendientes = DatabaseHelper.instance
               //     .obtenerFacturasPendientesdepago(customerCode.toString());
 
