@@ -103,6 +103,7 @@ class ResumenDePagos extends StatelessWidget {
                           showAlertDialog(context);
                         } else {
                           Pago.guardarPago();
+                          PagoTemporal.limpiarDetalle();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -135,6 +136,10 @@ showAlertDialog(BuildContext context) {
   Widget okButton = TextButton(
     child: Text("OK"),
     onPressed: () {
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => MyCustomForm(Pago.pago.clienteId)));
       Navigator.of(context).pop();
     },
   );

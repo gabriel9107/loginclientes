@@ -55,37 +55,6 @@ class DetalleDelCliente extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => MyCustomForm(this.customerCode)));
-              // var existenPendientes = DatabaseHelper.instance
-              //     .obtenerFacturasPendientesdepago(customerCode.toString());
-
-              // if (existenPendientes == false) {
-              //   Navigator.push(context,
-              //       MaterialPageRoute(builder: (context) => MyCustomForm())
-
-              //       // RealizarPagodeprueba(
-              //       //     this.nombredelcliente.toString(),
-              //       //     this.customerCode.toString())),
-              //       );
-              // } else {
-              //   // print('No existen facturas pendientes de pago');
-              //   showDialog(
-              //       context: context,
-              //       builder: (ctx) => AlertDialog(
-              //               title: const Text("Notificación :"),
-              //               content: const Text(
-              //                   "No existen facturas pendientes de pago"),
-              //               actions: <Widget>[
-              //                 TextButton(
-              //                   onPressed: () {
-              //                     Navigator.of(ctx).pop();
-              //                   },
-              //                   child: Container(
-              //                     padding: const EdgeInsets.all(14),
-              //                     child: const Text("Ok"),
-              //                   ),
-              //                 )
-              //               ]));
-              // }
             },
             tooltip: 'Agregar',
             child: const Icon(

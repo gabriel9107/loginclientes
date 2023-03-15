@@ -101,17 +101,34 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 if (value == 'Efectivo')
                   {
                     setState(() {
+                      _selectedValueFormaDePago = value;
+                      this.efectivo = true;
                       _isDisabled = true;
                     })
                   }
                 else
                   {
                     setState(() {
+                      _selectedValueFormaDePago = value;
+                      this.efectivo = false;
                       _isDisabled = false;
                     })
                   }
               },
               items: ListaFormaDepago.map<DropdownMenuItem<String>>((item) {
+                return DropdownMenuItem(
+                  value: item,
+                  child: Text(item),
+                );
+              }).toList(),
+            ),
+            DropdownButtonFormField<String>(
+              disabledHint: Text("-Seleccionar un banco"),
+              value: _selectedValue,
+              onChanged: _isDisabled
+                  ? null
+                  : (value) => {setState(() => _selectedValue = value)},
+              items: ListaDeBancos.map<DropdownMenuItem<String>>((item) {
                 return DropdownMenuItem(
                   value: item,
                   child: Text(item),
@@ -129,13 +146,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
             TextFormField(
               controller: formadelpagoController,
               decoration: InputDecoration(labelText: 'Num. Cheque	'),
-              readOnly: _isReadonly,
-              enabled: !_isDisabled,
-            ),
-            TextFormField(
-              controller: fechaChequeController,
-              keyboardType: TextInputType.datetime,
-              decoration: InputDecoration(labelText: 'Fecha Cheque'),
               readOnly: _isReadonly,
               enabled: !_isDisabled,
             ),
@@ -336,7 +346,9 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                               TextInputType.numberWithOptions(
                                                   signed: false, decimal: true),
                                           onTap: () {
-                                            // query = suggestion.facturaId.toString();
+                                            setState(() {
+                                              _refresh();
+                                            });
                                           },
                                         ),
                                       ),
@@ -357,6 +369,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                       PagoTemporal.actualizardetalle(
                                           index, monto);
                                       setState(() {
+                                        _controllers[index].text = '';
                                         _refresh();
                                       });
                                     },
@@ -431,8 +444,8 @@ class PagoTemporal {
     return pagos.add(pago);
   }
 
-  static void prueba() {
-    print('esta es una prueba');
+  static void limpiarDetalle() async {
+    pagos.clear();
   }
 
   static List<PagoTemporal> getDetalleFactura() {

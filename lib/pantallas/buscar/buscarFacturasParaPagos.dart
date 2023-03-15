@@ -84,7 +84,6 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                 alignment: Alignment.topRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    PagoTemporal.prueba();
                     var facturafecha = DateTime.now();
                     var facturafechavencimiento = DateTime.now();
 

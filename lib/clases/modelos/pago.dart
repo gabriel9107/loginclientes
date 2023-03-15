@@ -398,5 +398,7 @@ class Pago {
 
     // Pagodetalle.ActualizarFacutas();
     pagos.clear();
+    PagoTemporal.pagos.clear();
+    Pago.pago.montoPagado = 0;
   }
 }
