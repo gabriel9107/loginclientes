@@ -13,6 +13,7 @@ import '../../clases/modelos/pagodetalle.dart';
 import '../alertas.dart';
 import '../clientes/detalleDelCLiente.dart';
 import '../clientes/listaClientes.dart';
+import 'package:intl/intl.dart';
 
 class ResumenDePagos extends StatelessWidget {
   @override
@@ -46,7 +47,7 @@ class ResumenDePagos extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      subtotal.toString(),
+                      NumberFormat.simpleCurrency().format(subtotal),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -65,7 +66,7 @@ class ResumenDePagos extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      total.toString(),
+                      NumberFormat.simpleCurrency().format(total),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -99,11 +100,12 @@ class ResumenDePagos extends StatelessWidget {
                             color: Colors.white),
                       ),
                       onPressed: (() {
-                        if (subtotal != total) {
+                        if (total > 0 && subtotal != total) {
                           showAlertDialog(context);
                         } else {
                           Pago.guardarPago();
-                          PagoTemporal.limpiarDetalle();
+
+                          // Pago.pago.montoPagado = 0;
                           Navigator.push(
                               context,
                               MaterialPageRoute(

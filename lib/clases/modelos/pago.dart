@@ -397,8 +397,5 @@ class Pago {
         .then((value) => PagoTemporal.guardarDetallePago(value, formaDePago));
 
     // Pagodetalle.ActualizarFacutas();
-    pagos.clear();
-    PagoTemporal.pagos.clear();
-    Pago.pago.montoPagado = 0;
   }
 }

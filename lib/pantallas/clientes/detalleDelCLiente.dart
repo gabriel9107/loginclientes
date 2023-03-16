@@ -51,6 +51,7 @@ class DetalleDelCliente extends StatelessWidget {
           drawer: navegacions(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
+              PagoTemporal.limpiarDetalle();
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -148,7 +149,8 @@ class ListadoPedidos extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    pedido.totalAPagar.toStringAsFixed(2),
+                                    NumberFormat.simpleCurrency()
+                                        .format(pedido.totalAPagar),
                                   ),
                                   Text(
                                       pedido.sincronizado == 1
@@ -282,11 +284,13 @@ class ListFactura extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    factura.montoFactura.toString(),
+                                    NumberFormat.simpleCurrency()
+                                        .format(factura.montoFactura),
                                   ),
                                   Text(
-                                      ((factura.montoFactura -
-                                              factura.totalPagado))
+                                      (NumberFormat.simpleCurrency().format(
+                                              (factura.montoFactura -
+                                                  factura.totalPagado)))
                                           .toString(),
                                       textAlign: TextAlign.left),
                                 ],
@@ -367,7 +371,8 @@ class ListPagos extends StatelessWidget {
                                   Column(
                                     children: [
                                       Text('Monto : ' +
-                                          pago.montoPagado.toString())
+                                          NumberFormat.simpleCurrency()
+                                              .format(pago.montoPagado))
                                     ],
                                   ),
                                 ],

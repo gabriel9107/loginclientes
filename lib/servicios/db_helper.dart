@@ -19,6 +19,7 @@ import '../clases/global.dart';
 import '../clases/modelos/clientes.dart';
 import '../clases/modelos/pagodetalle.dart';
 import '../clases/ordenDeventa.dart';
+import '../pantallas/Pagos/pagosForm.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConsturctor();
@@ -406,6 +407,8 @@ class DatabaseHelper {
   Future<int> aregardetalledePagoAsincronizar(PagoDetalle pago) async {
     var db = await instance.database;
     return await db.insert('PagoDetalle', pago.toJson());
+    PagoTemporal.limpiarDetalle();
+    PagoTemporal.pagos.clear();
   }
 
   Future<int> aregardetalledePago(PagoDetalle pago) async {

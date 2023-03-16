@@ -12,6 +12,8 @@ import '../../clases/facturaDetalle.dart';
 import '../../clases/global.dart';
 import '../../clases/modelos/pagodetalle.dart';
 
+import 'package:intl/intl.dart';
+
 class BuscarFacturaEnPagos extends SearchDelegate {
   @override
   List<Widget>? buildActions(BuildContext context) => [
@@ -68,17 +70,19 @@ class BuscarFacturaEnPagos extends SearchDelegate {
         return ListTile(
           title: Text('Numero Factura: ' + suggestion.facturaId.toString(),
               style: TextStyle(fontSize: 18)),
-          subtitle: Text('Monto total : ' + suggestion.montoFactura.toString()),
+          subtitle: Text('Monto total : ' +
+              NumberFormat.simpleCurrency().format(suggestion.montoFactura)),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
-                width: 80,
-                child: Text('Monto Pendiente'),
+                width: 150,
+                child: Text('Monto Pendiente :'),
               ),
               Container(
-                width: 60,
-                child: Text(suggestion.montoPendiente.toString()),
+                width: 100,
+                child: Text(NumberFormat.simpleCurrency()
+                    .format(suggestion.montoPendiente)),
               ),
               Container(
                 alignment: Alignment.topRight,
