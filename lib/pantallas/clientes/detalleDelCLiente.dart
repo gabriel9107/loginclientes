@@ -52,10 +52,13 @@ class DetalleDelCliente extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               PagoTemporal.limpiarDetalle();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MyCustomForm(this.customerCode)));
+
+              if (1 == 1) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyCustomForm(this.customerCode)));
+              } else {}
             },
             tooltip: 'Agregar',
             child: const Icon(

@@ -196,6 +196,7 @@
 // }
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -218,11 +219,13 @@ class pedidosLista extends StatefulWidget {
 }
 
 class _ListaOedidosState extends State<pedidosLista> {
+  late DatabaseReference dbref;
   // late List<Client> Clients;
   int count = 0;
 
   @override
   void initState() {
+    dbref = FirebaseDatabase.instance.ref().child('Pedidos');
     // Clients = Client.getClients();
     super.initState();
   }
@@ -237,7 +240,33 @@ class _ListaOedidosState extends State<pedidosLista> {
 
         actions: [
           IconButton(
-              icon: Icon(Icons.refresh), onPressed: () => {cargarPedidos()})
+              icon: Icon(Icons.refresh),
+              onPressed: () => {
+                    // DatabaseHelper.instance
+                    //     .obtenerPedidosPendienteDeSincornizacion()
+                    //     .then(
+                    //   (value) {
+                    //     value.forEach((element) {
+                    //       Map<String, dynamic> pedido = {
+                    //         "ClienteId": element.clienteId,
+                    //         "Compagnia": element.compagnia,
+                    //         "FechaOrden": element.fechaOrden.toIso8601String(),
+                    //         "Id": element.id,
+                    //         "Impuestos": element.impuestos,
+                    //         "IsDelete": element.isDelete,
+                    //         "NumeroOrden": element.numeroOrden,
+                    //         "Sincronizado": element.sincronizado,
+                    //         "totalAPagar": element.totalAPagar,
+                    //         "Estado": element.estado
+                    //       };
+
+                    //       dbref.push().set(pedido);
+                    //     });
+                    //   },
+                    // )
+
+                    cargarPedidos()
+                  })
         ],
       ),
       drawer: navegacions(),
@@ -332,23 +361,53 @@ Future cargarPedidos() async {
 }
 
 Future sincronizarPedidos(Pedido pedido) async {
-  final databaseReference = FirebaseDatabase.instance.ref('Pedidos');
-  await databaseReference
-      .child('PT-' + pedido.clienteId + '-' + pedido.id.toString())
-      .set({
-    "ClienteId": pedido.clienteId,
-    "Compagnia": pedido.compagnia,
-    "FechaOrden": pedido.fechaOrden.toIso8601String(),
-    "Id": pedido.id,
-    "Impuestos": pedido.impuestos,
-    "IsDelete": pedido.isDelete,
-    "NumeroOrden": pedido.numeroOrden,
-    "Sincronizado": pedido.sincronizado,
-    "totalAPagar": pedido.totalAPagar,
-    "Estado": pedido.estado
-  });
+  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final url = Uri.https(_baseUrl, 'Pedidos.json');
 
-  DatabaseHelper.instance.actualizarPedidoCargado(pedido.id as int);
+  final resp = await http.post(url, body: json.encode(pedido.toJsonUp()));
+  final decodeData = resp.body;
+  print(decodeData);
+  if (decodeData.isNotEmpty) {
+    DatabaseHelper.instance.actualizarClientesCargado(pedido.id as int);
+  }
+
+  // final database = FirebaseDatabase.instance.reference();
+
+  // await database
+  //     .child('Pedidos')
+  //     .child('PT-' + pedido.clienteId + '-' + pedido.id.toString())
+  //     .push()
+  //     .set({
+  //       "ClienteId": pedido.clienteId,
+  //       "Compagnia": pedido.compagnia,
+  //       "FechaOrden": pedido.fechaOrden.toIso8601String(),
+  //       "Id": pedido.id,
+  //       "Impuestos": pedido.impuestos,
+  //       "IsDelete": pedido.isDelete,
+  //       "NumeroOrden": pedido.numeroOrden,
+  //       "Sincronizado": pedido.sincronizado,
+  //       "totalAPagar": pedido.totalAPagar,
+  //       "Estado": pedido.estado
+  //     })
+  //     .then((value) => print('Factura creada'))
+  //     .catchError((error) => print('existe un error $error'));
+
+  // await databaseReference
+  //     .child('PT-' + pedido.clienteId + '-' + pedido.id.toString())
+  //     .set({
+  //   "ClienteId": pedido.clienteId,
+  //   "Compagnia": pedido.compagnia,
+  //   "FechaOrden": pedido.fechaOrden.toIso8601String(),
+  //   "Id": pedido.id,
+  //   "Impuestos": pedido.impuestos,
+  //   "IsDelete": pedido.isDelete,
+  //   "NumeroOrden": pedido.numeroOrden,
+  //   "Sincronizado": pedido.sincronizado,
+  //   "totalAPagar": pedido.totalAPagar,
+  //   "Estado": pedido.estado
+  // });
+
+  // DatabaseHelper.instance.actualizarPedidoCargado(pedido.id as int);
 
   // final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
   // final url = Uri.https(_baseUrl, 'Pedidos.json');
@@ -368,36 +427,18 @@ Future cargarPedidoDetalle(Pedido Pedido) async {
 
 sincronizarPedidoDetalles(
     List<PedidoDetalle> pedidoLista, String clienteID) async {
-  final databaseReference = FirebaseDatabase.instance.ref('PedidoDetalle');
+  // final databaseReference = FirebaseDatabase.instance.ref('PedidoDetalle');
+
+  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
 
   pedidoLista.forEach((element) async {
-    await databaseReference
-        .child('PTD-' + clienteID + '-' + element.id.toString())
-        .set({
-      "Id": element.id,
-      "Codigo": element.codigo,
-      "Nombre": element.nombre,
-      "cantidad": element.cantidad,
-      "Precio": element.precio,
-      "ProductoId": element.productoId,
-      "PedidoId": element.pedidoId,
-      "Sincronizado": element.sincronizado,
-      "Compagnia": element.compagnia,
-      "IsDelete": element.isDelete
-
-      //   "ClienteId": element.clienteId,
-      //   "Compagnia": element.compagnia,
-      //   "FechaOrden": element.fechaOrden.toIso8601String(),
-      //   "Id": element.id,
-      //   "Impuestos": element.impuestos,
-      //   "IsDelete": element.isDelete,
-      //   "NumeroOrden": element.numeroOrden,
-      //   "Sincronizado": element.sincronizado,
-      //   "totalAPagar": element.totalAPagar,
-      //   "Estado": element.estado
-    });
-
-    DatabaseHelper.instance.actualizarPedidoDetalleCargado(element.id as int);
+    final resp = await http.post(url, body: json.encode(element.toJsonUp()));
+    final decodeData = resp.body;
+    print(decodeData);
+    if (decodeData.isNotEmpty) {
+      DatabaseHelper.instance.actualizarPedidoDetalleCargado(element.id as int);
+    }
   });
 
   Resumen.resumentList.add(Resumen(
