@@ -94,7 +94,7 @@ class FacturaDetalle {
   double montoLinea;
   double precioVenta;
   String productoCodigo;
-  double qty;
+  int qty;
   int compagnia;
   int isDelete;
   int sincronizado;
@@ -112,6 +112,21 @@ class FacturaDetalle {
         precioVenta: json["PrecioVenta"].toDouble(),
         productoCodigo: json["ProductoCodigo"].toString().trim(),
         qty: json["Qty"],
+        montoLinea: json["MontoLinea"].toDouble(),
+        sincronizado: json["Sincronizado"],
+        compagnia: json["Compagnia"],
+        isDelete: json["isDelete"],
+      );
+
+  factory FacturaDetalle.fromMapSql(Map<String, dynamic> json) =>
+      FacturaDetalle(
+        id: json["ID"],
+        facturaId: json["FacturaId"].toString().trim(),
+        lineaNumero: json["LineaNumero"].toDouble(),
+        nombre: json["Nombre"].toString().trim(),
+        precioVenta: json["PrecioVenta"].toDouble(),
+        productoCodigo: json["ProductoCodigo"].toString().trim(),
+        qty: json["Qty"],
         montoLinea: json["montoLinea"].toDouble(),
         sincronizado: json["Sincronizado"],
         compagnia: json["Compagnia"],
@@ -122,14 +137,14 @@ class FacturaDetalle {
         "Compagnia": compagnia,
         "FacturaId": facturaId,
         "ID": id,
-        "IsDelete": isDelete,
+        "isDelete": isDelete,
         "LineaNumero": lineaNumero,
         "Nombre": nombre,
         "PrecioVenta": precioVenta,
         "ProductoCodigo": productoCodigo,
         "Qty": qty,
         "Sincronizado": sincronizado,
-        "montoLinea": montoLinea,
+        "MontoLinea": montoLinea,
       };
 
   static List<FacturaDetalle> _detalle = [];

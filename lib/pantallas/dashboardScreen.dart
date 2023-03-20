@@ -10,6 +10,7 @@ import '../clases/components/card_custom.dart';
 import '../clases/components/circle_progress.dart';
 import '../clases/components/list_tile_custom.dart';
 import '../clases/modelos/clientes.dart';
+import '../clases/pedidoDetalle.dart';
 import '../clases/themes.dart';
 import 'NavigationDrawer.dart';
 
@@ -26,6 +27,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   late var ventas = 0; //DatabaseHelper.instance.CantidadDeVentas();
   var cobros = 0; //DatabaseHelper.instance.cantidadDeCobros();
   var puntaje = 0;
+  late List<PedidosMasVendidos> productos = [];
   // const DashboardScreen({
   //   Key? key,
   // }) : super(key: key);
@@ -85,11 +87,23 @@ class DashboardScreenState extends State<DashboardScreen> {
     }); //you can call handleError method show an alert or to try again
   }
 
+  Future obtenerProductosMasVendidos() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.obtenerProductoMasVendedido().then((result) {
+      print(result);
+      setState(() {
+        productos = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
   @override
   void initState() {
     obtenerCantidadDeCobros();
     obtenerCantidadDeventas();
     obtenerCantidadesDeCleintes();
+    obtenerProductosMasVendidos();
     // obtenerCantidadesDeCleintes();
     // Clients = Client.getClients();
     super.initState();
@@ -265,40 +279,46 @@ class DashboardScreenState extends State<DashboardScreen> {
                       ),
                       Row(
                         children: <Widget>[
+                          //  ol(
+                          //   child: Text('Top 10 Productos mas vendidos'),
+                          // ),
                           Padding(
                               padding: EdgeInsets.all(20.0),
-                              child: Column(children: [
-                                RichText(
-                                  text: TextSpan(
-                                      text: "Top 10 Productos vendidos ",
-                                      style: GoogleFonts.montserrat().copyWith(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 18,
-                                          color: purple1),
-                                      children: const <TextSpan>[
-                                        TextSpan(
-                                            text: " ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))
-                                      ]),
-                                )
-                              ])),
+                              child: Column(children: [])),
                           Expanded(
                             child: SizedBox(
                               height: 200.0,
                               child: new ListView.builder(
-                                // scrollDirection: Axis.horizontal,
-                                itemCount: 1,
-                                itemBuilder: (BuildContext ctxt, int index) {
-                                  return new Text('Productos');
-                                },
-                              ),
+                                  padding: const EdgeInsets.all(8),
+                                  itemCount: productos.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ListTile(
+                                      leading: Text((index + 1).toString()),
+                                      trailing: Text(
+                                        productos[index].cantidad.toString(),
+                                        style: TextStyle(
+                                            color: Colors.green, fontSize: 15),
+                                      ),
+                                      title: Text(
+                                          'Articulo : ' +
+                                              productos[index]
+                                                  .nombre
+                                                  .toString(),
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              fontStyle: FontStyle.italic)),
+                                      // subtitle: Text('Cantidad : ' +
+                                      //     productos[index].cantidad.toString()),
+                                    );
+                                  }),
                             ),
                           ),
-                          new IconButton(
-                            icon: Icon(Icons.remove_circle),
-                            onPressed: () {},
-                          ),
+                          // new IconButton(
+                          //   icon: Icon(Icons.remove_circle),
+                          //   onPressed: () {},
+                          // ),
                         ],
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       )
@@ -310,6 +330,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
+      // bottomNavigationBar: ListView(),
     );
   }
 }

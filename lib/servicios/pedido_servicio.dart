@@ -44,7 +44,6 @@ class PedidoServicio extends ChangeNotifier {
   }
 
   Future cargarPedidos() async {
-    print('este es un reporte');
     var clientes = await DatabaseHelper.instance
         .obtenerPedidosPendienteDeSincornizacion()
         .then((value) => sincronizaClienteFire(value));

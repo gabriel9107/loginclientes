@@ -146,22 +146,21 @@ String pagoToJson(Map<String, Pago> data) => json.encode(
     Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
 
 class Pago {
-  Pago({
-    this.id,
-    this.banco,
-    required this.clienteId,
-    required this.compagni,
-    this.fechaDeCheque,
-    required this.fechaPago,
-    required this.isDelete,
-    required this.metodoDePago,
-    required this.montoPagado,
-    required this.pendiente,
-    required this.sincronizado,
-    required this.vendorId,
-    required this.habilitado,
-    this.numeroDeCheque,
-  });
+  Pago(
+      {this.id,
+      this.banco,
+      required this.clienteId,
+      required this.compagni,
+      this.fechaDeCheque,
+      required this.fechaPago,
+      required this.isDelete,
+      required this.metodoDePago,
+      required this.montoPagado,
+      required this.pendiente,
+      required this.sincronizado,
+      required this.vendorId,
+      this.numeroDeCheque,
+      this.estado});
 
   int? id;
   String vendorId;
@@ -175,8 +174,8 @@ class Pago {
   int pendiente;
   int compagni;
   int sincronizado;
-  int habilitado;
   int isDelete;
+  String? estado;
 
   factory Pago.fromJson(Map<String, dynamic> json) => Pago(
         banco: json["Banco"]!,
@@ -191,11 +190,11 @@ class Pago {
         pendiente: json["Pendiente"],
         sincronizado: json["Sincronizado"],
         vendorId: json["VendorID"],
-        habilitado: json["habilitado"],
         numeroDeCheque: json["NumeroDeCheque"],
       );
 
   Map<String, dynamic> toJson() => {
+        "ID": id,
         "Banco": banco,
         "ClienteId": clienteId,
         "Compagni": compagni,
@@ -207,7 +206,6 @@ class Pago {
         "Pendiente": pendiente,
         "Sincronizado": sincronizado,
         "VendorID": vendorId,
-        "habilitado": habilitado,
         "NumeroDeCheque": numeroDeCheque,
       };
   Map<String, dynamic> toJsonsql() => {
@@ -223,7 +221,6 @@ class Pago {
         "Pendiente": pendiente,
         "Sincronizado": sincronizado,
         "VendorID": vendorId,
-        "habilitado": habilitado,
         "NumeroDeCheque": numeroDeCheque,
       };
   Map<String, dynamic> toJsonsqlinsert() => {
@@ -238,7 +235,6 @@ class Pago {
         "Pendiente": pendiente,
         "Sincronizado": sincronizado,
         "VendorID": vendorId,
-        "habilitado": habilitado,
         "NumeroDeCheque": numeroDeCheque,
       };
 
@@ -251,16 +247,16 @@ class Pago {
         fechaPago: json["FechaPago"],
         metodoDePago: json["MetodoDePago"]!,
         montoPagado: json["MontoPagado"]?.toDouble(),
-        pendiente: json["Pendiente"] ? 1 : 0,
+        pendiente: json["Pendiente"],
         vendorId: json["VendorID"],
         compagni: json["Compagni"],
-        habilitado: json["habilitado"] ? 1 : 0,
+        estado: json["Estado"],
         sincronizado: json["Sincronizado"],
-        isDelete: json["IsDelete"],
+        isDelete: json["isDelete"],
       );
 
   factory Pago.fromMapSqlLiteWitId(Map<String, dynamic> json) => Pago(
-        id: json["Id"],
+        id: json["ID"],
         clienteId: json["clienteId"],
         banco: json["banco"],
         numeroDeCheque: json["numeroDeCheque"],
@@ -271,7 +267,6 @@ class Pago {
         pendiente: 0,
         vendorId: json["vendorId"],
         compagni: json["compagni"],
-        habilitado: json["habilitado"],
         sincronizado: json["sincronizado"],
         isDelete: json["isDelete"],
       );
@@ -286,7 +281,6 @@ class Pago {
         pendiente: 0,
         vendorId: json["vendorId"],
         compagni: json["compagni"],
-        habilitado: json["habilitado"],
         sincronizado: json["sincronizado"],
         isDelete: json["isDelete"],
       );
@@ -303,7 +297,7 @@ class Pago {
       pendiente: 1,
       sincronizado: 0,
       vendorId: 'vendorId',
-      habilitado: 0);
+      estado: 'Pendiente');
 // 22301591404
   static actualizarpago(String clienteId, metodoDePago) {
     pago.clienteId = clienteId;
@@ -392,6 +386,7 @@ class Pago {
 
   static void guardarPago() {
     var formaDePago = pago.metodoDePago.toString();
+
     DatabaseHelper.instance
         .agregarPagoconID(pago)
         .then((value) => PagoTemporal.guardarDetallePago(value, formaDePago));

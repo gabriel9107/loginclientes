@@ -163,7 +163,7 @@ class PagoDetalle {
         compagni: json["compagni"],
         isDelete: json["isDelete"],
         activo: 0,
-        formaDePago: json["FormaDePago"],
+        formaDePago: 'N/A',
       );
 
   Map<String, dynamic> toJson() => {
@@ -217,13 +217,15 @@ class PagoDetalleLista {
       this.facturaId,
       required this.fechaPago,
       this.metodoDePago,
-      this.montoPagado});
+      this.montoPagado,
+      this.estado});
 
   int? id;
   DateTime fechaPago;
   String? facturaId;
   String? metodoDePago;
   double? montoPagado;
+  String? estado;
 
   factory PagoDetalleLista.fromMapSqlLiteWitId(Map<String, dynamic> json) =>
       PagoDetalleLista(
@@ -231,7 +233,8 @@ class PagoDetalleLista {
           fechaPago: DateTime.parse(json["fechaPago"]),
           metodoDePago: json["MetodoDePago"],
           montoPagado: json["montoPagado"]?.toDouble(),
-          facturaId: json["facturaId"]);
+          facturaId: json["facturaId"],
+          estado: json["estado"]);
 
   // int sincronizado;
   // int compagni;

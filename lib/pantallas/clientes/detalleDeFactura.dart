@@ -100,7 +100,7 @@ class DetalleFacturaDataSource extends DataGridSource {
                   columnName: 'Codigo', value: dataGridRows.productoCodigo),
               DataGridCell<String>(
                   columnName: 'Articulo', value: dataGridRows.nombre),
-              DataGridCell<double>(
+              DataGridCell<int>(
                   columnName: 'Cantidad', value: dataGridRows.qty),
               DataGridCell<double>(
                   columnName: 'Monto Articulo', value: dataGridRows.montoLinea),

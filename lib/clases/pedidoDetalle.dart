@@ -4,6 +4,21 @@
 
 import 'dart:convert';
 
+class PedidosMasVendidos {
+  PedidosMasVendidos(
+      {required this.nombre, required this.cantidad, required this.codigo});
+
+  String codigo;
+  String nombre;
+  int cantidad;
+
+  factory PedidosMasVendidos.fromMap(Map<String, dynamic> json) =>
+      new PedidosMasVendidos(
+          cantidad: json["Cantidad"],
+          nombre: json["Nombre"],
+          codigo: json["Codigo"]);
+}
+
 class PedidoDetalle {
   PedidoDetalle({
     this.id,

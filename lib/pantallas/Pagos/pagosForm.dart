@@ -13,18 +13,21 @@ import 'package:intl/src/intl/date_format.dart';
 import 'package:intl/intl.dart';
 
 class MyCustomForm extends StatefulWidget {
-  String? clienteId;
-  MyCustomForm(this.clienteId, {super.key});
+  String? customerCode;
+  String? clienteName;
+  MyCustomForm(this.customerCode, this.clienteName, {super.key});
 
   @override
-  State<MyCustomForm> createState() => _MyCustomFormState(this.clienteId);
+  State<MyCustomForm> createState() =>
+      _MyCustomFormState(this.customerCode, this.clienteName);
 }
 
 // Define a corresponding State class.
 // This class holds data related to the Form.
 class _MyCustomFormState extends State<MyCustomForm> {
-  String? clienteId;
-  _MyCustomFormState(this.clienteId);
+  String? customerCode;
+  String? clienteName;
+  _MyCustomFormState(this.customerCode, this.clienteName);
 //   // Create a text controller and use it to retrieve the current value
 //   // of the TextField.
 //   final myController = TextEditingController();
@@ -92,7 +95,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Realizar Pagos  A : ' + this.clienteId.toString()),
+        title: Text('Realizar Pagos  A : ' + this.clienteName.toString()),
       ),
       body: Form(
         key: _claveFormulario,
@@ -158,7 +161,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
               ),
               TextFormField(
                 validator: (value) {
-                  if (value == null) {
+                  if (value == "") {
                     return 'Este campo no puede estar vacio ';
                   }
                 },
@@ -230,7 +233,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                         //     double.parse(valordelpagoControler.text);
                         Pago.actualizarmontodelpago(
                             double.parse(valordelpagoControler.text));
-                        Pago.actualizarpago(this.clienteId.toString(),
+                        Pago.actualizarpago(this.customerCode.toString(),
                             _selectedValueFormaDePago);
                         await showSearch(
                             context: context, delegate: BuscarFacturaEnPagos());

@@ -55,7 +55,8 @@ class DetalleDelCliente extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MyCustomForm(this.customerCode)));
+                      builder: (context) => MyCustomForm(
+                          this.customerCode, this.nombredelcliente)));
             },
             tooltip: 'Agregar',
             child: const Icon(
@@ -340,8 +341,13 @@ class ListPagos extends StatelessWidget {
                         elevation: 2.0,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Icon(Icons.monetization_on),
+                            backgroundColor: pago.estado == 'Pendiente'
+                                ? Colors.blue
+                                : Colors.yellow,
+                            child: Icon(
+                              Icons.monetization_on,
+                              color: Colors.white,
+                            ),
                           ),
 
                           title: Text('Numero de Pago : ' + pago.id.toString()),

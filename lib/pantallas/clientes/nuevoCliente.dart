@@ -148,29 +148,26 @@ class _editClienteScreenState extends State<EditarCliente> {
                   ),
                 ),
               ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: DropdownButtonFormField(
-                    validator: (value) {
-                      return 'No puede ser nulo';
-                    },
-                    hint: Text('Descuento del cliente'),
-                    elevation: 4,
-                    isDense: true,
-                    isExpanded: true,
-                    iconSize: 60.0,
-                    // onChanged: selectedValue,
-                    value: selectedValue,
-                    items: <String>['20', '30']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                          child: Text(value), value: value);
-                    }).toList(),
-                    onChanged: (String? value) {
-                      descuentoController.text = value as String;
-                    },
-                  )),
+              // Padding(
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              //     child: DropdownButtonFormField(
+              //       hint: Text('Descuento del cliente'),
+              //       elevation: 4,
+              //       isDense: true,
+              //       isExpanded: true,
+              //       iconSize: 60.0,
+              //       // onChanged: selectedValue,
+              //       value: selectedValue,
+              //       items: <String>['20', '30']
+              //           .map<DropdownMenuItem<String>>((String value) {
+              //         return DropdownMenuItem<String>(
+              //             child: Text(value), value: value);
+              //       }).toList(),
+              //       onChanged: (String? value) {
+              //         descuentoController.text = value as String;
+              //       },
+              //     )),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
