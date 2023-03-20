@@ -57,6 +57,19 @@ class Pedido {
 
   String toJson() => json.encode(toMap());
 
+  Map<String, dynamic> toJsonUp() => {
+        "ClienteId": clienteId,
+        "Compagnia": compagnia,
+        "FechaOrden": fechaOrden.toIso8601String(),
+        "Id": id,
+        "Impuestos": impuestos,
+        "IsDelete": isDelete,
+        "NumeroOrden": numeroOrden,
+        "Sincronizado": sincronizado,
+        "totalAPagar": totalAPagar,
+        "Estado": estado
+      };
+
   factory Pedido.fromMap(Map<String, dynamic> json) => new Pedido(
         id: json["Id"],
         clienteId: json["ClienteId"].toString().trim(),

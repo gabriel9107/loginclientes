@@ -30,7 +30,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '37.db');
+    String path = join(documentsDirectory.path, '34.db');
     return await openDatabase(
       path,
       version: 7,
@@ -631,8 +631,8 @@ class DatabaseHelper {
       int id) async {
     Database db = await instance.database;
 
-    var res = await db.rawQuery(
-        "SELECT * FROM PedidoDetalle where Sincronizado = 1 and PedidoId =$id");
+    var res =
+        await db.rawQuery("SELECT * FROM PedidoDetalle where    PedidoId =$id");
 
     List<PedidoDetalle> ordenesLista = res.isNotEmpty
         ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()

@@ -48,6 +48,18 @@ class PedidoDetalle {
       PedidoDetalle.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
+  Map<String, dynamic> toJsonUp() => {
+        "Cantidad": cantidad,
+        "Compagnia": compagnia,
+        "Id": id,
+        "IsDelete": isDelete,
+        "PedidoId": pedidoId,
+        "Precio": precio,
+        "ProductoId": productoId,
+        "Sincronizado": sincronizado,
+        "Codigo": codigo,
+        "Nombre": nombre
+      };
 
   factory PedidoDetalle.fromMap(Map<String, dynamic> json) => new PedidoDetalle(
         cantidad: json["Cantidad"],
