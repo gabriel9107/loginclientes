@@ -16,9 +16,10 @@ import '../clases/modelos/resumen.dart';
 class PedidoDetalleServicio extends ChangeNotifier {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
   final List<PedidoDetalle> detalle = [];
+  final int bajado = 0;
 
   PedidoDetalleServicio() {
-    // this.sincronizar();
+    this.sincronizar();
     cargarDetallePedidos();
   }
 
@@ -29,17 +30,21 @@ class PedidoDetalleServicio extends ChangeNotifier {
 
     final Map<String, dynamic> map = json.decode(resp.body);
     map.forEach((key, value) {
-      final temp = PedidoDetalle.fromMap(value);
+      final temp = PedidoDetalle.fromMapFire(value);
+      temp.idfirebase = key;
       this.detalle.add(temp);
     });
 
     detalle.forEach((pedido) {
-      DatabaseHelper.instance.AgregarPedidoDetalle(pedido);
+      DatabaseHelper.instance
+          .AgregarPedidoDetalleNoDescargado(pedido)
+          .then((value) => {
+                if (value == 0) {bajado + 1} else {}
+              });
     });
 
     Resumen.resumentList.add(Resumen(
-        accion: 'Pedidos Detalle Sincronizados',
-        cantidad: detalle.length.toString()));
+        accion: 'Pedidos Detalle Descargado', cantidad: bajado.toString()));
   }
 
   Future cargarDetallePedidos() async {
@@ -59,10 +64,12 @@ class PedidoDetalleServicio extends ChangeNotifier {
       print(decodeData);
 
       if (decodeData.isNotEmpty) {
-        DatabaseHelper.instance.actualizarPedidoCargado(element.id as int);
+        DatabaseHelper.instance
+            .actualizarPedidoCargado(element.id as int, decodeData);
       }
       Resumen.resumentList.add(Resumen(
-          accion: 'Pedidos Subidos', cantidad: pedidoLista.length.toString()));
+          accion: 'Pedidos Detalle Cargado',
+          cantidad: pedidoLista.length.toString()));
     });
 
     // // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');

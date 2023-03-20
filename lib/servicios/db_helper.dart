@@ -30,7 +30,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '34.db');
+    String path = join(documentsDirectory.path, '49.db');
     return await openDatabase(
       path,
       version: 7,
@@ -41,7 +41,8 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute('''CREATE TABLE Clientes(
    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        codigo INTEGER,
+   
+        codigo TEXT,
         nombre TEXT,
         direccion TEXT,
         telefono1 TEXT,
@@ -57,6 +58,7 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE Productos(
         Id  INTEGER PRIMARY KEY AUTOINCREMENT,
+        idfirebase TEXT, 
         Codigo TEXT,
         Nombre TEXT,
         Cantidad  INTEGER,
@@ -70,7 +72,7 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE Pedidos(
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        
+        idfirebase TEXT, 
         NumeroOrden TEXT,
         ClienteId TEXT,
         FechaOrden TEXT, 
@@ -85,6 +87,7 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE PedidoDetalle(
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        idfirebase TEXT, 
         Precio REAL,
         Cantidad INTEGER,
         Codigo TEXT, 
@@ -97,6 +100,7 @@ class DatabaseHelper {
                 )''');
     await db.execute('''CREATE TABLE Factura(
      Id	 INTEGER PRIMARY KEY AUTOINCREMENT
+     ,idfirebase TEXT
     ,FacturaId TEXT
     ,PedidoId TEXT
     ,clienteId	 TEXT
@@ -113,7 +117,8 @@ class DatabaseHelper {
     ,Compagnia	 INTEGER
         )''');
     await db.execute('''CREATE TABLE FacturaDetalle(
-        ID	INTEGER PRIMARY KEY AUTOINCREMENT 
+       ID	INTEGER PRIMARY KEY AUTOINCREMENT 
+      ,idfirebase TEXT
       ,FacturaId	 TEXT
       ,LineaNumero	  REAL
       ,ProductoCodigo  TEXT
@@ -127,8 +132,9 @@ class DatabaseHelper {
         )''');
 
     await db.execute('''CREATE TABLE Pago(
-        id  INTEGER PRIMARY KEY AUTOINCREMENT,
-        Banco TEXT,
+        id  INTEGER PRIMARY KEY AUTOINCREMENT
+        ,idfirebase TEXT
+        ,Banco TEXT,
         Estado TEXT, 
         clienteId TEXT,
         vendorId TEXT,
@@ -146,6 +152,7 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE PagoDetalle(
           ID INTEGER PRIMARY KEY AUTOINCREMENT
+          ,idfirebase TEXT
          ,pagoId INTEGER
          ,facturaId TEXT
          ,formaDePago TEXT
@@ -275,7 +282,7 @@ class DatabaseHelper {
 
 //Verificar si existe el Cliente antes de sincronizarlo
   Future<int> customerExists(Cliente cliente) async {
-    int customerCode = cliente.codigo;
+    var customerCode = cliente.codigo;
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
         "SELECT EXISTS(SELECT 1 FROM Clientes WHERE codigo= '$customerCode')");
@@ -591,9 +598,38 @@ class DatabaseHelper {
 
 //Pedidos de ventas
 
+  Future<int> AgregarPedidoNoDescargado(Pedido pedido) async {
+    var idFirebase = pedido.idfirebase.toString().trim();
+
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM Pedidos WHERE idfirebase= '$idFirebase' )");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      AgregarPedido(pedido);
+    }
+    return 0;
+  }
+
   Future<int> AgregarPedido(Pedido pedido) async {
     Database db = await instance.database;
     return await db.insert('Pedidos', pedido.toMapSqli());
+  }
+
+//verificar si el detalle de pago ya existen antes de descargar
+  Future<int> AgregarPedidoDetalleNoDescargado(PedidoDetalle detalle) async {
+    var idfirebase = detalle.idfirebase;
+
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM PedidoDetalle WHERE idfirebase= '$idfirebase')");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      AgregarPedidoDetalle(detalle);
+    }
+    return 0;
   }
 
   Future<int> AgregarPedidoDetalle(PedidoDetalle detalle) async {
@@ -617,7 +653,7 @@ class DatabaseHelper {
   Future<int> actualizarClientesCargado(int id) async {
     Database db = await instance.database;
     final data = {
-      'sincronizado': 0,
+      'Sincronizado': 0,
       // 'description': descrption,
       // 'createdAt': DateTime.now().toString()
     };
@@ -640,23 +676,20 @@ class DatabaseHelper {
     return ordenesLista;
   }
 
-  Future<int> actualizarPedidoCargado(int id) async {
+  Future<int> actualizarPedidoCargado(int id, String idfire) async {
     Database db = await instance.database;
-    final data = {
-      'Sincronizado': 0,
-      // 'description': descrption,
-      // 'createdAt': DateTime.now().toString()
-    };
+    final data = {'Sincronizado': 0, 'idfirebase': idfire};
 
     final result =
         await db.update('Pedidos', data, where: "ID = ?", whereArgs: [id]);
     return result;
   }
 
-  Future<int> actualizarPedidoDetalleCargado(int id) async {
+  Future<int> actualizarPedidoDetalleCargado(int id, String idfire) async {
     Database db = await instance.database;
     final data = {
       'Sincronizado': 0,
+      'idfirebase': idfire
       // 'description': descrption,
       // 'createdAt': DateTime.now().toString()
     };

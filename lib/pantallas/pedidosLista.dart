@@ -368,52 +368,10 @@ Future sincronizarPedidos(Pedido pedido) async {
   final decodeData = resp.body;
   print(decodeData);
   if (decodeData.isNotEmpty) {
-    DatabaseHelper.instance.actualizarClientesCargado(pedido.id as int);
+    DatabaseHelper.instance
+        .actualizarPedidoCargado(pedido.id as int, decodeData);
   }
 
-  // final database = FirebaseDatabase.instance.reference();
-
-  // await database
-  //     .child('Pedidos')
-  //     .child('PT-' + pedido.clienteId + '-' + pedido.id.toString())
-  //     .push()
-  //     .set({
-  //       "ClienteId": pedido.clienteId,
-  //       "Compagnia": pedido.compagnia,
-  //       "FechaOrden": pedido.fechaOrden.toIso8601String(),
-  //       "Id": pedido.id,
-  //       "Impuestos": pedido.impuestos,
-  //       "IsDelete": pedido.isDelete,
-  //       "NumeroOrden": pedido.numeroOrden,
-  //       "Sincronizado": pedido.sincronizado,
-  //       "totalAPagar": pedido.totalAPagar,
-  //       "Estado": pedido.estado
-  //     })
-  //     .then((value) => print('Factura creada'))
-  //     .catchError((error) => print('existe un error $error'));
-
-  // await databaseReference
-  //     .child('PT-' + pedido.clienteId + '-' + pedido.id.toString())
-  //     .set({
-  //   "ClienteId": pedido.clienteId,
-  //   "Compagnia": pedido.compagnia,
-  //   "FechaOrden": pedido.fechaOrden.toIso8601String(),
-  //   "Id": pedido.id,
-  //   "Impuestos": pedido.impuestos,
-  //   "IsDelete": pedido.isDelete,
-  //   "NumeroOrden": pedido.numeroOrden,
-  //   "Sincronizado": pedido.sincronizado,
-  //   "totalAPagar": pedido.totalAPagar,
-  //   "Estado": pedido.estado
-  // });
-
-  // DatabaseHelper.instance.actualizarPedidoCargado(pedido.id as int);
-
-  // final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
-  // final url = Uri.https(_baseUrl, 'Pedidos.json');
-  // final resp = await http.post(url, body: pedido.toJson());
-  // final decodeData = resp.body;
-  // print(decodeData);
   return '';
 }
 
@@ -437,7 +395,8 @@ sincronizarPedidoDetalles(
     final decodeData = resp.body;
     print(decodeData);
     if (decodeData.isNotEmpty) {
-      DatabaseHelper.instance.actualizarPedidoDetalleCargado(element.id as int);
+      DatabaseHelper.instance
+          .actualizarPedidoDetalleCargado(element.id as int, decodeData);
     }
   });
 

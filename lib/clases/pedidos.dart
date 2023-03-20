@@ -39,7 +39,8 @@ class Pedido {
       required this.sincronizado,
       required this.isDelete,
       this.estado,
-      this.vendorId});
+      this.vendorId,
+      this.idfirebase});
 
   int? id;
   String clienteId;
@@ -52,6 +53,7 @@ class Pedido {
   int compagnia;
   String? estado;
   String? vendorId;
+  String? idfirebase;
 
   factory Pedido.fromJson(String str) => Pedido.fromMap(json.decode(str));
 
@@ -79,7 +81,7 @@ class Pedido {
         isDelete: json["IsDelete"],
         numeroOrden: json["NumeroOrden"],
         sincronizado: json["Sincronizado"],
-        totalAPagar: json["TotalAPagar"],
+        totalAPagar: json["totalAPagar"],
       );
   factory Pedido.fromMapsqlite(Map<String, dynamic> json) => Pedido(
       id: json["ID"],
@@ -130,5 +132,6 @@ class Pedido {
         "totalAPagar": totalAPagar,
         "Estado": estado,
         "vendorId": usuario,
+        "idfirebase": idfirebase,
       };
 }

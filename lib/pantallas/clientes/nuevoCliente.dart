@@ -59,7 +59,7 @@ class _editClienteScreenState extends State<EditarCliente> {
                 Cliente update = Cliente(
                     id: _clientes.id,
                     comentario: commentController.text,
-                    codigo: int.parse(customerCodeController.text),
+                    codigo: customerCodeController.text,
                     direccion: customerDirController.text,
                     nombre: customerNameController.text,
                     telefono1: phone1Controller.text,

@@ -32,6 +32,12 @@ TextStyle textBold3 = GoogleFonts.openSans().copyWith(
   color: green,
 );
 
+TextStyle textParaProductos = GoogleFonts.openSans().copyWith(
+  fontWeight: FontWeight.bold,
+  fontSize: 18,
+  color: red,
+);
+
 TextStyle textSemiBold = GoogleFonts.openSans()
     .copyWith(fontWeight: FontWeight.w600, fontSize: 13, color: purple1);
 

@@ -55,7 +55,8 @@ class DetalleDelCliente extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MyCustomForm(this.customerCode)));
+                      builder: (context) => MyCustomForm(
+                          this.customerCode, this.nombredelcliente)));
             },
             tooltip: 'Agregar',
             child: const Icon(

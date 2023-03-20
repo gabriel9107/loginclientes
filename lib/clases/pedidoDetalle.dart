@@ -20,18 +20,18 @@ class PedidosMasVendidos {
 }
 
 class PedidoDetalle {
-  PedidoDetalle({
-    this.id,
-    required this.codigo,
-    required this.nombre,
-    required this.cantidad,
-    required this.precio,
-    this.productoId,
-    required this.pedidoId,
-    required this.compagnia,
-    required this.isDelete,
-    required this.sincronizado,
-  });
+  PedidoDetalle(
+      {this.id,
+      required this.codigo,
+      required this.nombre,
+      required this.cantidad,
+      required this.precio,
+      this.productoId,
+      required this.pedidoId,
+      required this.compagnia,
+      required this.isDelete,
+      required this.sincronizado,
+      this.idfirebase});
 
   int? id;
   String codigo;
@@ -43,6 +43,7 @@ class PedidoDetalle {
   int sincronizado;
   int compagnia;
   int isDelete;
+  String? idfirebase;
 
   factory PedidoDetalle.fromJson(String str) =>
       PedidoDetalle.fromMap(json.decode(str));
@@ -60,6 +61,21 @@ class PedidoDetalle {
         "Codigo": codigo,
         "Nombre": nombre
       };
+
+  //Estos son los pedidos que agregamos desde firebase, por lo tantos son pedidos que ya se crearon y no necesitan ser actualizado nuevamente
+  factory PedidoDetalle.fromMapFire(Map<String, dynamic> json) =>
+      new PedidoDetalle(
+        cantidad: json["Cantidad"],
+        compagnia: json["Compagnia"],
+        id: json["ID"],
+        isDelete: json["IsDelete"],
+        pedidoId: json["PedidoId"].toString(),
+        precio: json["Precio"].toDouble(),
+        productoId: json["ProductoId"],
+        sincronizado: 0,
+        codigo: json["Codigo"],
+        nombre: json["Nombre"],
+      );
 
   factory PedidoDetalle.fromMap(Map<String, dynamic> json) => new PedidoDetalle(
         cantidad: json["Cantidad"],
@@ -109,6 +125,7 @@ class PedidoDetalle {
         "Sincronizado": sincronizado,
         "Codigo": codigo,
         "Nombre": nombre,
+        "idfirebase": idfirebase,
       };
   Map<String, dynamic> toMapInsert() => {
         "Cantidad": cantidad,

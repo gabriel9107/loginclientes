@@ -26,7 +26,7 @@ class Cliente {
 
   int? id;
   int activo;
-  int codigo;
+  String codigo;
   String codigoVendedor;
   String comentario;
   int compagnia;
@@ -130,7 +130,7 @@ class Cliente {
         "compagnia": compagnia.toString(),
         "direccion": direccion,
         "nombre": nombre,
-        "sincronizado": sincronizado.toString(),
+        "sincronizado": sincronizado,
         "telefono1": telefono1,
         "descuento": descuento,
         "telefono2": telefono2,

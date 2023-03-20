@@ -277,6 +277,46 @@ class DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ],
                       ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: size.width / 2 - 20,
+                              child: Column(
+                                children: [
+                                  CustomPaint(
+                                    child: SizedBox(
+                                      width: 107,
+                                      height: 57,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Top 10 Productos mas vendidos",
+                                    style: textParaProductos,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                                // width: size.width / 2 - 20,
+                                // height: 180,
+                                // decoration: BoxDecoration(
+                                //     image: DecorationImage(
+                                //         image: AssetImage("assets/images/people.png"))),
+                                )
+                          ],
+                        ),
+                      ),
                       Row(
                         children: <Widget>[
                           //  ol(
@@ -287,7 +327,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                               child: Column(children: [])),
                           Expanded(
                             child: SizedBox(
-                              height: 200.0,
+                              height: 400.0,
                               child: new ListView.builder(
                                   padding: const EdgeInsets.all(8),
                                   itemCount: productos.length,
