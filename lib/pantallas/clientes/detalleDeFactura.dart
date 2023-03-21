@@ -14,7 +14,7 @@ class DetalleDeFactura extends StatefulWidget {
 class _DetalleDeFactura extends State<DetalleDeFactura> {
   String? facturaId;
   _DetalleDeFactura(this.facturaId);
-  late List<FacturaDetalle> _detalle;
+  List<FacturaDetalle> _detalle = [];
   late DetalleFacturaDataSource _detalleFacturaDataSource;
   @override
 
@@ -22,7 +22,9 @@ class _DetalleDeFactura extends State<DetalleDeFactura> {
   initState() {
     FacturaDetalle.obtenerDetallePorFacturaId(this.facturaId.toString());
 
-    _detalle = FacturaDetalle.getDetalleFactura();
+    if (_detalle.isEmpty) {
+      _detalle = FacturaDetalle.getDetalleFactura();
+    }
 
     _detalleFacturaDataSource = DetalleFacturaDataSource(_detalle);
     super.initState();

@@ -17,7 +17,7 @@ class PagoServices extends ChangeNotifier {
 
   PagoServices() {
     cargarPago();
-    // this.sincronizar();
+    this.sincronizar();
   }
 
   Future sincronizar() async {
@@ -30,27 +30,24 @@ class PagoServices extends ChangeNotifier {
     // final jsonList = jsonDecode(response.body) as List<dynamic>;
 
     // DatabaseHelper.instance.Deleteproducto();
-    final Map<String, dynamic> map = json.decode(response.body);
+    if (response != "null") {
+      final Map<String, dynamic> map = json.decode(response.body);
 
-    map.forEach((key, value) {
-      final temp = Pago.fromMap(value);
-      pagos.add(temp);
-    });
-    print('sincronizando un pago');
+      map.forEach((key, value) {
+        final temp = Pago.fromMap(value);
+        pagos.add(temp);
+      });
 
-    print(pagos[0].clienteId);
-//agregando las facturas a la base de datos
-
-    pagos.forEach((pago) {
-      DatabaseHelper.instance.agregarPago(pago);
-    });
+      pagos.forEach((pago) {
+        DatabaseHelper.instance.AgregarPagoDescargado(pago);
+      });
+    }
 
     Resumen.resumentList.add(Resumen(
-        accion: 'Pagos Sincronizados', cantidad: pagos.length.toString()));
+        accion: 'Pagos Descargados', cantidad: pagos.length.toString()));
   }
 
   Future cargarPago() async {
-    print('sincronizando clientes');
     var clientes = await DatabaseHelper.instance
         .obtenerPagosASincornizar()
         .then((value) => sincronizarFire(value));
@@ -66,9 +63,10 @@ class PagoServices extends ChangeNotifier {
     pago.forEach((element) async {
       final resp = await http.post(url, body: json.encode(element.toJson()));
       final decodeData = resp.body;
-      print(decodeData);
+
       if (decodeData.isNotEmpty) {
-        // DatabaseHelper.instance.actualizarClientesCargado(element.id as int);
+        DatabaseHelper.instance
+            .actualizarPagoDetalleCargado(element.id as int, decodeData);
       }
     });
   }
@@ -81,7 +79,8 @@ class PagoServices extends ChangeNotifier {
       final decodeData = resp.body;
       print(decodeData);
       if (decodeData.isNotEmpty) {
-        DatabaseHelper.instance.actualizarPagoCargado(element.id as int);
+        DatabaseHelper.instance
+            .actualizarPagoCargado(element.id as int, decodeData);
       }
     });
   }

@@ -94,6 +94,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
     final _claveFormulario = GlobalKey<FormState>();
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Realizar Pagos  A : ' + this.clienteName.toString()),
       ),
@@ -399,7 +400,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Text(
-                                          'Saldo ',
+                                          'valor pagó ',
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold),

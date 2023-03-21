@@ -327,13 +327,14 @@ class DashboardScreenState extends State<DashboardScreen> {
                               child: Column(children: [])),
                           Expanded(
                             child: SizedBox(
-                              height: 400.0,
+                              height: 600.0,
                               child: new ListView.builder(
                                   padding: const EdgeInsets.all(8),
                                   itemCount: productos.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    return ListTile(
+                                    return Card(
+                                        child: ListTile(
                                       leading: Text((index + 1).toString()),
                                       trailing: Text(
                                         productos[index].cantidad.toString(),
@@ -351,7 +352,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                                               fontStyle: FontStyle.italic)),
                                       // subtitle: Text('Cantidad : ' +
                                       //     productos[index].cantidad.toString()),
-                                    );
+                                    ));
                                   }),
                             ),
                           ),

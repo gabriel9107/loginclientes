@@ -30,7 +30,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '49.db');
+    String path = join(documentsDirectory.path, '51.db');
     return await openDatabase(
       path,
       version: 7,
@@ -430,6 +430,25 @@ class DatabaseHelper {
     return id;
   }
 
+  Future<int> AgregarPagoDescargado(Pago pago) async {
+    var idFirebase = pago.idFirebase.toString().trim();
+
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM Pago WHERE idfirebase= '$idFirebase' )");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      agregarPagoFire(pago);
+    }
+    return 0;
+  }
+
+  Future<int> agregarPagoFire(Pago pago) async {
+    var db = await instance.database;
+    return await db.insert('Pago', pago.toJsonFire());
+  }
+
   Future<int> agregarPago(Pago pago) async {
     var db = await instance.database;
     return await db.insert('Pago', pago.toJson());
@@ -461,10 +480,11 @@ class DatabaseHelper {
 
   Future<List<PagoDetalle>> obtenerPagoDetallessASincornizar() async {
     Database db = await instance.database;
-    var pagos = await db.rawQuery("SELECT * FROM PagoDetalle ");
+    var pagos =
+        await db.rawQuery("SELECT * FROM PagoDetalle where sincronizado =1 ");
 
     List<PagoDetalle> listadePagos = pagos.isNotEmpty
-        ? pagos.map((e) => PagoDetalle.fromJson(e)).toList()
+        ? pagos.map((e) => PagoDetalle.fromJsontofire(e)).toList()
         : [];
 
     return listadePagos;
@@ -637,16 +657,21 @@ class DatabaseHelper {
     return await db.insert('PedidoDetalle', detalle.toMap());
   }
 
-  Future<int> actualizarPagoCargado(int id) async {
+  Future<int> actualizarPagoDetalleCargado(int id, String idFire) async {
     Database db = await instance.database;
-    final data = {
-      'sincronizado': 0,
-      // 'description': descrption,
-      // 'createdAt': DateTime.now().toString()
-    };
+    final data = {'sincronizado': 0, 'idfirebase': idFire};
 
     final result =
-        await db.update('Pago', data, where: "ID = ?", whereArgs: [id]);
+        await db.update('PagoDetalle', data, where: "ID = ?", whereArgs: [id]);
+    return result;
+  }
+
+  Future<int> actualizarPagoCargado(int id, String idFire) async {
+    Database db = await instance.database;
+    final data = {'sincronizado': 0, 'idfirebase': idFire};
+
+    final result =
+        await db.update('Pago', data, where: "id = ?", whereArgs: [id]);
     return result;
   }
 

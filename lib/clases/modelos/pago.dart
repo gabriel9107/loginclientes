@@ -160,7 +160,8 @@ class Pago {
       required this.sincronizado,
       required this.vendorId,
       this.numeroDeCheque,
-      this.estado});
+      this.estado,
+      this.idFirebase});
 
   int? id;
   String vendorId;
@@ -176,6 +177,7 @@ class Pago {
   int sincronizado;
   int isDelete;
   String? estado;
+  String? idFirebase;
 
   factory Pago.fromJson(Map<String, dynamic> json) => Pago(
         banco: json["Banco"]!,
@@ -193,8 +195,22 @@ class Pago {
         numeroDeCheque: json["NumeroDeCheque"],
       );
 
+  Map<String, dynamic> toJsonFire() => {
+        "Banco": banco,
+        "ClienteId": clienteId,
+        "Compagni": compagni,
+        "FechaDeCheque": fechaDeCheque,
+        "FechaPago": fechaPago,
+        "IsDelete": isDelete,
+        "MetodoDePago": metodoDePago,
+        "MontoPagado": montoPagado,
+        "Pendiente": pendiente,
+        "Sincronizado": 0,
+        "VendorID": vendorId,
+        "NumeroDeCheque": numeroDeCheque,
+      };
+
   Map<String, dynamic> toJson() => {
-        "ID": id,
         "Banco": banco,
         "ClienteId": clienteId,
         "Compagni": compagni,
@@ -243,20 +259,20 @@ class Pago {
         clienteId: json["ClienteId"],
         banco: json["Banco"],
         numeroDeCheque: json["NumeroDeCheque"],
-        fechaDeCheque: json["FechaDeCheque"]!,
+        fechaDeCheque: json["FechaDeCheque"],
         fechaPago: json["FechaPago"],
-        metodoDePago: json["MetodoDePago"]!,
+        metodoDePago: json["MetodoDePago"],
         montoPagado: json["MontoPagado"]?.toDouble(),
         pendiente: json["Pendiente"],
         vendorId: json["VendorID"],
         compagni: json["Compagni"],
         estado: json["Estado"],
         sincronizado: json["Sincronizado"],
-        isDelete: json["isDelete"],
+        isDelete: 1,
       );
 
   factory Pago.fromMapSqlLiteWitId(Map<String, dynamic> json) => Pago(
-        id: json["ID"],
+        id: json["id"],
         clienteId: json["clienteId"],
         banco: json["banco"],
         numeroDeCheque: json["numeroDeCheque"],

@@ -153,6 +153,18 @@ class PagoDetalle {
         "isDelete": isDelete,
       };
 
+  factory PagoDetalle.fromJsontofire(Map<String, dynamic> json) => PagoDetalle(
+        id: json["ID"],
+        facturaId: json["facturaId"],
+        pagoId: json["pagoId"],
+        montoAplicado: json["montoAplicado"]?.toDouble(),
+        montoDeFacturaAlMomento: json["montoDeFacturaAlMomento"]?.toDouble(),
+        sincronizado: json["sincronizado"],
+        compagni: json["compagni"],
+        isDelete: json["isDelete"],
+        activo: 0,
+        formaDePago: 'N/A',
+      );
   factory PagoDetalle.fromJson(Map<String, dynamic> json) => PagoDetalle(
         id: json["Id"],
         facturaId: json["facturaId"],
