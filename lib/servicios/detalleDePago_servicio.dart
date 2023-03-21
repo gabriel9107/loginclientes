@@ -26,17 +26,16 @@ class PagoDetalleServicio extends ChangeNotifier {
 
     final response =
         await http.get(url, headers: {"Content-Type": "application/json"});
-    // final jsonList = jsonDecode(response.body) as List<dynamic>;
 
-    // DatabaseHelper.instance.Deleteproducto();
-    final Map<String, dynamic> servicioMap = json.decode(response.body);
+    if (response.body != "null") {
+      final Map<String, dynamic> servicioMap = json.decode(response.body);
+      servicioMap.forEach((key, value) {
+        // if (value != "") {
+        final pago = PagoDetalle.fromJson(value);
+
+        // DatabaseHelper.instance.aregardetalledePagoAsincronizar(pago);
+      });
+    }
     // final productomap = Producto.fromJson(productosMap);
-
-    servicioMap.forEach((key, value) {
-      // if (value != "") {
-      final pago = PagoDetalle.fromJson(value);
-
-      // DatabaseHelper.instance.aregardetalledePagoAsincronizar(pago);
-    });
   }
 }

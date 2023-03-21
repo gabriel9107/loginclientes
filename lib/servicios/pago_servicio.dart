@@ -55,9 +55,9 @@ class PagoServices extends ChangeNotifier {
         .obtenerPagosASincornizar()
         .then((value) => sincronizarFire(value));
 
-    DatabaseHelper.instance
-        .obtenerPagoDetallessASincornizar()
-        .then((value) => sincronizarDetalle(value));
+    // DatabaseHelper.instance
+    //     .obtenerPagoDetallessASincornizar()
+    //     .then((value) => sincronizarDetalle(value));
   }
 
   sincronizarDetalle(List<PagoDetalle> pago) async {
@@ -68,7 +68,8 @@ class PagoServices extends ChangeNotifier {
       final decodeData = resp.body;
       print(decodeData);
       if (decodeData.isNotEmpty) {
-        // DatabaseHelper.instance.actualizarClientesCargado(element.id as int);
+        DatabaseHelper.instance
+            .actualizarPagoCargado(element.id as int, decodeData);
       }
     });
   }
@@ -81,7 +82,8 @@ class PagoServices extends ChangeNotifier {
       final decodeData = resp.body;
       print(decodeData);
       if (decodeData.isNotEmpty) {
-        DatabaseHelper.instance.actualizarPagoCargado(element.id as int);
+        DatabaseHelper.instance
+            .actualizarPagoCargado(element.id as int, decodeData);
       }
     });
   }

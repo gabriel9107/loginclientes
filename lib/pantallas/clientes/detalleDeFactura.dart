@@ -20,12 +20,12 @@ class _DetalleDeFactura extends State<DetalleDeFactura> {
 
   // TODO: implement setState
   initState() {
+    super.initState();
     FacturaDetalle.obtenerDetallePorFacturaId(this.facturaId.toString());
 
     _detalle = FacturaDetalle.getDetalleFactura();
 
     _detalleFacturaDataSource = DetalleFacturaDataSource(_detalle);
-    super.initState();
   }
 
   Widget build(BuildContext context) {
