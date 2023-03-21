@@ -7,7 +7,6 @@ class LoginFormProvider extends ChangeNotifier {
   String password = '';
 
   bool isValidForm() {
-    print(formKey.currentState?.validate());
     return formKey.currentState?.validate() ?? false;
   }
 

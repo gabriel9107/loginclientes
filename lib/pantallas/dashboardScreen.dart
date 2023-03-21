@@ -1,18 +1,113 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../clases/components/card_custom.dart';
 import '../clases/components/circle_progress.dart';
 import '../clases/components/list_tile_custom.dart';
+import '../clases/modelos/clientes.dart';
+import '../clases/pedidoDetalle.dart';
 import '../clases/themes.dart';
 import 'NavigationDrawer.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({
-    Key? key,
-  }) : super(key: key);
+class DashboardScreen extends StatefulWidget {
+  @override
+  createState() => DashboardScreenState();
+}
+
+class DashboardScreenState extends State<DashboardScreen> {
+  var nuevosclientes = 0;
+  var cantidadDevisitas =
+      0; //DatabaseHelper.instance.CantidadDeClientesPorMes();
+  int fijos = 105;
+  late var ventas = 0; //DatabaseHelper.instance.CantidadDeVentas();
+  var cobros = 0; //DatabaseHelper.instance.cantidadDeCobros();
+  var puntaje = 0;
+  late List<PedidosMasVendidos> productos = [];
+  // const DashboardScreen({
+  //   Key? key,
+  // }) : super(key: key);
+
+  Future obtenerCantidadesDeCleintes() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.CantidadDeClientesPorMes().then((result) {
+      print(result);
+      setState(() {
+        nuevosclientes = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  Future obtenerCantidadesDevisitas() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.CantidadDevisitas().then((result) {
+      print(result);
+      setState(() {
+        fijos = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  Future obtenerCantidadDeventas() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.CantidadDeVentas().then((result) {
+      print(result);
+      setState(() {
+        ventas = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  Future obtenerCantidadDeCobros() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.cantidadDeCobros().then((result) {
+      print(result);
+      setState(() {
+        cobros = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  Future obtenerpuntaje() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.Puntajes().then((result) {
+      print(result);
+      setState(() {
+        puntaje = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  Future obtenerProductosMasVendidos() async {
+    //here you can call the function and handle the output(return value) as result
+    DatabaseHelper.instance.obtenerProductoMasVendedido().then((result) {
+      print(result);
+      setState(() {
+        productos = result;
+        //DatabaseHelper.instance.CantidadDeVentas();
+      });
+    }); //you can call handleError method show an alert or to try again
+  }
+
+  @override
+  void initState() {
+    obtenerCantidadDeCobros();
+    obtenerCantidadDeventas();
+    obtenerCantidadesDeCleintes();
+    obtenerProductosMasVendidos();
+    // obtenerCantidadesDeCleintes();
+    // Clients = Client.getClients();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +118,7 @@ class DashboardScreen extends StatelessWidget {
           backgroundColor: navBar,
           elevation: 0.0,
           title: Text('Dashboard')),
-      drawer: NavigationDrawer(),
+      drawer: navegacions(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -50,11 +145,11 @@ class DashboardScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "345",
+                                      puntaje.toString(),
                                       style: textBold,
                                     ),
                                     Text(
-                                      "REACH",
+                                      "Meta",
                                       style: textSemiBold,
                                     ),
                                     Row(
@@ -69,7 +164,7 @@ class DashboardScreen extends StatelessWidget {
                                           size: 14,
                                         ),
                                         Text(
-                                          "8.1%",
+                                          "0.1%",
                                           style: textSemiBold,
                                         ),
                                       ],
@@ -83,7 +178,9 @@ class DashboardScreen extends StatelessWidget {
                               style: textBold2,
                             ),
                             Text(
-                              "Mejor Vendedor",
+                              puntaje > 100
+                                  ? "Mejor Vendedor"
+                                  : "Sigue avanzando",
                               style: textBold3,
                             ),
                           ],
@@ -117,7 +214,7 @@ class DashboardScreen extends StatelessWidget {
                                 color: purple1),
                             children: const <TextSpan>[
                               TextSpan(
-                                  text: " Esta semana",
+                                  text: " Este Mes",
                                   style: TextStyle(fontWeight: FontWeight.bold))
                             ]),
                       ),
@@ -135,7 +232,7 @@ class DashboardScreen extends StatelessWidget {
                               bgColor: purpleLight,
                               pathIcon: "thumb_up.svg",
                               title: "Visitas",
-                              subTitle: "4,324",
+                              subTitle: cantidadDevisitas.toString(),
                             ),
                           ),
                           CardCustom(
@@ -147,7 +244,7 @@ class DashboardScreen extends StatelessWidget {
                               bgColor: greenLight,
                               pathIcon: "thumb_up.svg",
                               title: "Ventas",
-                              subTitle: "654",
+                              subTitle: ventas.toString(),
                             ),
                           ),
                         ],
@@ -162,8 +259,8 @@ class DashboardScreen extends StatelessWidget {
                             child: ListTileCustom(
                               bgColor: yellowLight,
                               pathIcon: "starts.svg",
-                              title: "Fijos",
-                              subTitle: "855",
+                              title: "Nuevos Clientes",
+                              subTitle: nuevosclientes.toString(),
                             ),
                           ),
                           CardCustom(
@@ -175,90 +272,96 @@ class DashboardScreen extends StatelessWidget {
                               bgColor: blueLight,
                               pathIcon: "eyes.svg",
                               title: "Cobros",
-                              subTitle: "5,436",
+                              subTitle: cobros.toString(),
                             ),
                           ),
                         ],
                       ),
-                      CardCustom(
-                          mLeft: 0,
-                          mRight: 0,
-                          width: size.width - 40,
-                          height: 211,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 9.71,
-                                      height: 9.71,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: purple2),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: size.width / 2 - 20,
+                              child: Column(
+                                children: [
+                                  CustomPaint(
+                                    child: SizedBox(
+                                      width: 107,
+                                      height: 57,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                      ),
                                     ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      "Visits",
-                                      style: label,
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                    Container(
-                                      width: 9.71,
-                                      height: 9.71,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle, color: green),
-                                    ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      "Likes",
-                                      style: label,
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                    Container(
-                                      width: 9.71,
-                                      height: 9.71,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle, color: red),
-                                    ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      "Conversions",
-                                      style: label,
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  Text(
+                                    "Top 10 Productos mas vendidos",
+                                    style: textParaProductos,
+                                  ),
+                                ],
                               ),
-                              Container(
-                                width: size.width - 40,
-                                height: 144.35,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(15),
-                                      bottomRight: Radius.circular(15),
-                                    ),
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            "assets/images/graph.png"),
-                                        fit: BoxFit.fill)),
-                              )
-                            ],
-                          )),
+                            ),
+                            Container(
+                                // width: size.width / 2 - 20,
+                                // height: 180,
+                                // decoration: BoxDecoration(
+                                //     image: DecorationImage(
+                                //         image: AssetImage("assets/images/people.png"))),
+                                )
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          //  ol(
+                          //   child: Text('Top 10 Productos mas vendidos'),
+                          // ),
+                          Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Column(children: [])),
+                          Expanded(
+                            child: SizedBox(
+                              height: 400.0,
+                              child: new ListView.builder(
+                                  padding: const EdgeInsets.all(8),
+                                  itemCount: productos.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ListTile(
+                                      leading: Text((index + 1).toString()),
+                                      trailing: Text(
+                                        productos[index].cantidad.toString(),
+                                        style: TextStyle(
+                                            color: Colors.green, fontSize: 15),
+                                      ),
+                                      title: Text(
+                                          'Articulo : ' +
+                                              productos[index]
+                                                  .nombre
+                                                  .toString(),
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              fontStyle: FontStyle.italic)),
+                                      // subtitle: Text('Cantidad : ' +
+                                      //     productos[index].cantidad.toString()),
+                                    );
+                                  }),
+                            ),
+                          ),
+                          // new IconButton(
+                          //   icon: Icon(Icons.remove_circle),
+                          //   onPressed: () {},
+                          // ),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      )
                     ],
                   ),
                 ),
@@ -267,55 +370,7 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      //   showSelectedLabels: false,
-      //   showUnselectedLabels: false,
-      //   currentIndex: 0,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/home.svg"),
-      //       ),
-      //       label: "Home",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/chart.svg"),
-      //       ),
-      //       label: "Chart",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/bell.svg"),
-      //       ),
-      //       label: "Bell",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/maps.svg"),
-      //       ),
-      //       label: "Maps",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: SizedBox(
-      //         width: 30,
-      //         height: 30,
-      //         child: SvgPicture.asset("assets/icons/profile.svg"),
-      //       ),
-      //       label: "Profile",
-      //     ),
-      //   ],
-      // ),
+      // bottomNavigationBar: ListView(),
     );
   }
 }

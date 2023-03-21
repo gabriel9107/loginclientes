@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:sigalogin/clases/global.dart';
+import 'package:sigalogin/clases/modelos/clientes.dart';
+import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
 import 'package:sigalogin/pantallas/clientes/new_cliente.dart';
-import 'package:sigalogin/servicios/productos_servicio.dart';
 
 import '../../clases/customers.dart';
+import '../../clases/facturaDetalle.dart';
 import '../../clases/themes.dart';
+import '../../servicios/clientes_Services.dart';
 import '../../servicios/db_helper.dart';
 import '../NavigationDrawer.dart';
 
 import 'package:provider/provider.dart';
+
+import '../buscar/buscarClientesEnCLientes.dart';
+import '../pedidos/PedidosVentas.dart';
+import 'nuevoCliente.dart';
 
 class clienteLista extends StatefulWidget {
   @override
@@ -25,8 +34,6 @@ class CustomerListState extends State<clienteLista> {
   }
 
   Widget build(BuildContext context) {
-    final servicioClientes = Provider.of<ClienteSevices>(context);
-
     // Clients.sort();
     return Scaffold(
       appBar: AppBar(
@@ -38,12 +45,14 @@ class CustomerListState extends State<clienteLista> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () => {
-              // showSearch(context: context, delegate: MySearchDelegate())
+              showSearch(
+                  context: context,
+                  delegate: MySearchDelegateParaClientesEnClientes())
             },
           )
         ],
       ),
-      drawer: NavigationDrawer(),
+      drawer: navegacions(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -55,10 +64,11 @@ class CustomerListState extends State<clienteLista> {
         child: Icon(Icons.add),
       ),
       body: Center(
-        child: FutureBuilder<List<Customers>>(
-          future: DatabaseHelper.instance.getCustomers(),
+        child: FutureBuilder<List<Cliente>>(
+          // future: DatabaseHelper.instance.obtenerClientesPorVendedor(usuario),
+          future: DatabaseHelper.instance.obtenerCliente(usuario),
           builder:
-              (BuildContext context, AsyncSnapshot<List<Customers>> snapshot) {
+              (BuildContext context, AsyncSnapshot<List<Cliente>> snapshot) {
             if (!snapshot.hasData) {
               return Center(child: Text('Cargando...'));
             }
@@ -71,14 +81,16 @@ class CustomerListState extends State<clienteLista> {
                         elevation: 2.0,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: customer.sincronizado == 0
+                                ? Colors.blue
+                                : Colors.red,
                             child: Icon(Icons.emoji_people),
                           ),
-                          title: Text(customer.CustomerCode +
+                          title: Text(customer.codigo.toString() +
                               ' | ' +
-                              customer.CustomerName),
+                              customer.nombre),
                           subtitle: Text(
-                              customer.CustomerDir + ' | ' + customer.Phone1),
+                              customer.direccion + ' | ' + customer.telefono1),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
@@ -87,12 +99,13 @@ class CustomerListState extends State<clienteLista> {
                                   Icons.point_of_sale_sharp,
                                 ),
                                 onPressed: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => CartPage(
-                                  //             customer.CustomerCode.toString(),
-                                  //             null)));
+                                  FacturaDetalle.limpiarfacturas();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CartPage(
+                                              customer.codigo.toString(),
+                                              customer.nombre.toString())));
                                 },
                               ),
                               IconButton(
@@ -104,30 +117,38 @@ class CustomerListState extends State<clienteLista> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            NewClient('Editar Cliente')),
+                                            EditarCliente(customer)),
                                   );
                                 },
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            NewClient('Editar Cliente')),
-                                  );
-                                },
-                              ),
+                              // IconButton(
+                              //   icon: Icon(
+                              //     Icons.delete,
+                              //   ),
+                              //   onPressed: () {
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) =>
+                              //               NewClient('Editar Cliente')),
+                              //     );
+                              //   },
+                              // ),
                             ],
                           ),
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) =>
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DetalleDelCliente(
+                                        customer.codigo.toString(),
+                                        customer.nombre.toString())
+                                    //  CartPage(
+                                    //     customer.CustomerCode,
+                                    //     customer.CustomerName.toString())
+
+                                    ));
+
                             //           detallePage(customer.CustomerName)),
                             // );
                             // NavigateDetail('Edit Product');

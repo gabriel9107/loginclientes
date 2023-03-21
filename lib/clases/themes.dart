@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Color navBar = Color.fromARGB(255, 245, 141, 38);
+Color navBar = Color.fromARGB(255, 61, 64, 238);
 Color bgColor = const Color(0xFFFFFDFD);
 Color sparatorColor = const Color(0xFFF5F4F4);
 Color gray = const Color(0xFFE7E7E7);
@@ -30,6 +30,12 @@ TextStyle textBold3 = GoogleFonts.openSans().copyWith(
   fontWeight: FontWeight.bold,
   fontSize: 18,
   color: green,
+);
+
+TextStyle textParaProductos = GoogleFonts.openSans().copyWith(
+  fontWeight: FontWeight.bold,
+  fontSize: 18,
+  color: red,
 );
 
 TextStyle textSemiBold = GoogleFonts.openSans()

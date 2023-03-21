@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "61255138479",
+    "firebase_url": "https://sigaapp-127c4-default-rtdb.firebaseio.com",
+    "project_id": "sigaapp-127c4",
+    "storage_bucket": "sigaapp-127c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61255138479:android:eba0686b8c21a88590e85a",
+        "android_client_info": {
+          "package_name": "com.example.carrito"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61255138479-ij3608u7dhkjnapa3i4dm92qsju8ce4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD1Qf4ZOj2Shs7azW96Gp5j9zB_Q-WLcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61255138479-ij3608u7dhkjnapa3i4dm92qsju8ce4h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61255138479:android:85dd207b13829d0590e85a",
+        "android_client_info": {
+          "package_name": "com.example.sigalogin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61255138479-ij3608u7dhkjnapa3i4dm92qsju8ce4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD1Qf4ZOj2Shs7azW96Gp5j9zB_Q-WLcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61255138479-ij3608u7dhkjnapa3i4dm92qsju8ce4h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

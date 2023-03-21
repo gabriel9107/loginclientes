@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/pedidoDetalle.dart';
 import 'package:sigalogin/pantallas/dashboardScreen.dart';
 import 'package:sigalogin/pantallas/home.dart';
 import 'package:sigalogin/pantallas/login/IniciarUsuario.dart';
@@ -6,9 +9,35 @@ import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 
 import 'package:provider/provider.dart';
 import 'package:sigalogin/servicios/authServices.dart';
-import 'package:sigalogin/servicios/productos_servicio.dart';
+import 'package:sigalogin/servicios/clientes_Services.dart';
+import 'package:sigalogin/servicios/detalleDePago_servicio.dart';
+import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
+import 'package:sigalogin/servicios/factura_service.dart';
+import 'package:sigalogin/servicios/notifications_service.dart';
+import 'package:sigalogin/servicios/PedidoDetalle_Servicio.dart';
+import 'package:sigalogin/servicios/pago_servicio.dart';
+import 'package:sigalogin/servicios/pedido_servicio.dart';
+import 'package:sigalogin/servicios/productos_services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() => runApp(AppState());
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  HttpOverrides.global = MyHttpOverrides();
+  runApp(AppState());
+}
 
 class AppState extends StatelessWidget {
   @override
@@ -16,7 +45,14 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthServices()),
-        ChangeNotifierProvider(create: (_) => ClienteSevices())
+        ChangeNotifierProvider(create: (_) => ClienteSevices()),
+        ChangeNotifierProvider(create: (_) => ProductoServices()),
+        ChangeNotifierProvider(create: (_) => PedidoServicio()),
+        ChangeNotifierProvider(create: (_) => PedidoDetalleServicio()),
+        ChangeNotifierProvider(create: (_) => FacturaServices()),
+        ChangeNotifierProvider(create: (_) => FacturaDetalleServices()),
+        ChangeNotifierProvider(create: (_) => PagoServices()),
+        ChangeNotifierProvider(create: (_) => PagoDetalleServicio())
       ],
       child: MyApp(),
     );
@@ -35,9 +71,9 @@ class MyApp extends StatelessWidget {
       routes: {
         'login': (context) => LoginScreen(),
         'register': (context) => RegisterScreen(),
-        'home': (context) => const DashboardScreen()
+        'home': (context) => DashboardScreen()
       },
-
+      scaffoldMessengerKey: NotificationsService.messengerKey,
       theme: ThemeData(
         // This is the theme of your application.
         //

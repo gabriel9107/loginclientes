@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:sigalogin/pantallas/login/registrarUsuario.dart';
 import 'package:sigalogin/servicios/authServices.dart';
 
+import '../../clases/global.dart';
 import '../../provider/login_from_prodivder.dart';
+import '../../servicios/notifications_service.dart';
 import '../../ui/InputDecorations.dart';
 import '../../widgets/auth_background.dart';
 import '../../widgets/card_container.dart';
@@ -39,8 +42,12 @@ class LoginScreen extends StatelessWidget {
         )),
         SizedBox(height: 50),
         TextButton(
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, 'register'),
+            onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                ),
+            // Navigator.pushReplacementNamed(context, 'register'),
+
             style: ButtonStyle(
               overlayColor:
                   MaterialStateProperty.all(Colors.indigo.withOpacity(0.1)),
@@ -92,8 +99,8 @@ class _LoginForm extends StatelessWidget {
                       : 'La contraseña debe de ser de 6 caracteres';
                 },
               ),
-              SizedBox(height: 30),
-              SizedBox(height: 50),
+              const SizedBox(height: 30),
+              const SizedBox(height: 50),
               MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -101,23 +108,27 @@ class _LoginForm extends StatelessWidget {
                   elevation: 0,
                   color: Colors.deepPurple,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                    child:
-                        Text('Ingresar', style: TextStyle(color: Colors.white)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 80, vertical: 15),
+                    child: const Text('Ingresar',
+                        style: TextStyle(color: Colors.white)),
                   ),
                   onPressed: () async {
                     FocusScope.of(context).unfocus();
                     final authServices =
                         Provider.of<AuthServices>(context, listen: false);
                     if (!loginForm.isValidForm()) return;
-
+                    loginForm.isLoading = true;
                     final String? errorMessage = await authServices.login(
                         loginForm.email, loginForm.password);
+                    usuario = loginForm.email.replaceAll('@gmail.com', '');
+
                     if (errorMessage == null) {
                       loginForm.isLoading = true;
                       Navigator.pushReplacementNamed(context, 'home');
                     } else {
-                      print(errorMessage);
+                      NotificationsService.showSnackbar(errorMessage);
+                      loginForm.isLoading = false;
                     }
                   }),
             ],

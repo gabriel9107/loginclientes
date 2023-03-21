@@ -15,10 +15,10 @@ class CardCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.fromLTRB(mLeft, 3, mRight, 3),
-      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
       width: width,
       height: height,
       decoration: BoxDecoration(
