@@ -66,11 +66,7 @@ class PagoServices extends ChangeNotifier {
 
       if (decodeData.isNotEmpty) {
         DatabaseHelper.instance
-<<<<<<< HEAD
             .actualizarPagoDetalleCargado(element.id as int, decodeData);
-=======
-            .actualizarPagoCargado(element.id as int, decodeData);
->>>>>>> a890addae5db6002c70f52bb9f82eb4352fdeafa
       }
     });
   }
