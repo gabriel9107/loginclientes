@@ -57,7 +57,7 @@ class CustomerListState extends State<clienteLista> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NewClient('Nuevo cliente')),
+            MaterialPageRoute(builder: (context) => NewClient("Nuevo Cliente")),
           );
         },
         tooltip: 'Agregar',
@@ -97,6 +97,7 @@ class CustomerListState extends State<clienteLista> {
                               IconButton(
                                 icon: Icon(
                                   Icons.point_of_sale_sharp,
+                                  color: red,
                                 ),
                                 onPressed: () {
                                   FacturaDetalle.limpiarfacturas();
@@ -111,15 +112,29 @@ class CustomerListState extends State<clienteLista> {
                               IconButton(
                                 icon: Icon(
                                   Icons.edit,
+                                  color: customer.sincronizado == 0
+                                      ? Colors.white
+                                      : Colors.blue,
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditarCliente(customer)),
-                                  );
-                                },
+                                onPressed: customer.sincronizado == 0
+                                    ? () {
+                                        FacturaDetalle.limpiarfacturas();
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => CartPage(
+                                                    customer.codigo.toString(),
+                                                    customer.nombre
+                                                        .toString())));
+                                      }
+                                    : () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditarCliente(customer)),
+                                        );
+                                      },
                               ),
                               // IconButton(
                               //   icon: Icon(

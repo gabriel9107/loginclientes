@@ -19,7 +19,7 @@ class PedidoDetalleServicio extends ChangeNotifier {
   final int bajado = 0;
 
   PedidoDetalleServicio() {
-    this.sincronizar();
+//    this.sincronizar();
     cargarDetallePedidos();
   }
 
@@ -65,7 +65,7 @@ class PedidoDetalleServicio extends ChangeNotifier {
 
       if (decodeData.isNotEmpty) {
         DatabaseHelper.instance
-            .actualizarPedidoCargado(element.id as int, decodeData);
+            .actualizarPedidoDetalleCargado(element.id as int, decodeData);
       }
       Resumen.resumentList.add(Resumen(
           accion: 'Pedidos Detalle Cargado',
@@ -90,8 +90,6 @@ class PedidoDetalleServicio extends ChangeNotifier {
     //     "Codigo": element.codigo,
     //     "Nombre": element.nombre,
     //   });
-
-    // DatabaseHelper.instance.actualizarPedidoCargado(element.id as int);
 
     // Resumen.resumentList.add(Resumen(
     //     accion: 'Pedidos Subidos', cantidad: pedidoLista.length.toString()));

@@ -145,12 +145,13 @@ class _mainPage extends State<CartPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                detalleFactura[index].codigoProducto,
+                                detalleFactura[index].nombreProducto,
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                detalleFactura[index].nombreProducto,
+                                "Codigo : " +
+                                    detalleFactura[index].codigoProducto,
                                 style: TextStyle(fontSize: 14),
                               ),
                               Text(
@@ -222,8 +223,8 @@ class _mainPage extends State<CartPage> {
           },
         ),
       ),
-      bottomNavigationBar:
-          CartBottomNavBar(NumeroPedido, clienteCodigo.toString()),
+      bottomNavigationBar: CartBottomNavBar(
+          NumeroPedido, clienteCodigo.toString(), nombreCliente),
     );
   }
 }

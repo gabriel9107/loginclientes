@@ -168,6 +168,10 @@ class FacturaDetalle {
     }
   }
 
+  static limpiarFactura() {
+    _detalle.clear();
+  }
+
   static List<FacturaDetalle> getDetalleFactura() {
     return _detalle;
   }

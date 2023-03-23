@@ -299,7 +299,11 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
         final suggestion = suggestions[index];
         return ListTile(
           title: Text('Nombre: ' + suggestion.nombre.toString()),
-          subtitle: Text('Costo : ' + suggestion.precio.toString()),
+          subtitle: Text(" Codigo:" +
+              suggestion.codigo +
+              "             " +
+              'Costo : ' +
+              suggestion.precio.toString()),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[

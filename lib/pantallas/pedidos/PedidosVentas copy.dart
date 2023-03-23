@@ -76,13 +76,13 @@ class _mainPage extends State<PedidoHistorico> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Text(
-                                          detalles![index].codigo,
+                                          detalles![index].nombre,
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          detalles![index].nombre,
+                                          "Codigo : " + detalles![index].codigo,
                                           style: TextStyle(fontSize: 14),
                                         ),
                                         Text(

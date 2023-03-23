@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/modelos/clientes.dart';
+import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
 import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
 
 import '../../clases/customers.dart';
@@ -24,7 +25,7 @@ class NewClient extends StatelessWidget {
   String? selectedValue;
   // const NewClient({super.key});
 
-  final _formKey = GlobalKey<FormState>();
+  static final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,9 @@ class NewClient extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => clienteLista()));
+                            builder: (context) => DetalleDelCliente(
+                                customerCodeController.text,
+                                customerNameController.text)));
                   }
                 })
           ],
@@ -60,7 +63,7 @@ class NewClient extends StatelessWidget {
         body: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding:
@@ -132,7 +135,6 @@ class NewClient extends StatelessWidget {
                   ),
                 ),
               ),
-
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -169,68 +171,8 @@ class NewClient extends StatelessWidget {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(top: 15.5, bottom: 15.5),
-              //   child: Row(children: <Widget>[
-              //     ElevatedButton(
-              //       child: Text('Guardar'),
-              //       onPressed: () async {
-              //         DatabaseHelper.instance.agregarNuevoCLiente(Cliente(
-              //             codigo: customerCodeController.text,
-              //             codigoVendedor: usuario,
-              //             comentario: commentController.text,
-              //             compagnia: compagnia,
-              //             direccion: customerDirController.text,
-              //             nombre: customerNameController.text,
-              //             telefono1: phone1Controller.text,
-              //             telefono2: phone2Controller.text,
-              //             descuento: descuentoController.text,
-              //             sincronizado: 1,
-              //             activo: 0,
-              //             creadoEn: DateTime.now().toIso8601String()));
-
-              //         // DatabaseHelpe
-
-              //         // await DatabaseHelper.instance.Add(Customers(
-              //         //     CustomerCode: customerCodeController.text,
-              //         //     CustomerName: customerNameController.text,
-              //         //     CustomerDir: customerDirController.text,
-              //         //     Phone1: phone1Controller.text,
-              //         //     Phone2: phone2Controller.text,
-              //         //     Comment1: commentController.text,
-              //         //     creadoEn: DateTime.now().toString(),
-              //         //     creadoPor: usuario));
-
-              //         // Navigator.push(context,
-              //         //     MaterialPageRoute(builder: (context) => clienteLista()));
-              //       },
-              //       style: ElevatedButton.styleFrom(
-              //           textStyle:
-              //               TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-              //     ),
-              //     // ElevatedButton(
-              //     //   child: Text('Cancelar'),
-              //     //   onPressed: () {},
-              //     //   style: ElevatedButton.styleFrom(
-              //     //       textStyle:
-              //     //           TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-              //     // )
-              //   ]),
-              // ),
             ],
           ),
         ));
   }
-} 
-  // const MyCustomForm({super.key});
- 
-  
-
-  // @override
-//   // Widget build(BuildContext context) {
-//   //   return 
-    
-    
-    
-//   }
-// }
+}

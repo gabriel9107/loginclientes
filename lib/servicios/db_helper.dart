@@ -19,6 +19,7 @@ import '../clases/global.dart';
 import '../clases/modelos/clientes.dart';
 import '../clases/modelos/pagodetalle.dart';
 import '../clases/ordenDeventa.dart';
+import '../clases/usuario.dart';
 import '../pantallas/Pagos/pagosForm.dart';
 
 class DatabaseHelper {
@@ -30,7 +31,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '51.db');
+    String path = join(documentsDirectory.path, '56.db');
     return await openDatabase(
       path,
       version: 7,
@@ -164,13 +165,13 @@ class DatabaseHelper {
          ,activo INTEGER
              )''');
 
-    // await db.execute('''CREATE TABLE Usuario(
-    //        id INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,UsuarioNombre TEXT
-    //     ,UsuarioClave TEXT
-    //     ,Compagnia TEXT
-    //     ,Activo TEXT
-    //     )''');
+    await db.execute('''CREATE TABLE Usuario(
+           id INTEGER PRIMARY KEY AUTOINCREMENT
+        ,UsuarioNombre TEXT
+        ,UsuarioClave TEXT
+        ,Compagnia TEXT
+        ,Activo TEXT
+        )''');
 
     // await db.execute('''CREATE TABLE InvoiceHeaders(
     //        id INTEGER PRIMARY KEY AUTOINCREMENT
@@ -278,6 +279,26 @@ class DatabaseHelper {
     //     , valorpendiente TEXT
     //     , int activo INTEGER
     //     )''');
+  }
+
+//Agregar Clientes
+  Future<int> agregarUsuario(Usuario usuario) async {
+    Database db = await instance.database;
+    return await db.insert('Usuario', usuario.toMapsql());
+  }
+
+  Future<int> obtenerUsuario(Usuario usuario) async {
+    var user = usuario.usuarioNombre;
+    var password = usuario.usuarioClave;
+    var dbClient = await instance.database;
+    var res = await dbClient.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM Usuario WHERE usuarioNombre= '$user' and usuarioClave = '$password')");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      return 0;
+    }
+    return 1;
   }
 
 //Verificar si existe el Cliente antes de sincronizarlo
@@ -481,11 +502,7 @@ class DatabaseHelper {
   Future<List<PagoDetalle>> obtenerPagoDetallessASincornizar() async {
     Database db = await instance.database;
     var pagos =
-<<<<<<< HEAD
-        await db.rawQuery("SELECT * FROM PagoDetalle where sincronizado =1 ");
-=======
-        await db.rawQuery("SELECT * FROM PagoDetalle Where sincronizado = 1 ");
->>>>>>> a890addae5db6002c70f52bb9f82eb4352fdeafa
+        await db.rawQuery("SELECT * FROM PagoDetalle where sincronizado =1");
 
     List<PagoDetalle> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => PagoDetalle.fromJsontofire(e)).toList()
@@ -661,25 +678,19 @@ class DatabaseHelper {
     return await db.insert('PedidoDetalle', detalle.toMap());
   }
 
-<<<<<<< HEAD
-  Future<int> actualizarPagoDetalleCargado(int id, String idFire) async {
-    Database db = await instance.database;
-    final data = {'sincronizado': 0, 'idfirebase': idFire};
-=======
-  Future<int> actualizarPagoCargado(int id, String idFire) async {
-    Database db = await instance.database;
-    final data = {
-      'sincronizado': 0,
-      'idfirebase': idFire
-      // 'description': descrption,
-      // 'createdAt': DateTime.now().toString()
-    };
->>>>>>> a890addae5db6002c70f52bb9f82eb4352fdeafa
+  // Future<int> actualizarPagoCargado(int id, String idFire) async {
+  //   Database db = await instance.database;
+  //   final data = {
+  //     'sincronizado': 0,
+  //     'idfirebase': idFire
+  //     // 'description': descrption,
+  //     // 'createdAt': DateTime.now().toString()
+  //   };
 
-    final result =
-        await db.update('PagoDetalle', data, where: "ID = ?", whereArgs: [id]);
-    return result;
-  }
+  //   final result =
+  //       await db.update('PagoDetalle', data, where: "ID = ?", whereArgs: [id]);
+  //   return result;
+  // }
 
   Future<int> actualizarPagoCargado(int id, String idFire) async {
     Database db = await instance.database;
@@ -897,32 +908,6 @@ class DatabaseHelper {
         .update('Factura', data, where: "FacturaId = ?", whereArgs: [id]);
     return result;
   }
-  // Future<int> actualizarMontoFactura(String facturaNumero, id) async {
-  //   Database db = await instance.database;
-  //   return await db
-  //       .update('Factura', factura.toMap(), where: 'id = ?', whereArgs: [id]);
-  // }
-
-//Agregar pagos
-
-  // Future<int> AddPagos(Pagos pago) async {
-  //   Database db = await instance.database;
-  //   return await db.insert('Pago', pago.toMap());
-  // }
-
-// //Lista de ordenes para pedidos de venta
-//   Future<List<OrdenVenta>> getOrdenes() async {
-//     Database db = await instance.database;
-//     var ordenes = await db.query('SalesOrders', orderBy: 'ID');
-//     // List<OrdenVenta> ordenesLista = ordenes.isNotEmpty
-//     //     ? ordenes.map((c) => OrdenVenta.fromMap(c)).toList()
-//     //     : [];
-
-//     List<OrdenVenta> ordenesLista = ordenes.isNotEmpty
-//         ? ordenes.map((c) => OrdenVenta.fromMap(c)).toList()
-//         : [];
-//     return ordenesLista;
-//   }
 
   Future<List<PedidoDetalle>> getDetallesporId(String id) async {
     Database db = await instance.database;
@@ -935,36 +920,6 @@ class DatabaseHelper {
         : [];
     return ordenesDetalleLista;
   }
-
-//   //creando y leyendo los usuarios
-//   Future<int> saveUser(Usuario user) async {
-//     var dbClient = await instance.database;
-//     int res = await dbClient.insert("Usuario", user.toMap());
-
-//     return res;
-//   }
-
-//   Future<String> getLogin(String user, String password) async {
-//     var dbClient = await instance.database;
-//     var res = await dbClient.rawQuery(
-//         "SELECT * FROM Usuario WHERE usuarioNombre; = '$user' and usuarioClave = '$password' and Activo = 1");
-
-//     if (res.length > 0) {
-//       return 'Si';
-//     }
-//     return 'NO';
-//   }
-
-  // Future<List<User>> getAllUser() async {
-  //   var dbClient = await con.db;
-  //   var res = await dbClient.query("user");
-
-  //   List<User> list =
-  //       res.isNotEmpty ? res.map((c) => User.fromMap(c)).toList() : null;
-  //   return list;
-  // }
-
-//Panel
 
   Future<int> CantidadDeClientesPorMes() async {
     var mes =

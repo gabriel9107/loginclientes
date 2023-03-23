@@ -25,7 +25,7 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 10),
             Image.network(
               //       // <-- SEE HERE
-              'https://firebasestorage.googleapis.com/v0/b/sigaapp-127c4.appspot.com/o/Siga%20inicio.PNG?alt=media&token=b23f275a-b8f1-4656-9f1d-7127ace42ca4',
+              'https://firebasestorage.googleapis.com/v0/b/sigaapp-127c4.appspot.com/o/Siga%20inicio-removebg-preview.jpg?alt=media&token=2fc2f502-65a2-446f-955c-b4695a9da100',
             ),
             SizedBox(height: 15),
             Text('Sistema de Pedidos',

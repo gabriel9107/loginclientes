@@ -89,9 +89,10 @@ class _MyCustomFormState extends State<MyCustomForm> {
     });
   }
 
+  static final GlobalKey<FormState> _claveFormulario = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final _claveFormulario = GlobalKey<FormState>();
+    // final _claveFormulario = GlobalKey<FormState>();
 
     return Scaffold(
       resizeToAvoidBottomInset: true,

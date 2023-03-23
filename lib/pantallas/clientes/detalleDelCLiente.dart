@@ -9,12 +9,14 @@ import 'package:sigalogin/pantallas/Pagos/realizarPago.dart';
 import 'package:sigalogin/pantallas/clientes/detalleDeFactura.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas.dart';
 
+import '../../clases/facturaDetalle.dart';
 import '../../clases/modelos/pago.dart';
 import '../../servicios/db_helper.dart';
 import '../NavigationDrawer.dart';
 import '../Pagos/pago.dart';
 import '../Pagos/pagodeprueba.dart';
 import '../alertas.dart';
+import '../pedidos/PedidosVentas copy.dart';
 import 'new_cliente.dart';
 import 'package:intl/intl.dart';
 
@@ -29,53 +31,77 @@ class DetalleDelCliente extends StatelessWidget {
     return MaterialApp(
       home: DefaultTabController(
         length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.card_giftcard), text: 'Pedidos'),
-                Tab(
-                  icon: Icon(Icons.inventory),
-                  text: 'Facturas',
-                ),
-                Tab(icon: Icon(Icons.paypal), text: 'Pagos'),
-                // Tab(
-                //   icon: Icon(Icons.directions_bike),
-                //   text: 'Pedidos',
-                // ),
+        child: Builder(builder: (BuildContext context) {
+          final TabController controller = DefaultTabController.of(context)!;
+          controller.addListener(() {
+            if (!controller.indexIsChanging) {
+              print(controller.index);
+              // add code to be executed on TabBar change
+            }
+          });
+
+          return Scaffold(
+            appBar: AppBar(
+              bottom: const TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.card_giftcard), text: 'Pedidos'),
+                  Tab(
+                    icon: Icon(Icons.inventory),
+                    text: 'Facturas',
+                  ),
+                  Tab(icon: Icon(Icons.paypal), text: 'Pagos'),
+                  // Tab(
+                  //   icon: Icon(Icons.directions_bike),
+                  //   text: 'Pedidos',
+                  // ),
+                ],
+              ),
+              title: Text(
+                  'Detalle del Cliente ' + this.nombredelcliente.toString()),
+            ),
+            drawer: navegacions(),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                PagoTemporal.limpiarDetalle();
+                if (controller.index == 0) {
+                  FacturaDetalle.limpiarfacturas();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CartPage(
+                              customerCode.toString(),
+                              nombredelcliente.toString())));
+                }
+                if (controller.index == 2) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyCustomForm(
+                              this.customerCode, this.nombredelcliente)));
+                } else {
+                  print('haciendo nada');
+                }
+                //
+              },
+              tooltip: 'Agregar',
+              child: const Icon(
+                Icons.add,
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                // ListadoPedidos(const Icon(Icons.send), customerCode.toString()),
+                ListadoPedidos(
+                    const Icon(Icons.directions_car), customerCode.toString()),
+                ListFactura(
+                    const Icon(Icons.directions_car), customerCode.toString()),
+                ListPagos(
+                    const Icon(Icons.directions_car), customerCode.toString()),
+                // ListPedidos(const Icon(Icons.directions_car)),
               ],
             ),
-            title:
-                Text('Detalle del Cliente ' + this.nombredelcliente.toString()),
-          ),
-          drawer: navegacions(),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              PagoTemporal.limpiarDetalle();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MyCustomForm(
-                          this.customerCode, this.nombredelcliente)));
-            },
-            tooltip: 'Agregar',
-            child: const Icon(
-              Icons.add,
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              // ListadoPedidos(const Icon(Icons.send), customerCode.toString()),
-              ListadoPedidos(
-                  const Icon(Icons.directions_car), customerCode.toString()),
-              ListFactura(
-                  const Icon(Icons.directions_car), customerCode.toString()),
-              ListPagos(
-                  const Icon(Icons.directions_car), customerCode.toString()),
-              // ListPedidos(const Icon(Icons.directions_car)),
-            ],
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
@@ -170,12 +196,10 @@ class ListadoPedidos extends StatelessWidget {
                       ),
                       onTap: () {
                         // _showMyDialog();
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) =>
-                        //             DetalleDeFactura(pedidos.facturaId))
-                        // );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PedidoHistorico(pedido)));
                       },
                     ),
                   );
@@ -216,24 +240,6 @@ class ListFactura extends StatelessWidget {
               return AlertDialog(
                 title: Text('Country List'),
               );
-              //   title: const Text('AlertDialog Title'),
-              //   content: SingleChildScrollView(
-              //     child: ListBody(
-              //       children: const <Widget>[
-              //         Text('This is a demo alert dialog.'),
-              //         Text('Would you like to approve of this message?'),
-              //       ],
-              //     ),
-              //   ),
-              //   actions: <Widget>[
-              //     TextButton(
-              //       child: const Text('Approve'),
-              //       onPressed: () {
-              //         Navigator.of(context).pop();
-              //       },
-              //     ),
-              //   ],
-              // );
             },
           );
         }
@@ -300,8 +306,9 @@ class ListFactura extends StatelessWidget {
                           ),
                         ],
                       ),
-                      onTap: () {
+                      onTap: () async {
                         // _showMyDialog();
+                        FacturaDetalle.limpiarfacturas();
                         Navigator.push(
                             context,
                             MaterialPageRoute(

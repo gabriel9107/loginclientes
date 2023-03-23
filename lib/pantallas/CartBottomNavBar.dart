@@ -12,7 +12,8 @@ import 'clientes/detalleDelCLiente.dart';
 class CartBottomNavBar extends StatelessWidget {
   String? NumeroPedido;
   String? idCliente;
-  CartBottomNavBar(this.NumeroPedido, this.idCliente);
+  String? clienteNombre;
+  CartBottomNavBar(this.NumeroPedido, this.idCliente, this.clienteNombre);
   @override
   Widget build(BuildContext context) {
     FacturaMaster totales = FacturaMaster.totales();
@@ -160,9 +161,11 @@ class CartBottomNavBar extends StatelessWidget {
                                     })
                                   });
 
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                              // builder: (context) => pedidop(), pedidosLista
-                              builder: (context) => pedidosLista()));
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  // builder: (context) => pedidop(), pedidosLista
+                                  builder: (context) => DetalleDelCliente(
+                                      idCliente, this.clienteNombre)));
 
 //limpiar lista
                           ListaProducto = false;
