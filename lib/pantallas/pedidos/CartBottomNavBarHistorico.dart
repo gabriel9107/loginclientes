@@ -50,7 +50,9 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "\$ " + pedidos.totalAPagar.toStringAsFixed(2),
+                      "\$ " +
+                          (pedidos.totalAPagar - pedidos.impuestos)
+                              .toStringAsFixed(2),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -69,7 +71,7 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "\$ " + pedidos.impuestos!.toStringAsFixed(2),
+                      "\$ ${pedidos.impuestos!.toStringAsFixed(2)}",
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -88,7 +90,7 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      ("\$ " + pedidos.totalAPagar.toStringAsFixed(2)),
+                      ("\$ ${pedidos.totalAPagar.toStringAsFixed(2)}"),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,

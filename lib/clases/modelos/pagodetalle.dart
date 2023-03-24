@@ -109,6 +109,8 @@
 
 import 'dart:convert';
 
+import 'package:sigalogin/servicios/db_helper.dart';
+
 Map<String, PagoDetalle> pagoDetalleFromJson(String str) =>
     Map.from(json.decode(str)).map(
         (k, v) => MapEntry<String, PagoDetalle>(k, PagoDetalle.fromJson(v)));
@@ -220,6 +222,10 @@ class PagoDetalle {
       }
     }
     return 0;
+  }
+
+  static obtenerDetalleDePago(int pagoid, String clienteId) {
+    return DatabaseHelper.instance.obtenerPagoPorIdyCliente(pagoid);
   }
 }
 

@@ -62,10 +62,14 @@ class FacturaMaster {
         .reduce((value, element) => value + element)
         .toInt();
 
-    subtotal = (FacturaDetalle.getFacturaDetalle()
-            .map((e) => e.montoproducto)
-            .reduce((value, element) => value + element) *
-        cantidadArticulos);
+    subtotal = FacturaDetalle.getFacturaDetalle()
+        .map((e) => e.montoLinea)
+        .reduce((value, element) => value + element);
+
+    // subtotal = (FacturaDetalle.getFacturaDetalle()
+    //         .map((e) => e.montoproducto)
+    //         .reduce((value, element) => value + element) *
+    //     cantidadArticulos);
 
     descuento = 0;
     // descuento = ((subtotal * descuentoI) / 1000).toDouble();
@@ -103,13 +107,15 @@ class FacturaDetalle {
   String nombreProducto;
   double montoproducto;
   int cantidadProducto;
+  double montoLinea;
 
   FacturaDetalle(
       {required this.facturaNumero,
       required this.codigoProducto,
       required this.montoproducto,
       required this.nombreProducto,
-      required this.cantidadProducto});
+      required this.cantidadProducto,
+      required this.montoLinea});
 
   static List<FacturaDetalle> facturaDetalle = <FacturaDetalle>[];
 
@@ -122,6 +128,11 @@ class FacturaDetalle {
 
   static List<FacturaDetalle> getFacturaDetalle() {
     return facturaDetalle.toList();
+  }
+
+  static actualiarLinea(var index) {
+    facturaDetalle[index].montoLinea = facturaDetalle[index].montoproducto *
+        facturaDetalle[index].cantidadProducto;
   }
 
   static bool limpiarfacturas() {

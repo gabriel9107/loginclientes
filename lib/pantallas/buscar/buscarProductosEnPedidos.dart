@@ -329,6 +329,7 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
                     // double price = suggestion.price as double;
                     if (_controllers[index].text.isEmpty) {
                       FacturaDetalle.addfacturaDetalle(FacturaDetalle(
+                          montoLinea: suggestion.precio,
                           facturaNumero: "1",
                           codigoProducto: suggestion.codigo.toString(),
                           montoproducto:
@@ -337,7 +338,10 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
                           cantidadProducto: 1));
                       // close(context, null);
                     } else {
+                      int cantidad =
+                          int.parse(_controllers[index].text.toString());
                       FacturaDetalle.addfacturaDetalle(FacturaDetalle(
+                          montoLinea: (cantidad * suggestion.precio),
                           facturaNumero: "1",
                           codigoProducto: suggestion.codigo.toString(),
                           montoproducto:

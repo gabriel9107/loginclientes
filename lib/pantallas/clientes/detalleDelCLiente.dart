@@ -3,6 +3,7 @@ import 'package:sigalogin/clases/factura.dart';
 import 'package:sigalogin/clases/modelos/pagodetalle.dart';
 import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/clases/themes.dart';
+import 'package:sigalogin/pantallas/Pagos/pagoHistorico.dart';
 import 'package:sigalogin/pantallas/Pagos/pagosForm.dart';
 
 import 'package:sigalogin/pantallas/Pagos/realizarPago.dart';
@@ -62,7 +63,7 @@ class DetalleDelCliente extends StatelessWidget {
             drawer: navegacions(),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                PagoTemporal.limpiarDetalle();
+                // PagoTemporal.limpiarDetalle();
                 if (controller.index == 0) {
                   FacturaDetalle.limpiarfacturas();
                   Navigator.push(
@@ -407,6 +408,14 @@ class ListPagos extends StatelessWidget {
                               // ),
                             ],
                           ),
+                          onTap: () {
+                            FacturaDetalle.limpiarfacturas();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyPagosHistoricos(
+                                        pago.facturaId, "gabriel")));
+                          },
                         ));
                   }).toList(),
                 );

@@ -178,6 +178,7 @@ class _mainPage extends State<CartPage> {
                                         print('restando');
                                         detalleFactura[index]
                                             .cantidadProducto += 1;
+                                        FacturaDetalle.actualiarLinea(index);
                                       });
                                     },
                                     child: Icon(
@@ -201,6 +202,8 @@ class _mainPage extends State<CartPage> {
                                             .cantidadProducto -= 1;
                                         print(detalleFactura[index]
                                             .cantidadProducto);
+
+                                        FacturaDetalle.actualiarLinea(index);
 
                                         // qty -= 1;
                                       });

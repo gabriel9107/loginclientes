@@ -142,17 +142,6 @@ class _mainPage extends State<PedidoHistorico> {
                       ],
                     ),
                   );
-                  // final detalleFactura = detalles![index];
-
-                  // return Card(
-                  //     child: Column(children: [
-                  //   Text(detalleFactura.productCode.toString()),
-                  //   Text(detalleFactura.productName.toString()),
-                  //   Text(detalleFactura.qty.toString()),
-                  //   Text(detalleFactura.price.toString()),
-                  //   Text(detalleFactura.salesOrdersID.toString()),
-                  //   Text(detalleFactura.iD.toString())
-                  // ]));
                 });
           },
         ),

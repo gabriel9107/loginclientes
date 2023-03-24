@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:sigalogin/clases/factura.dart';
@@ -816,6 +817,25 @@ class DatabaseHelper {
     } else {
       return false;
     }
+  }
+
+  Future<List<Pago>> obtenerPagoPorIdyCliente(int id) async {
+    Database db = await instance.database;
+    var pago = await db.rawQuery("SELECT * FROM Pago where id = '$id'");
+
+    List<Pago> pagos = pago.map((e) => Pago.fromMapSqlLite(e)).toList();
+
+    return pagos;
+  }
+
+  Future<List<PagoDetalle>> obtenerPagoDetallePorIdyCliente(int pagoid) async {
+    Database db = await instance.database;
+    var pago =
+        await db.rawQuery("SELECT * FROM PagoDetalle where pagoId = '$pagoid'");
+
+    List<PagoDetalle> pagos = pago.map((e) => PagoDetalle.fromJson(e)).toList();
+
+    return pagos;
   }
 
   Future<List<FacturaDetalle>> obtenerDetalleDeFactura() async {

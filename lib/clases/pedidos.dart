@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:sigalogin/clases/global.dart';
 
 class Contact {
@@ -33,7 +34,7 @@ class Pedido {
       required this.clienteId,
       required this.fechaOrden,
       this.numeroOrden,
-      this.impuestos,
+      required this.impuestos,
       required this.totalAPagar,
       required this.compagnia,
       required this.sincronizado,
@@ -45,7 +46,7 @@ class Pedido {
   int? id;
   String clienteId;
   DateTime fechaOrden;
-  double? impuestos;
+  double impuestos;
   double totalAPagar;
   String? numeroOrden;
   int sincronizado;

@@ -149,23 +149,19 @@ class FacturaDetalle {
 
   static List<FacturaDetalle> _detalle = [];
   static Future obtenerDetalle() async {
-    if (_detalle.length == 0) {
-      var documento = await DatabaseHelper.instance.obtenerDetalleDeFactura()
-          as List<FacturaDetalle>;
-      documento.forEach((element) {
-        _detalle.add(element);
-      });
-    }
+    var documento = await DatabaseHelper.instance.obtenerDetalleDeFactura()
+        as List<FacturaDetalle>;
+    documento.forEach((element) {
+      _detalle.add(element);
+    });
   }
 
   static Future obtenerDetallePorFacturaId(String facturaId) async {
-    if (_detalle.length == 0) {
-      var documento = await DatabaseHelper.instance
-          .obtenerDetalleDeFacturaPorFacturaId(facturaId);
-      documento.forEach((element) {
-        _detalle.add(element);
-      });
-    }
+    var documento = await DatabaseHelper.instance
+        .obtenerDetalleDeFacturaPorFacturaId(facturaId);
+    documento.forEach((element) {
+      _detalle.add(element);
+    });
   }
 
   static limpiarFactura() {

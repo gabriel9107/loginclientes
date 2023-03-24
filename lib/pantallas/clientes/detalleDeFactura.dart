@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/detalleFactura.dart';
 import 'package:sigalogin/clases/modelos/facturaM.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+
+import 'package:flutter/material.dart';
 
 class DetalleDeFactura extends StatefulWidget {
   String? facturaId;
@@ -14,20 +15,39 @@ class DetalleDeFactura extends StatefulWidget {
 class _DetalleDeFactura extends State<DetalleDeFactura> {
   String? facturaId;
   _DetalleDeFactura(this.facturaId);
-  List<FacturaDetalle> _detalle = [];
+
+  final detalle = <FacturaDetalle>[];
   late DetalleFacturaDataSource _detalleFacturaDataSource;
+
   @override
-
-  // TODO: implement setState
-  initState() {
+  void initState() {
     super.initState();
-    FacturaDetalle.obtenerDetallePorFacturaId(this.facturaId.toString());
 
-    if (_detalle.isEmpty) {
-      _detalle = FacturaDetalle.getDetalleFactura();
-    }
-
-    _detalleFacturaDataSource = DetalleFacturaDataSource(_detalle);
+    DatabaseHelper.instance
+        .obtenerDetalleDeFacturaPorFacturaId(facturaId!)
+        .then((value) => {
+              _detalleFacturaDataSource = DetalleFacturaDataSource(detalle),
+              setState(() {
+                value.forEach((element) {
+                  detalle.add(FacturaDetalle(
+                      compagnia: 0,
+                      facturaId: element.facturaId,
+                      isDelete: 1,
+                      lineaNumero: element.lineaNumero,
+                      montoLinea: element.montoLinea,
+                      nombre: element.nombre,
+                      precioVenta: element.precioVenta,
+                      productoCodigo: element.productoCodigo,
+                      qty: element.qty,
+                      sincronizado: element.sincronizado,
+                      id: element.id));
+                });
+                _detalleFacturaDataSource = DetalleFacturaDataSource(detalle);
+              })
+            })
+        .catchError((error) {
+      print(error);
+    });
   }
 
   Widget build(BuildContext context) {
