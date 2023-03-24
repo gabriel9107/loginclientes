@@ -63,11 +63,7 @@ class DetalleDelCliente extends StatelessWidget {
             drawer: navegacions(),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-<<<<<<< HEAD
                 // PagoTemporal.limpiarDetalle();
-=======
-                PagoTemporal.limpiarDetalle();
->>>>>>> 8528396ed446201783aee5e3c736fe3864ae7561
                 if (controller.index == 0) {
                   FacturaDetalle.limpiarfacturas();
                   Navigator.push(
@@ -313,11 +309,8 @@ class ListFactura extends StatelessWidget {
                       ),
                       onTap: () async {
                         // _showMyDialog();
-<<<<<<< HEAD
                         FacturaDetalle.limpiarfacturas();
-=======
 
->>>>>>> 8528396ed446201783aee5e3c736fe3864ae7561
                         Navigator.push(
                             context,
                             MaterialPageRoute(
