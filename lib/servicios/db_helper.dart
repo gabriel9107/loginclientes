@@ -503,7 +503,11 @@ class DatabaseHelper {
   Future<List<PagoDetalle>> obtenerPagoDetallessASincornizar() async {
     Database db = await instance.database;
     var pagos =
+<<<<<<< HEAD
         await db.rawQuery("SELECT * FROM PagoDetalle where sincronizado =1");
+=======
+        await db.rawQuery("SELECT * FROM PagoDetalle where sincronizado =1 ");
+>>>>>>> 8528396ed446201783aee5e3c736fe3864ae7561
 
     List<PagoDetalle> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => PagoDetalle.fromJsontofire(e)).toList()
@@ -679,6 +683,7 @@ class DatabaseHelper {
     return await db.insert('PedidoDetalle', detalle.toMap());
   }
 
+<<<<<<< HEAD
   // Future<int> actualizarPagoCargado(int id, String idFire) async {
   //   Database db = await instance.database;
   //   final data = {
@@ -687,6 +692,11 @@ class DatabaseHelper {
   //     // 'description': descrption,
   //     // 'createdAt': DateTime.now().toString()
   //   };
+=======
+  Future<int> actualizarPagoDetalleCargado(int id, String idFire) async {
+    Database db = await instance.database;
+    final data = {'sincronizado': 0, 'idfirebase': idFire};
+>>>>>>> 8528396ed446201783aee5e3c736fe3864ae7561
 
   //   final result =
   //       await db.update('PagoDetalle', data, where: "ID = ?", whereArgs: [id]);
@@ -699,20 +709,6 @@ class DatabaseHelper {
 
     final result =
         await db.update('Pago', data, where: "id = ?", whereArgs: [id]);
-    return result;
-  }
-
-  Future<int> actualizarPagoDetalleCargado(int id, String idFire) async {
-    Database db = await instance.database;
-    final data = {
-      'sincronizado': 0,
-      'idfirebase': idFire
-      // 'description': descrption,
-      // 'createdAt': DateTime.now().toString()
-    };
-
-    final result =
-        await db.update('PagoDetalle', data, where: "ID = ?", whereArgs: [id]);
     return result;
   }
 
