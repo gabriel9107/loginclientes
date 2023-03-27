@@ -122,8 +122,13 @@ class FacturaDetalle {
   static void addfacturaDetalle(FacturaDetalle detalle) {
     var contain = facturaDetalle
             .any((element) => element.codigoProducto == detalle.codigoProducto)
-        ? print('nada?')
+        ? actualizarcantidadProducto(detalle)
         : facturaDetalle.add(detalle);
+  }
+
+  static void actualizarcantidadProducto(FacturaDetalle detalle) {
+    facturaDetalle[facturaDetalle.indexWhere(
+        (element) => element.facturaNumero == detalle.facturaNumero)] = detalle;
   }
 
   static List<FacturaDetalle> getFacturaDetalle() {

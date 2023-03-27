@@ -352,55 +352,48 @@ class _ListaOedidosState extends State<pedidosLista> {
 Future cargarPedidos() async {
   var clientes = await DatabaseHelper.instance
       .obtenerPedidosPendienteDeSincornizacion()
-      .then((pedido) {
-    pedido.forEach((element) {
-      sincronizarPedidos(element);
-      cargarPedidoDetalle(element);
-    });
-  });
+      .then((value) => sincronizaClienteFire(value));
 }
 
-Future sincronizarPedidos(Pedido pedido) async {
+sincronizaClienteFire(List<Pedido> pedidos) async {
   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
   final url = Uri.https(_baseUrl, 'Pedidos.json');
 
-  final resp = await http.post(url, body: json.encode(pedido.toJsonUp()));
-  final decodeData = resp.body;
-  print(decodeData);
-  if (decodeData.isNotEmpty) {
-    DatabaseHelper.instance
-        .actualizarPedidoCargado(pedido.id as int, decodeData);
-  }
+  pedidos.forEach((pedido) async {
+    final resp = await http.post(url, body: json.encode(pedido.toJsonUp()));
+    final codeData = json.decode(resp.body);
+    final decodeData = codeData['name'];
+    if (decodeData.isNotEmpty) {
+      DatabaseHelper.instance
+          .actualizarPedidoCargado(pedido.id as int, decodeData);
 
-  return '';
+      DatabaseHelper.instance
+          .obtenerPedidoDetalleEspecificoASincronizar(pedido.id as int)
+          .then((value) => {sincronizarDetallePedido(value, decodeData)});
+    }
+  });
+
+  Resumen.resumentList.add(
+      Resumen(accion: 'Pedidos Subidos', cantidad: pedidos.length.toString()));
 }
 
-Future cargarPedidoDetalle(Pedido Pedido) async {
-  var busquedarDetalle = await DatabaseHelper.instance
-      .obtenerPedidoDetalleEspecificoASincronizar(Pedido.id as int)
-      .then((value) => sincronizarPedidoDetalles(value, Pedido.clienteId));
-  // var detalle = await DatabaseHelper.instance
-  //     .obtenerDetallePedidosPendienteDeSincornizacion()
-}
-
-sincronizarPedidoDetalles(
-    List<PedidoDetalle> pedidoLista, String clienteID) async {
-  // final databaseReference = FirebaseDatabase.instance.ref('PedidoDetalle');
-
-  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
-  final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
-
+sincronizarDetallePedido(List<PedidoDetalle> pedidoLista, String decode) async {
   pedidoLista.forEach((element) async {
-    final resp = await http.post(url, body: json.encode(element.toJsonUp()));
+    element.idfirebase = decode;
+    final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+    final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
+    final resp = await http.post(url, body: element.toJson());
+
     final decodeData = resp.body;
+
     print(decodeData);
+
     if (decodeData.isNotEmpty) {
       DatabaseHelper.instance
           .actualizarPedidoDetalleCargado(element.id as int, decodeData);
     }
+    Resumen.resumentList.add(Resumen(
+        accion: 'Pedidos Detalle Cargado',
+        cantidad: pedidoLista.length.toString()));
   });
-
-  Resumen.resumentList.add(Resumen(
-      accion: 'Pedidos Detalle Subidos',
-      cantidad: pedidoLista.length.toString()));
 }

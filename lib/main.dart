@@ -21,6 +21,8 @@ import 'package:sigalogin/servicios/productos_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+import 'package:hive_flutter/hive_flutter.dart';
+
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
@@ -31,6 +33,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() async {
+  await Hive.initFlutter();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

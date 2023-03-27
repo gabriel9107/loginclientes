@@ -476,6 +476,19 @@ class DatabaseHelper {
     return await db.insert('Pago', pago.toJson());
   }
 
+  Future<List<PagoDetalleLista>> obtenerDetalleDePagoPorPagoId(
+      int pagoId) async {
+    Database db = await instance.database;
+    var detalle = await db.rawQuery(
+        "SELECT Pago.id, pago.fechaPago, PagoDetalle.facturaId, Pago.MetodoDePago, Pago.montoPagado, Pago.Estado FROM Pago INNER JOIN PagoDetalle ON Pago.Id = PagoDetalle.pagoId Where pago.id ='$pagoId'");
+
+    List<PagoDetalleLista> listadePagos = detalle.isNotEmpty
+        ? detalle.map((e) => PagoDetalleLista.fromMapSqlLiteWitId(e)).toList()
+        : [];
+
+    return listadePagos;
+  }
+
   Future<List<PagoDetalleLista>> obtenerDetalleDePagoPorCliente(
       String cliente) async {
     Database db = await instance.database;

@@ -395,18 +395,6 @@ class ListPagos extends StatelessWidget {
                               Container(
                                 height: 10,
                               ),
-                              // Column(
-                              //   children: [
-                              //     Column(
-                              //       children: [
-                              //         Text('Monto'),
-                              //         Text(
-                              //           pago.montoPagado.toString(),
-                              //         ),
-                              //       ],
-                              //     )
-                              //   ],
-                              // ),
                             ],
                           ),
                           onTap: () {
@@ -414,8 +402,8 @@ class ListPagos extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MyPagosHistoricos(
-                                        pago.facturaId, "gabriel")));
+                                    builder: (context) =>
+                                        MyPagosHistoricos(pago.id as int)));
                           },
                         ));
                   }).toList(),

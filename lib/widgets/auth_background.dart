@@ -36,7 +36,7 @@ class _HeaderIcon extends StatelessWidget {
       child: Container(
         width: double.infinity,
         margin: EdgeInsets.only(top: 50),
-        child: Icon(Icons.person_pin, color: Colors.white, size: 110),
+        // child: Icon(Icons.person_pin, color: Colors.white, size: 110),
       ),
     );
   }

@@ -530,7 +530,15 @@ class PagoTemporal {
   static List<PagoTemporal> pagos = [];
 
   static void agregarFacturasaPagos(PagoTemporal pago) {
-    return pagos.add(pago);
+    var resultado = pagos
+        .where((element) =>
+            element.facturaId.toLowerCase().contains(pago.facturaId))
+        .isEmpty;
+    if (resultado != true) {
+      return pagos.add(pago);
+    } else {
+      return;
+    }
   }
 
   static void limpiarDetalle() async {
