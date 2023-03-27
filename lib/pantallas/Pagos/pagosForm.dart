@@ -531,10 +531,10 @@ class PagoTemporal {
 
   static void agregarFacturasaPagos(PagoTemporal pago) {
     var resultado = pagos
-        .where((element) =>
-            element.facturaId.toLowerCase().contains(pago.facturaId))
-        .isEmpty;
-    if (resultado != true) {
+        .where((element) => element.facturaId.contains(pago.facturaId))
+        .toList();
+
+    if (resultado.length == 0) {
       return pagos.add(pago);
     } else {
       return;
