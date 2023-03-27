@@ -74,6 +74,9 @@ class DetalleDelCliente extends StatelessWidget {
                               nombredelcliente.toString())));
                 }
                 if (controller.index == 2) {
+                  //limpiar detalle de la factura
+                  PagoTemporal.limpiarDetalle();
+                  Pago.eliminartotalpago();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

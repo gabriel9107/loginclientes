@@ -350,6 +350,10 @@ class Pago {
     // pago.valordelpago;
   }
 
+  static eliminartotalpago() {
+    pago.montoPagado = 0;
+  }
+
   static obtenerCliente() {
     return pago.clienteId;
   }
