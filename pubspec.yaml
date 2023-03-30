@@ -59,6 +59,7 @@ dependencies:
   cloud_firestore: ^4.4.3
   firebase_core_platform_interface: ^4.5.3
   dropdown_button2: ^2.0.0
+  # connectivity_plus: ^3.0.3
   
   
     

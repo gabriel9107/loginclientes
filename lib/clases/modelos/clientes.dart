@@ -147,6 +147,7 @@ class Cliente {
         "sincronizado": sincronizado,
         "telefono1": telefono1,
         "telefono2": telefono2,
+        "descuento": descuento,
       };
 
   static Future obtenerClientesFijos() async {

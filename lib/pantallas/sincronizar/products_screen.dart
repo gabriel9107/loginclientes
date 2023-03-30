@@ -41,8 +41,8 @@ class PincronizarListState extends State<PincronizarLista> {
   }
 
   Widget build(BuildContext context) {
-    final servicioClientes = Provider.of<ClienteSevices>(context);
     final servicioProductos = Provider.of<ProductoServices>(context);
+    final servicioClientes = Provider.of<ClienteSevices>(context);
     final servicioPedidos = Provider.of<PedidoServicio>(context);
     // final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
 

@@ -12,7 +12,7 @@ import '../clases/modelos/productos.dart';
 import '../clases/modelos/resumen.dart';
 
 class ProductoServices extends ChangeNotifier {
-  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   final List<Producto> productos = [];
 
   ProductoServices() {

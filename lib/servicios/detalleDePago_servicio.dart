@@ -13,7 +13,7 @@ import '../clases/modelos/pagodetalle.dart';
 import '../clases/modelos/productos.dart';
 
 class PagoDetalleServicio extends ChangeNotifier {
-  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   final List<PagoDetalle> pagos = [];
   PagoDetalleServicio() {
     this.sincronizar();

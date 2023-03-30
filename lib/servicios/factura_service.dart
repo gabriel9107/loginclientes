@@ -10,7 +10,7 @@ import '../clases/modelos/resumen.dart';
 import 'db_helper.dart';
 
 class FacturaServices extends ChangeNotifier {
-  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   final List<Factura> facturas = [];
 
   FacturaServices() {

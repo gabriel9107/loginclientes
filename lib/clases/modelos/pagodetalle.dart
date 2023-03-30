@@ -143,6 +143,7 @@ class PagoDetalle {
   int isDelete;
   int activo;
   int? estado;
+  String? pagoIdFirebase;
 
   Map<String, dynamic> toJsonsqlinsert() => {
         "pagoId": pagoId,
@@ -188,6 +189,7 @@ class PagoDetalle {
         "montoAplicado": montoAplicado,
         "sincronizado": sincronizado,
         "montoDeFacturaAlMomento": montoDeFacturaAlMomento,
+        "pagoIdFirebase": pagoIdFirebase
       };
 
   static List<PagoDetalle> pagos = [];

@@ -15,7 +15,7 @@ import 'package:sigalogin/servicios/db_helper.dart';
 import '../clases/modelos/resumen.dart';
 
 class PedidoServicio extends ChangeNotifier {
-  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   final List<Pedido> pedidos = [];
   final int pedidosSincronizados = 0;
 
@@ -57,7 +57,7 @@ class PedidoServicio extends ChangeNotifier {
   }
 
   sincronizaClienteFire(List<Pedido> pedidos) async {
-    final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+    final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
     final url = Uri.https(_baseUrl, 'Pedidos.json');
 
     pedidos.forEach((pedido) async {

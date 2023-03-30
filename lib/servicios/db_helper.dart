@@ -32,7 +32,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '56.db');
+    String path = join(documentsDirectory.path, '58.db');
     return await openDatabase(
       path,
       version: 7,
@@ -504,10 +504,23 @@ class DatabaseHelper {
 
   Future<List<Pago>> obtenerPagosASincornizar() async {
     Database db = await instance.database;
-    var pagos = await db.rawQuery("SELECT * FROM Pago");
+    var pagos = await db.rawQuery("SELECT * FROM Pago where sincronizado =1 ");
 
     List<Pago> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
+        : [];
+
+    return listadePagos;
+  }
+
+  Future<List<PagoDetalle>> obtenerPagoDetallessASincornizarPorId(
+      int pagoId) async {
+    Database db = await instance.database;
+    var pagos =
+        await db.rawQuery("SELECT * FROM PagoDetalle where Pagoid ='$pagoId");
+
+    List<PagoDetalle> listadePagos = pagos.isNotEmpty
+        ? pagos.map((e) => PagoDetalle.fromJsontofire(e)).toList()
         : [];
 
     return listadePagos;

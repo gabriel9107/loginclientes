@@ -14,7 +14,7 @@ import 'package:sigalogin/servicios/db_helper.dart';
 import '../clases/modelos/resumen.dart';
 
 class PedidoDetalleServicio extends ChangeNotifier {
-  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   final List<PedidoDetalle> detalle = [];
   final int bajado = 0;
 

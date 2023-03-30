@@ -13,7 +13,7 @@ import 'package:sigalogin/servicios/db_helper.dart';
 import '../clases/modelos/clientes.dart';
 
 class ClienteSevices extends ChangeNotifier {
-  final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+  final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   late List<Cliente> clientes = [];
 
   ClienteSevices() {
@@ -59,7 +59,7 @@ class ClienteSevices extends ChangeNotifier {
   }
 
   sincronizaClienteFire(List<Cliente> clienteList) async {
-    final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+    final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
     final url = Uri.https(_baseUrl, 'Clientes.json');
     clienteList.forEach((element) async {
       final resp = await http.post(url, body: json.encode(element.toJsonUp()));
@@ -72,7 +72,7 @@ class ClienteSevices extends ChangeNotifier {
     Resumen.resumentList.add(Resumen(
         accion: 'Clientes Subidos', cantidad: clienteList.length.toString()));
 
-    //   final String _baseUrl = 'sigaapp-127c4-default-rtdb.firebaseio.com';
+    //   final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
     // final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
     // final resp = await http.post(url, body: detalle.toJson());
 
