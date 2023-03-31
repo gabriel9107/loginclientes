@@ -32,7 +32,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '58.db');
+    String path = join(documentsDirectory.path, '60.db');
     return await openDatabase(
       path,
       version: 7,
@@ -100,6 +100,7 @@ class DatabaseHelper {
         IsDelete INTEGER,
         Compagnia INTEGER
                 )''');
+
     await db.execute('''CREATE TABLE Factura(
      Id	 INTEGER PRIMARY KEY AUTOINCREMENT
      ,idfirebase TEXT
@@ -504,7 +505,7 @@ class DatabaseHelper {
 
   Future<List<Pago>> obtenerPagosASincornizar() async {
     Database db = await instance.database;
-    var pagos = await db.rawQuery("SELECT * FROM Pago where sincronizado =1 ");
+    var pagos = await db.rawQuery("SELECT * FROM Pago  ");
 
     List<Pago> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
@@ -517,7 +518,7 @@ class DatabaseHelper {
       int pagoId) async {
     Database db = await instance.database;
     var pagos =
-        await db.rawQuery("SELECT * FROM PagoDetalle where Pagoid ='$pagoId");
+        await db.rawQuery("SELECT * FROM PagoDetalle where Pagoid =$pagoId");
 
     List<PagoDetalle> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => PagoDetalle.fromJsontofire(e)).toList()

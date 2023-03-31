@@ -105,16 +105,16 @@ class FacturaDetalle {
   String toJson() => json.encode(toMap());
 
   factory FacturaDetalle.fromMap(Map<String, dynamic> json) => FacturaDetalle(
-        id: json["ID"],
+        compagnia: json["Compagnia"],
         facturaId: json["FacturaId"].toString().trim(),
+        id: json["ID"],
         lineaNumero: json["LineaNumero"].toDouble(),
+        montoLinea: json["MontoLinea"].toDouble(),
         nombre: json["Nombre"].toString().trim(),
         precioVenta: json["PrecioVenta"].toDouble(),
         productoCodigo: json["ProductoCodigo"].toString().trim(),
         qty: json["Qty"],
-        montoLinea: json["MontoLinea"].toDouble(),
         sincronizado: json["Sincronizado"],
-        compagnia: json["Compagnia"],
         isDelete: json["isDelete"],
       );
 

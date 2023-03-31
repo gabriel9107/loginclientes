@@ -189,7 +189,7 @@ class PagoDetalle {
         "montoAplicado": montoAplicado,
         "sincronizado": sincronizado,
         "montoDeFacturaAlMomento": montoDeFacturaAlMomento,
-        "pagoIdFirebase": pagoIdFirebase
+        "idfirebase": pagoIdFirebase
       };
 
   static List<PagoDetalle> pagos = [];

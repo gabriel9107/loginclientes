@@ -36,7 +36,7 @@ class NewClient extends StatelessWidget {
             IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
-                  if (descuentoController.text != "") {
+                  if (selectedValue != null) {
                     DatabaseHelper.instance.agregarNuevoCLiente(Cliente(
                         codigo: customerCodeController.text,
                         codigoVendedor: usuario,
@@ -70,6 +70,7 @@ class NewClient extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
                   controller: customerCodeController,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'RNC',
@@ -86,6 +87,7 @@ class NewClient extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
                   controller: customerNameController,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Nombre Cliente',
@@ -102,6 +104,7 @@ class NewClient extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
                   controller: customerDirController,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Direccion',
@@ -118,6 +121,7 @@ class NewClient extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
                   controller: phone1Controller,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Telefono',
@@ -129,37 +133,39 @@ class NewClient extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextFormField(
                   controller: phone2Controller,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Celular ',
                   ),
                 ),
               ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: DropdownButtonFormField(
-                    hint: Text('Descuento del cliente'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'No puede ser nulo';
-                      }
-                    },
-                    elevation: 4,
-                    isDense: true,
-                    isExpanded: true,
-                    iconSize: 60.0,
-                    // onChanged: selectedValue,
-                    value: selectedValue,
-                    items: <String>['20', '25']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                          child: Text(value), value: value);
-                    }).toList(),
-                    onChanged: (String? value) {
-                      descuentoController.text = value as String;
-                    },
-                  )),
+              DropdownButtonFormField(
+                hint: Text('Descuento del cliente'),
+                // validator: (value) {
+                //   if (value!.isEmpty) {
+                //     return 'No puede ser nulo';
+                //   }
+                // },
+
+                elevation: 4,
+                isDense: true,
+                isExpanded: true,
+                iconSize: 60.0,
+                // onChanged: selectedValue,
+                value: selectedValue,
+
+                items: <String>['20', '25']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                      child: Text(value), value: value);
+                }).toList(),
+
+                onChanged: (String? value) {
+                  selectedValue = value;
+                  // descuentoController.text = value as String;
+                },
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),

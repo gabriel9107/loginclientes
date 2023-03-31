@@ -256,7 +256,7 @@ class Pago {
 
   factory Pago.fromMap(Map<String, dynamic> json) => Pago(
         id: json["ID"],
-        clienteId: json["ClienteId"],
+        clienteId: json["ClienteId"].toString(),
         banco: json["Banco"],
         numeroDeCheque: json["NumeroDeCheque"],
         fechaDeCheque: json["FechaDeCheque"],

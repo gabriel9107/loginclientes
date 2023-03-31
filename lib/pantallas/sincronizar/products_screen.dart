@@ -9,6 +9,7 @@ import 'package:sigalogin/pantallas/productos/products_detail.dart';
 import 'package:sigalogin/servicios/detalleDePago_servicio.dart';
 import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
 import 'package:sigalogin/servicios/factura_service.dart';
+import 'package:sigalogin/servicios/pagoDetalle_Servicio.dart';
 import 'package:sigalogin/servicios/pago_servicio.dart';
 import 'package:sigalogin/servicios/pedido_servicio.dart';
 
@@ -41,16 +42,16 @@ class PincronizarListState extends State<PincronizarLista> {
   }
 
   Widget build(BuildContext context) {
-    final servicioProductos = Provider.of<ProductoServices>(context);
-    final servicioClientes = Provider.of<ClienteSevices>(context);
-    final servicioPedidos = Provider.of<PedidoServicio>(context);
-    // final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
+    // final servicioProductos = Provider.of<ProductoServices>(context);
+    // final servicioClientes = Provider.of<ClienteSevices>(context);
+    // // final servicioPedidos = Provider.of<PedidoServicio>(context);
+    // // final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
 
     // final servicioFactura = Provider.of<FacturaServices>(context);
     // final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
 
-    // final servicioPago = Provider.of<PagoServices>(context);
-    // final servicioPagoDetalle = Provider.of<PagoDetalleServicio>(context);
+    final servicioPago = Provider.of<PagoServices>(context);
+    // final servicioPagoDetalle = Provider.of<PagodetalleServicio>(context);
 
     // DBProvider().initializeDB();
     return Scaffold(

@@ -191,10 +191,10 @@ class Factura {
   }
 
   factory Factura.fromMap(Map<String, dynamic> json) => Factura(
+        compagnia: json["Compagnia"],
         facturaFecha: json["FacturaFecha"],
         facturaId: json["FacturaId"].toString().trim(),
         facturaVencimiento: json["FacturaVencimiento"],
-        id: json["Id"],
         isDelete: json["IsDelete"],
         metodoDePago: json["MetodoDePago"].toString().trim(),
         montoFactura: json["MontoFactura"].toDouble(),
@@ -203,9 +203,9 @@ class Factura {
         sincronizado: json["Sincronizado"],
         clienteId: json["clienteId"].toString().trim(),
         clienteNombre: json["clienteNombre"].toString().trim(),
+        id: json["Id"],
         totalPagado: json["totalPagado"].toDouble(),
         vendedorId: json["vendedorId"].toString().trim(),
-        compagnia: json["Compagnia"],
       );
 
   List<Factura> factura = [];

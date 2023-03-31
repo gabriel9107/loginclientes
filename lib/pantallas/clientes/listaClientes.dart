@@ -65,8 +65,8 @@ class CustomerListState extends State<clienteLista> {
       ),
       body: Center(
         child: FutureBuilder<List<Cliente>>(
-          future: DatabaseHelper.instance.obtenerClientesPorVendedor(usuario),
-          // future: DatabaseHelper.instance.obtenerCliente(usuario),
+          // future: DatabaseHelper.instance.obtenerClientesPorVendedor(usuario),
+          future: DatabaseHelper.instance.obtenerCliente(usuario),
           builder:
               (BuildContext context, AsyncSnapshot<List<Cliente>> snapshot) {
             if (!snapshot.hasData) {
