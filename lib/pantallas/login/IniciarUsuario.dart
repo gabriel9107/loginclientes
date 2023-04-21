@@ -29,6 +29,8 @@ class _login_pageState extends State<LoginScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
+  String? selectedValue;
+
   final _formlogin = GlobalKey<FormState>();
   final loginForm = Provider.of<LoginFormProvider>;
   late Box box1;
@@ -114,6 +116,29 @@ class _login_pageState extends State<LoginScreen> {
                               : 'La contraseña debe de ser de 6 caracteres';
                         },
                       ),
+                      DropdownButtonFormField(
+                        hint: Text('Compañia'),
+
+                        elevation: 4,
+                        isDense: true,
+                        isExpanded: true,
+                        iconSize: 60.0,
+                        // onChanged: selectedValue,
+                        value: selectedValue,
+
+                        items: <String>['Siga SRl', 'Siga']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                              child: Text(value), value: value);
+                        }).toList(),
+
+                        onChanged: (String? value) {
+                          selectedValue = value;
+                          if (value == 'Siga') {
+                            compagnia = 1;
+                          }
+                        },
+                      ),
                       SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -155,9 +180,7 @@ class _login_pageState extends State<LoginScreen> {
                               usuario = correo;
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) => DashboardScreen()
-                                      // builder: (context) => HomeScreen(),
-                                      ));
+                                      builder: (context) => DashboardScreen()));
                             } else {
                               final authServices = Provider.of<AuthServices>(
                                   context,
@@ -176,29 +199,10 @@ class _login_pageState extends State<LoginScreen> {
                                 }
                               }
                             }
-                            // if(!_formlogin.)
-                            // if (!loginForm.isValidForm()) return;
-                            // loginForm.isLoading = true;
-                            // final String? errorMessage = await authServices
-                            //     .login(loginForm.email, loginForm.password);
-                            // usuario =
-                            //     loginForm.email.replaceAll('@gmail.com', '');
-
-                            // if (errorMessage == null) {
-                            //   loginForm.isLoading = true;
-                            //   Navigator.pushReplacementNamed(context, 'home');
-                            // } else {
-                            //   NotificationsService.showSnackbar(errorMessage);
-                            //   loginForm.isLoading = false;
-                            // }
                           }),
                     ],
                   )),
             )
-            // ChangeNotifierProvider(
-            //   create: (_) => LoginFormProvider(),
-            //   child: _LoginForm(),
-            // )
           ],
         )),
         SizedBox(height: 50),

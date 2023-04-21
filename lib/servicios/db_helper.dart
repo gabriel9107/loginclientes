@@ -362,10 +362,11 @@ class DatabaseHelper {
     return listadeClientes;
   }
 
-  Future<List<Cliente>> obtenerClientesPorVendedor(String vendedor) async {
+  Future<List<Cliente>> obtenerClientesPorVendedor(
+      String vendedor, int compagnia) async {
     Database db = await instance.database;
-    var clientes = await db
-        .rawQuery("SELECT * FROM Clientes where codigoVendedor = '$vendedor'");
+    var clientes = await db.rawQuery(
+        "SELECT * FROM Clientes where codigoVendedor = '$vendedor' and compagnia = $compagnia");
 
     List<Cliente> listadeClientes = clientes.isNotEmpty
         ? clientes.map((e) => Cliente.fromMapSql(e)).toList()

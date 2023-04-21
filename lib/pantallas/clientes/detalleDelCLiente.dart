@@ -82,9 +82,7 @@ class DetalleDelCliente extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => MyCustomForm(
                               this.customerCode, this.nombredelcliente)));
-                } else {
-                  print('haciendo nada');
-                }
+                } else {}
                 //
               },
               tooltip: 'Agregar',

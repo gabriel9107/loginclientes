@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/services.dart';
+import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/ordenDeventa.dart';
 import 'package:sigalogin/clases/pedidoDetalle.dart';
 import 'package:sigalogin/clases/pedidos.dart';
@@ -76,7 +77,7 @@ class FacturaMaster {
 
     impuestoI = 5;
 
-    impuesto = ((subtotal * 18) / 1000).toDouble();
+    compagnia == 0 ? impuesto = ((subtotal * 18) / 1000).toDouble() : 0;
     // impuesto = 0;
 
     totalApagar = ((subtotal - descuento) + impuesto);
