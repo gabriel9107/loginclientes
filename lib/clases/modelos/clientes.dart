@@ -60,9 +60,9 @@ class Cliente {
         telefono1: json["telefono1"].toString().trim(),
         comentario: json["comentario"].toString().trim(),
         codigoVendedor: json["codigoVendedor"].toString().trim(),
-        compagnia: 0,
-        sincronizado: 0,
-        activo: 0,
+        compagnia: json["compagnia"],
+        sincronizado: json["sincronizado"],
+        activo: json["activo"],
       );
 
   factory Cliente.fromMap(Map<String, dynamic> json) => new Cliente(
@@ -74,9 +74,9 @@ class Cliente {
         telefono1: json["telefono1"].toString().trim(),
         comentario: json["comentario"].toString().trim(),
         codigoVendedor: json["codigoVendedor"].toString().trim(),
-        compagnia: 0,
+        compagnia: json["compagnia"],
         sincronizado: int.parse(json["sincronizado"]),
-        activo: int.parse(json["activo"]),
+        activo: json["activo"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -123,11 +123,11 @@ class Cliente {
 
   Map<String, dynamic> toJsonUp() => {
         "ID": id,
-        "activo": activo.toString(),
+        "activo": activo,
         "codigo": codigo,
         "codigoVendedor": codigoVendedor,
         "comentario": comentario,
-        "compagnia": compagnia.toString(),
+        "compagnia": compagnia,
         "direccion": direccion,
         "nombre": nombre,
         "sincronizado": sincronizado,
@@ -155,22 +155,6 @@ class Cliente {
     print(result);
     return result;
   }
-
-  // static obtenerClientesFijos() async {
-  //   print('clientes');
-
-  //   int? valor;
-  //   DatabaseHelper.instance.CantidadDeClientesPorMes().then((value) {
-  //     valor = value;
-  //     print(valor);
-
-  //     print(valor);
-
-  //     print(valor);
-  //   });
-
-  //   return valor;
-  // }
 }
 
 class Dashboar {

@@ -43,6 +43,9 @@ class _login_pageState extends State<LoginScreen> {
 
   void createBox() async {
     box1 = await Hive.openBox('logindata');
+    if (isChecked == false) {
+      permiso = false;
+    }
     getdata();
   }
 
@@ -126,7 +129,7 @@ class _login_pageState extends State<LoginScreen> {
                         // onChanged: selectedValue,
                         value: selectedValue,
 
-                        items: <String>['Siga SRl', 'Siga']
+                        items: <String>['Siga SRL', 'SIGA MEW']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                               child: Text(value), value: value);
@@ -134,8 +137,12 @@ class _login_pageState extends State<LoginScreen> {
 
                         onChanged: (String? value) {
                           selectedValue = value;
-                          if (value == 'Siga') {
+                          if (value == 'SIGA MEW') {
+                            sistema = 'SIGA MEW';
                             compagnia = 1;
+                          } else {
+                            sistema = 'SIGA SRL';
+                            compagnia == 0;
                           }
                         },
                       ),
@@ -182,6 +189,10 @@ class _login_pageState extends State<LoginScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => DashboardScreen()));
                             } else {
+                              var correo =
+                                  email.text.replaceAll('@gmail.com', '');
+                              correo = email.text.replaceAll('@siga.local', '');
+                              usuario = correo;
                               final authServices = Provider.of<AuthServices>(
                                   context,
                                   listen: false);

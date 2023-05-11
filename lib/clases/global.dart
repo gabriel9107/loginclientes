@@ -7,6 +7,7 @@ import 'factura.dart';
 //compania 1 = Siga, compania 2 = SisaSRl
 
 int compagnia = 0;
+String sistema = '';
 String usuario = '';
 double _impuesto = 18;
 bool ListasFactura = false;

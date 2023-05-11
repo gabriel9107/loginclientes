@@ -66,6 +66,10 @@ class navegacions extends StatelessWidget {
               Text(
                 usuario.replaceAll('@gmail.com', ''),
                 style: TextStyle(fontSize: 28, color: Colors.white),
+              ),
+              Text(
+                sistema.toUpperCase().toString(),
+                style: TextStyle(fontSize: 28, color: Colors.white),
               )
             ],
           ),
@@ -149,7 +153,6 @@ class navegacions extends StatelessWidget {
 }
 
 Future cargarClientes() async {
-  print('este es un reporte');
   var clientes = await DatabaseHelper.instance
       .obtenerClientesNuevos()
       .then((value) => sincronizaClienteFire(value));
