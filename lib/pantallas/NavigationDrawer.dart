@@ -8,6 +8,7 @@ import 'package:sigalogin/pantallas/pedidos/ordenesDeventa.dart';
 import 'package:sigalogin/pantallas/pedidos/pedidos.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
 import 'package:sigalogin/pantallas/productos/products_screen.dart';
+import 'package:sigalogin/pantallas/reporte/listadecobros.dart';
 import 'package:sigalogin/pantallas/reporte/reporte.dart';
 import 'package:sigalogin/pantallas/sincronizar/products_screen.dart';
 import 'package:sigalogin/pantallas/user_screen.dart';
@@ -117,7 +118,7 @@ class navegacions extends StatelessWidget {
             title: const Text('Reporte'),
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => MyReporte(),
+                builder: (context) => cobroLista(),
                 // builder: (context) => Cart(),
               ));
             },
