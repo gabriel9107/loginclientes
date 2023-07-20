@@ -62,7 +62,9 @@ dependencies:
   dropdown_button2: ^2.1.0
   syncfusion_flutter_xlsio: ^21.1.41
   dio: ^5.1.1
-  # open_file: ^3.2.1
+  open_file: ^3.1.0
+  pdf: ^3.1.0
+  flutter_lints: ^2.0.0
 
   # open_file: ^2.1.1
   # connectivity_plus: ^3.0.3

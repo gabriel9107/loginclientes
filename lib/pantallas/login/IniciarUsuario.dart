@@ -126,7 +126,7 @@ class _login_pageState extends State<LoginScreen> {
                         // onChanged: selectedValue,
                         value: selectedValue,
 
-                        items: <String>['Siga SRl', 'Siga']
+                        items: <String>['Siga SRl', 'New']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                               child: Text(value), value: value);
@@ -134,7 +134,7 @@ class _login_pageState extends State<LoginScreen> {
 
                         onChanged: (String? value) {
                           selectedValue = value;
-                          if (value == 'Siga') {
+                          if (value == 'New') {
                             compagnia = 1;
                           }
                         },
