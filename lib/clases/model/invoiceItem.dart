@@ -27,3 +27,22 @@ class Cuadre {
       required this.nombreVendedor,
       required this.fechaReporte});
 }
+
+class detalleCuadre {
+  final int? numeroRecibo;
+  final int codigo;
+  final String nombre;
+  final double montoRecibo;
+  final String facturaNumero;
+  final String metodoPago;
+  final String referencia;
+
+  const detalleCuadre(
+      {this.numeroRecibo,
+      required this.codigo,
+      required this.nombre,
+      required this.montoRecibo,
+      required this.facturaNumero,
+      required this.metodoPago,
+      required this.referencia});
+}

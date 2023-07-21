@@ -97,6 +97,11 @@ class ProductsListState extends State<ReportePagos> {
                               autocorrect: true,
                               decoration:
                                   InputDecoration(labelText: '2021/03/03'),
+                              onTap: () async {
+                                DateTime date = DateTime(1900);
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
+                              },
                             ),
                           ))),
                   Spacer(flex: 1),

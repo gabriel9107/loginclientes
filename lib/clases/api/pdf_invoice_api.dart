@@ -11,10 +11,9 @@ class PdfInvoiceApi {
     final pdf = Document();
 
     pdf.addPage(MultiPage(
-      build: (Context) => [
-        buildTitle(invoice),
-        builInvoice(invoice),
-      ],
+      build: (Context) =>
+          [buildTitle(invoice), builInvoice(invoice), Divider()],
+      buildTotales(),
     ));
 
     return PdfFile.saveDocument(name: 'myCobros.pdf', pdf: pdf);
@@ -24,17 +23,20 @@ class PdfInvoiceApi {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Cuadre de transacciones por origen de ingreso',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            'SISTEMA SIGA, SRL',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 0.8 * PdfPageFormat.cm),
-          Text(invoice.info.descripction)
+          Text('Cuadre de transacciones por origen del ingreso'),
+          SizedBox(height: 0.5 * PdfPageFormat.cm),
+          Text('Gabriel Montero Terrero'),
+          SizedBox(height: 0.9 * PdfPageFormat.cm)
         ],
       );
 
   static Widget builInvoice(Invoice invoice) {
     final headers = [
-      'Numero Recibo',
+      'Numero',
       'Codigo',
       'Nombre',
       'Fecha Recibo',
@@ -63,12 +65,12 @@ class PdfInvoiceApi {
       headers: headers,
       data: data,
       border: null,
-      headerStyle: TextStyle(fontWeight: FontWeight.bold),
-      headerDecoration: BoxDecoration(color: PdfColors.green300),
-      cellHeight: 30,
+      headerStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+      headerDecoration: const BoxDecoration(color: PdfColors.grey300),
+      cellHeight: 10,
       cellAlignments: {
         0: Alignment.centerLeft,
-        1: Alignment.centerLeft,
+        1: Alignment.center,
         2: Alignment.centerLeft,
         3: Alignment.centerLeft,
         4: Alignment.centerLeft,
