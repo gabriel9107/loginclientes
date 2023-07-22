@@ -27,3 +27,16 @@ class InvoiceInfo {
       required this.date,
       required this.dueDate});
 }
+
+class CuadreHeader {
+  final String sistema;
+  final String tema;
+  final String vendedor;
+  final List<detalleCuadre> items;
+
+  const CuadreHeader(
+      {required this.sistema,
+      required this.tema,
+      required this.vendedor,
+      required this.items});
+}

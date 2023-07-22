@@ -47,25 +47,20 @@ class ProductsListState extends State<ReportePagos> {
           IconButton(
             icon: const Icon(Icons.print),
             onPressed: () async {
-              final invoice = Invoice(
-                  supplier: Supplier(
-                      name: 'Gabriel Montero',
-                      address: 'Nicolas Ramon #31',
-                      paymentInfo: 'htttp://paypal.me/gamontero'),
-                  customer: Customer(
-                      name: 'Apple Inc', address: 'Direccion de prueba'),
-                  info: InvoiceInfo(
-                      date: DateTime.now(),
-                      descripction: 'SISTEMA SIGA SRL.',
-                      dueDate: DateTime.now(),
-                      number: '1'),
+              final invoice = CuadreHeader(
+                  sistema: 'SISTEMA SIGA SRL.',
+                  vendedor: 'GABRIEL MONTERO TERRERO',
+                  tema: 'CUADRE DE TRANSACCIONES POR ORIGEN DEL INGRESO',
                   items: [
-                    InvoiceItem(
-                        description: 'description',
-                        date: DateTime.now(),
-                        quantity: 40,
-                        vat: 1.5,
-                        unitPrice: 25.5)
+                    detalleCuadre(
+                        codigo: 4554,
+                        nombre: 'Taller y Respuesto Juan',
+                        numeroRecibo: 1,
+                        montoRecibo: 7500.00,
+                        facturaNumero: 'fVS025351',
+                        metodoPago: 'Efectivo',
+                        referencia: 'null',
+                        fechaRecibo: DateTime.now())
                   ]);
 
               final pdfFile = await PdfInvoiceApi.generate(invoice);
