@@ -12,6 +12,8 @@ import '../buscar/buscarFacturasParaPagos.dart';
 import 'package:intl/src/intl/date_format.dart';
 import 'package:intl/intl.dart';
 
+import '../reporte/Pagos/printPagos.dart';
+
 class MyCustomForm extends StatefulWidget {
   String? customerCode;
   String? clienteName;
@@ -98,6 +100,20 @@ class _MyCustomFormState extends State<MyCustomForm> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Realizar Pagos  A : ' + this.clienteName.toString()),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            tooltip: 'Open shopping cart',
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => PrintHome(),
+                // builder: (context) => Cart(),
+              ));
+
+              // handle the press
+            },
+          ),
+        ],
       ),
       body: Form(
         key: _claveFormulario,

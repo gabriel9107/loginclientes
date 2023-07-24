@@ -130,11 +130,7 @@ class navegacions extends StatelessWidget {
               ));
             },
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.notifications),
-          //   title: const Text('Perfil'),
-          //   onTap: () {},
-          // ),
+         
           ListTile(
             leading: const Icon(Icons.exit_to_app_outlined),
             title: const Text('Salir'),
