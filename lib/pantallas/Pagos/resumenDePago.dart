@@ -15,9 +15,19 @@ import '../clientes/detalleDelCLiente.dart';
 import '../clientes/listaClientes.dart';
 import 'package:intl/intl.dart';
 
+import '../reporte/Pagos/printPage.dart';
+
 class ResumenDePagos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> data = [
+      {'title': 'Cadbury Dairy Milk', 'price': 15, 'qty': 2},
+      {'title': 'Parle-G Gluco Biscut', 'price': 5, 'qty': 5},
+      {'title': 'Fresh Onion - 1KG', 'price': 20, 'qty': 1},
+      {'title': 'Fresh Sweet Lime', 'price': 20, 'qty': 5},
+      {'title': 'Maggi', 'price': 10, 'qty': 5},
+    ];
+
     var subtotal = PagoTemporal.obtenerSubtotal();
     var total = Pago.obtenermontodelpago();
 
@@ -103,27 +113,15 @@ class ResumenDePagos extends StatelessWidget {
                         if (total > 0 && subtotal != total) {
                           showAlertDialog(context);
                         } else {
-                          Pago.guardarPago();
+                          // Pago.guardarPago();
 
                           // Pago.pago.montoPagado = 0;
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => clienteLista()));
+                                builder: (_) => PrintPage(data),
+                              ));
                         }
-
-                        //
-
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => clienteLista()));
-
-//Guardar Factura
-                        // // Pagos.eliminartodos();
-                        // PagosDetalles.eliminarpago();
-
-                        // DetalleDelCliente(totales.idClienteFactura)));
                       }),
                     )
                   ]),
@@ -138,11 +136,7 @@ showAlertDialog(BuildContext context) {
   Widget okButton = TextButton(
     child: Text("OK"),
     onPressed: () {
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => MyCustomForm(Pago.pago.clienteId)));
-      Navigator.of(context).pop();
+      Navigator.of(context, rootNavigator: true).pop(); // dismi
     },
   );
 

@@ -92,9 +92,9 @@ class _PrintPageState extends State<PrintPage> {
         }
       });
       Map<String, dynamic> config = Map();
-      config['width'] = 40; // 标签宽度，单位mm
-      config['height'] = 70; // 标签高度，单位mm
-      config['gap'] = 2; // 标签间隔，单位mm
+      config['width'] = 40;
+      config['height'] = 70;
+      config['gap'] = 2;
       List<LineText> list = [];
       list.add(LineText(
           type: LineText.TYPE_TEXT,
