@@ -3,6 +3,8 @@ import 'package:sigalogin/clases/modelos/pagodetalle.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../reporte/Pagos/printPagos.dart';
+
 class MyPagosHistoricos extends StatefulWidget {
   int pagoId;
 
@@ -53,6 +55,20 @@ class _MyPagosHistoricosState extends State<MyPagosHistoricos> {
         child: Scaffold(
       appBar: AppBar(
         title: Text('Detalle del Pago : ' + this.pagoId.toString()),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            tooltip: 'Open shopping cart',
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => PrintHome(),
+                // builder: (context) => Cart(),
+              ));
+
+              // handle the press
+            },
+          ),
+        ],
 
         // backgroundColor: Color.fromARGB(255, 25, 28, 228),
       ),

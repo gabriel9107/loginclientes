@@ -2,7 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sigalogin/pantallas/reporte/Pagos/printPage.dart';
 
+import '../../../clases/api/facturaRecibo.dart';
+import '../../../clases/modelos/pago.dart';
+
 class PrintHome extends StatelessWidget {
+  final comprobanteDePago pagos = comprobanteDePago(
+      clienteNombre: 'Gabriel Montero',
+      clienteCodigo: '40221025725',
+      fechaComprobante: DateTime.now(),
+      vendedorNombre: 'Gabriel Jose',
+      pagos: [
+        Pago(
+            clienteId: '40221025725',
+            compagni: 1,
+            fechaPago: DateTime.now().toString(),
+            isDelete: 1,
+            metodoDePago: 'Efectivo',
+            montoPagado: 4532.51,
+            pendiente: 1,
+            sincronizado: 1,
+            vendorId: 'gmontero'),
+        Pago(
+            clienteId: '40221025725',
+            compagni: 1,
+            fechaPago: DateTime.now().toString(),
+            isDelete: 1,
+            metodoDePago: 'Efectivo',
+            montoPagado: 1500.15,
+            pendiente: 1,
+            sincronizado: 1,
+            vendorId: 'gmontero'),
+        Pago(
+            clienteId: '40221025725',
+            compagni: 1,
+            fechaPago: DateTime.now().toString(),
+            isDelete: 1,
+            metodoDePago: 'Efectivo',
+            montoPagado: 12500.14,
+            pendiente: 1,
+            sincronizado: 1,
+            vendorId: 'gmontero'),
+        Pago(
+            clienteId: '40221025725',
+            compagni: 1,
+            fechaPago: DateTime.now().toString(),
+            isDelete: 1,
+            metodoDePago: 'Efectivo',
+            montoPagado: 682.3,
+            pendiente: 1,
+            sincronizado: 1,
+            vendorId: 'gmontero')
+      ]);
+
   final List<Map<String, dynamic>> data = [
     {'title': 'Cadbury Dairy Milk', 'price': 15, 'qty': 2},
     {'title': 'Parle-G Gluco Biscut', 'price': 5, 'qty': 5},
@@ -71,7 +122,7 @@ class PrintHome extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => PrintPage(data),
+                          builder: (_) => PrintPage(pagos),
                         ),
                       );
                     },

@@ -3,8 +3,12 @@ import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../clases/api/facturaRecibo.dart';
+
 class PrintPage extends StatefulWidget {
-  final List<Map<String, dynamic>> data;
+  final comprobanteDePago data;
+
+  // final List<Map<String, dynamic>> data;
   PrintPage(this.data);
 
   @override
@@ -177,11 +181,24 @@ class _PrintPageState extends State<PrintPage> {
           content: 'FACTURA     PAGADO    CONCEPTO',
           align: LineText.ALIGN_CENTER,
           linefeed: 1));
-      list.add(LineText(
-          type: LineText.TYPE_TEXT,
-          content: 'FSV024943     8,544.00  SALDO',
-          align: LineText.ALIGN_CENTER,
-          linefeed: 1));
+
+      for (var i = 0; i < widget.data.pagos.length; i++) {
+        list.add(
+          LineText(
+            type: LineText.TYPE_TEXT,
+            content: 'FSV024943     8,544.00  SALDO',
+            weight: 0,
+            align: LineText.ALIGN_LEFT,
+            linefeed: 1,
+          ),
+        );
+      }
+
+      // list.add(LineText(
+      //     type: LineText.TYPE_TEXT,
+      //     content: 'FSV024943     8,544.00  SALDO',
+      //     align: LineText.ALIGN_CENTER,
+      //     linefeed: 1));
       list.add(LineText(
           type: LineText.TYPE_TEXT,
           content: '=================================',
