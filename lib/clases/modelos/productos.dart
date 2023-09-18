@@ -131,12 +131,12 @@ class Producto {
         codigo: json["Codigo"],
         compagnia: json["Compagnia"],
         id: json["Id"],
-        isDelete: json["IsDelete"],
+        isDelete: 0,
         nombre: json["Nombre"],
         ouM: json["OuM"],
         precio: json["Precio"].toDouble(),
         sincronizado: json["Sincronizado"],
-        tipodeVenta: json["TipodeVenta"],
+        tipodeVenta: "Contado",
       );
 
   Map<String, dynamic> toMap() => {

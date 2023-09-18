@@ -5,6 +5,7 @@ import 'package:sigalogin/clases/formatos.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/modelos/pagodetalle.dart';
 import 'package:sigalogin/pantallas/Pagos/resumenDePago.dart';
+import 'package:sigalogin/pantallas/reporte/Pagos/imprimirPagos.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 import 'dart:math' as math;
 import '../../clases/factura.dart';
@@ -106,7 +107,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
             tooltip: 'Open shopping cart',
             onPressed: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => PrintHome(),
+                builder: (context) => MyAppPrinter(),
                 // builder: (context) => Cart(),
               ));
 
@@ -273,7 +274,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Container(
-                              width: 750,
+                              width: 650,
                               height: 100,
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -436,26 +437,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                             controller: _controllers[index],
                                           ),
                                         )
-                                        // Container(
-                                        //   width: 120,
-                                        //   child: TextField(
-                                        //     // controller: _controllers[index],
-                                        //     decoration: InputDecoration(
-                                        //         // labelText: facturaTemp[index]
-                                        //         //     .montoAplicado
-                                        //         //     .toString(),
-                                        //         ),
-                                        //     keyboardType:
-                                        //         TextInputType.numberWithOptions(
-                                        //             signed: false,
-                                        //             decimal: true),
-                                        //     onTap: () {
-                                        //       setState(() {
-                                        //         _refresh();
-                                        //       });
-                                        //     },
-                                        //   ),
-                                        // ),
                                       ],
                                     ),
                                   ),
@@ -480,7 +461,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                     ),
                                   ),
                                   Container(
-                                    width: 10,
+                                    width: 5,
                                   ),
                                   Container(
                                     width: 20,

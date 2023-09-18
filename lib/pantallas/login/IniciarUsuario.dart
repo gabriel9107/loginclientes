@@ -136,6 +136,8 @@ class _login_pageState extends State<LoginScreen> {
                           selectedValue = value;
                           if (value == 'New') {
                             compagnia = 1;
+                          } else {
+                            compagnia = 0;
                           }
                         },
                       ),
@@ -188,14 +190,14 @@ class _login_pageState extends State<LoginScreen> {
                               if (_formlogin.currentState!.validate()) {
                                 final String? errorMessage = await authServices
                                     .login(email.text, password.text);
-                                if (errorMessage == null) {
+                                if (errorMessage == 'validado') {
                                   isLoading = true;
                                   login(isChecked, isLoading);
                                   Navigator.of(context)
                                       .pushReplacementNamed('home');
                                 } else {
                                   NotificationsService.showSnackbar(
-                                      errorMessage);
+                                      errorMessage!);
                                 }
                               }
                             }

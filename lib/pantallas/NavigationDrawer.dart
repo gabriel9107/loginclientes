@@ -17,6 +17,7 @@ import '../clases/modelos/clientes.dart';
 import '../clases/modelos/resumen.dart';
 import '../clases/themes.dart';
 import '../servicios/db_helper.dart';
+import 'Usuarios/listaUsuarios.dart';
 import 'clientes/listaClientes.dart';
 import 'login/IniciarUsuario.dart';
 
@@ -66,6 +67,10 @@ class navegacions extends StatelessWidget {
               // ),
               Text(
                 usuario.replaceAll('@gmail.com', ''),
+                style: TextStyle(fontSize: 28, color: Colors.white),
+              ),
+              Text(
+                compagnia.toString(),
                 style: TextStyle(fontSize: 28, color: Colors.white),
               )
             ],
@@ -119,6 +124,16 @@ class navegacions extends StatelessWidget {
               ));
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.padding_outlined),
+            title: const Text('Usuarios'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => listaUsuarios(),
+                // builder: (context) => Cart(),
+              ));
+            },
+          ),
           const Divider(color: Colors.black54),
           ListTile(
             leading: const Icon(Icons.update),
@@ -130,7 +145,6 @@ class navegacions extends StatelessWidget {
               ));
             },
           ),
-         
           ListTile(
             leading: const Icon(Icons.exit_to_app_outlined),
             title: const Text('Salir'),

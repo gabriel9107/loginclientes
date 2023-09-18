@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../clases/api/facturaRecibo.dart';
 
@@ -29,28 +33,43 @@ class _PrintPageState extends State<PrintPage> {
   }
 
   Future<void> initPrinter() async {
-    bluetoothPrint.startScan(timeout: Duration(seconds: 2));
+    bluetoothPrint.startScan(timeout: Duration(seconds: 5));
 
-    if (!mounted) return;
-    bluetoothPrint.scanResults.listen(
-      (val) {
-        if (!mounted) return;
-        setState(() => {_devices = val});
-        if (_devices.isEmpty)
-          setState(() {
-            _devicesMsg = "No existen dipositivos";
-          });
-      },
-    );
+    //   if (!mounted) return;
+    //   bluetoothPrint.scanResults.listen(
+    //     (val) {
+    //       if (!mounted) return;
+    //       setState(() => {_devices = val});
+    //       if (_devices.isEmpty)
+    //         setState(() {
+    //           _devicesMsg = "No existen dipositivos";
+    //         });
+    //     },
+    //   );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('seleccionar impresora'),
-        backgroundColor: Colors.redAccent,
-      ),
+          title: Text('seleccionar impresora'),
+          backgroundColor: Colors.redAccent,
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.blue, onPrimary: Colors.white),
+              onPressed: Platform.isAndroid
+                  ? () async {
+                      if (!await Permission.bluetoothConnect.isGranted) {
+                        await Permission.bluetoothConnect.request();
+                      }
+
+                      // FlutterBluePlus.instance.turnOff();
+                    }
+                  : null,
+              child: const Text('TURN OFF'),
+            )
+          ]),
       body: _devices.isEmpty
           ? Center(
               child: Text(_devicesMsg ?? ''),

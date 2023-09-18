@@ -32,7 +32,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '60.db');
+    String path = join(documentsDirectory.path, '62.db');
     return await openDatabase(
       path,
       version: 7,
@@ -168,11 +168,14 @@ class DatabaseHelper {
              )''');
 
     await db.execute('''CREATE TABLE Usuario(
-           id INTEGER PRIMARY KEY AUTOINCREMENT
+           id INTEGER PRIMARY KEY AUTOINCREMENT, 
+           Nombre TEXT, 
+           Apellido TEXT       
         ,UsuarioNombre TEXT
         ,UsuarioClave TEXT
-        ,Compagnia TEXT
-        ,Activo TEXT
+        ,Compagnia INTEGER
+        ,Activo INTEGER
+        , sincronizado INTEGER 
         )''');
 
     // await db.execute('''CREATE TABLE InvoiceHeaders(
@@ -286,21 +289,41 @@ class DatabaseHelper {
 //Agregar Clientes
   Future<int> agregarUsuario(Usuario usuario) async {
     Database db = await instance.database;
-    return await db.insert('Usuario', usuario.toMapsql());
+    return await db.insert('Usuario', usuario.toMap());
   }
 
-  Future<int> obtenerUsuario(Usuario usuario) async {
-    var user = usuario.usuarioNombre;
-    var password = usuario.usuarioClave;
+  ///0 - El usuario no existe
+  ///1 - Clave  inccorrecta
+  ///2 - Seccion inicada
+
+  Future<int> obtenerUsuario(String usuario, String clave) async {
+    var user = usuario;
+    var password = clave;
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM Usuario WHERE usuarioNombre= '$user' and usuarioClave = '$password')");
+        "SELECT EXISTS(SELECT 1 FROM Usuario WHERE usuarioNombre= '$user')");
 
     int? exists = Sqflite.firstIntValue(res);
-    if (exists == 0) {
-      return 0;
+    if (exists == 1) {
+      var validar = await dbClient.rawQuery(
+          "SELECT EXISTS(SELECT 1 FROM Usuario WHERE usuarioNombre= '$user' and usuarioClave = '$password')");
+      int? iniciando = Sqflite.firstIntValue(validar);
+      if (iniciando == 1) return 2;
+
+      return 1;
     }
-    return 1;
+    return 0;
+  }
+
+  Future<void> actualizarUsuario(Usuario usuario) async {
+    final db = await database;
+
+    await db.update(
+      'Usuario',
+      usuario.toMap(),
+      where: 'id = ?',
+      whereArgs: [usuario.id],
+    );
   }
 
 //Verificar si existe el Cliente antes de sincronizarlo
@@ -315,6 +338,37 @@ class DatabaseHelper {
       Add(cliente);
     }
     return 0;
+  }
+
+  Future<List<Usuario>> obtenerInformacionUsuario(
+      int compagnia, String usuarioNombre) async {
+    Database db = await instance.database;
+    var usuarios = await db.query(
+      'Usuario',
+      // orderBy: 'UsuarioNombre',
+      where: " Compagnia = ? and UsuarioNombre =?",
+      whereArgs: [compagnia, usuarioNombre],
+    );
+    List<Usuario> usuariosList = usuarios.isNotEmpty
+        ? usuarios.map((c) => Usuario.fromMapSql(c)).toList()
+        : [];
+
+    return usuariosList;
+  }
+
+  Future<List<Usuario>> obtenerListaDeUsuarios(int compagnia) async {
+    Database db = await instance.database;
+    var usuarios = await db.query(
+      'Usuario',
+      orderBy: 'UsuarioNombre',
+      where: " Compagnia = ?",
+      whereArgs: [compagnia],
+    );
+    List<Usuario> usuariosList = usuarios.isNotEmpty
+        ? usuarios.map((c) => Usuario.fromMapSql(c)).toList()
+        : [];
+
+    return usuariosList;
   }
 
 //Obtener Clientes
@@ -365,9 +419,9 @@ class DatabaseHelper {
   Future<List<Cliente>> obtenerClientesPorVendedor(
       String vendedor, int compagnia) async {
     Database db = await instance.database;
-    var clientes = await db
-        .rawQuery("SELECT * FROM Clientes where   compagnia = $compagnia");
-    // "SELECT * FROM Clientes where codigoVendedor = '$vendedor' and compagnia = $compagnia");
+    var clientes = await db.rawQuery(
+        "SELECT * FROM Clientes where codigoVendedor = '$vendedor' and   compagnia = $compagnia");
+    //  "SELECT * FROM Clientes where codigoVendedor = '$vendedor' and compagnia = $compagnia");
 
     List<Cliente> listadeClientes = clientes.isNotEmpty
         ? clientes.map((e) => Cliente.fromMapSql(e)).toList()
@@ -396,7 +450,8 @@ class DatabaseHelper {
 //Obtener Productos
   Future<List<Producto>> getProductos() async {
     Database db = await instance.database;
-    var productos = await db.query('Productos', orderBy: 'Codigo');
+    var productos = await db.query('Productos',
+        orderBy: 'Codigo', where: 'compagnia =?', whereArgs: [compagnia]);
 
     List<Producto> productoLista =
         productos.map((c) => Producto.fromMap(c)).toList();
@@ -404,26 +459,11 @@ class DatabaseHelper {
     return productoLista;
   }
 
-  // Future<int> Deletecustomer(Cliente customers) async {
-  //   Database db = await instance.database;
-  //   return await db.delete('Customer');
-  // }
-
-//Actualizar Clientes
-
-  // Future<int> update(Customers customers) async {
-  //   Database db = await instance.database;
-  //   int? id = customers.id;
-
-  //   return await db.update('Customer', customers.toMap(),
-  //       where: '$id = ?', whereArgs: [id]);
-  // }
-
   Future<int> productoExists(Producto producto) async {
     String codigoProducto = producto.codigo.toString();
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM Productos WHERE Codigo= '$codigoProducto')");
+        "SELECT EXISTS(SELECT 1 FROM Productos WHERE Codigo= '$codigoProducto' and compagnia = '$compagnia')");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {
@@ -460,7 +500,7 @@ class DatabaseHelper {
 
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM Pago WHERE idfirebase= '$idFirebase' )");
+        "SELECT EXISTS(SELECT 1 FROM Pago WHERE idfirebase= '$idFirebase' and compagnia = '$compagnia') )");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {
@@ -483,7 +523,7 @@ class DatabaseHelper {
       int pagoId) async {
     Database db = await instance.database;
     var detalle = await db.rawQuery(
-        "SELECT Pago.id, pago.fechaPago, PagoDetalle.facturaId, Pago.MetodoDePago, Pago.montoPagado, Pago.Estado FROM Pago INNER JOIN PagoDetalle ON Pago.Id = PagoDetalle.pagoId Where pago.id ='$pagoId'");
+        "SELECT Pago.id, pago.fechaPago, PagoDetalle.facturaId, Pago.MetodoDePago, Pago.montoPagado, Pago.Estado FROM Pago INNER JOIN PagoDetalle ON Pago.Id = PagoDetalle.pagoId Where pago.id ='$pagoId' and compagnia = '$compagnia')");
 
     List<PagoDetalleLista> listadePagos = detalle.isNotEmpty
         ? detalle.map((e) => PagoDetalleLista.fromMapSqlLiteWitId(e)).toList()
@@ -496,7 +536,7 @@ class DatabaseHelper {
       String cliente) async {
     Database db = await instance.database;
     var detalle = await db.rawQuery(
-        "SELECT Pago.id, pago.fechaPago, PagoDetalle.facturaId, Pago.MetodoDePago, Pago.montoPagado, Pago.Estado FROM Pago INNER JOIN PagoDetalle ON Pago.Id = PagoDetalle.pagoId Where clienteId ='$cliente'");
+        "SELECT Pago.id, pago.fechaPago, PagoDetalle.facturaId, Pago.MetodoDePago, Pago.montoPagado, Pago.Estado FROM Pago INNER JOIN PagoDetalle ON Pago.Id = PagoDetalle.pagoId Where clienteId ='$cliente' and compagnia = '$compagnia')");
 
     List<PagoDetalleLista> listadePagos = detalle.isNotEmpty
         ? detalle.map((e) => PagoDetalleLista.fromMapSqlLiteWitId(e)).toList()
@@ -507,7 +547,8 @@ class DatabaseHelper {
 
   Future<List<Pago>> obtenerPagosASincornizar() async {
     Database db = await instance.database;
-    var pagos = await db.rawQuery("SELECT * FROM Pago  ");
+    var pagos = await db
+        .rawQuery("SELECT * FROM Pago  where compagnia = '$compagnia') ");
 
     List<Pago> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
@@ -519,8 +560,8 @@ class DatabaseHelper {
   Future<List<PagoDetalle>> obtenerPagoDetallessASincornizarPorId(
       int pagoId) async {
     Database db = await instance.database;
-    var pagos =
-        await db.rawQuery("SELECT * FROM PagoDetalle where Pagoid =$pagoId");
+    var pagos = await db.rawQuery(
+        "SELECT * FROM PagoDetalle where Pagoid =$pagoId and compagnia = '$compagnia')");
 
     List<PagoDetalle> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => PagoDetalle.fromJsontofire(e)).toList()
@@ -531,8 +572,8 @@ class DatabaseHelper {
 
   Future<List<PagoDetalle>> obtenerPagoDetallessASincornizar() async {
     Database db = await instance.database;
-    var pagos =
-        await db.rawQuery("SELECT * FROM PagoDetalle where sincronizado =1");
+    var pagos = await db.rawQuery(
+        "SELECT * FROM PagoDetalle where sincronizado =1 and compagnia = '$compagnia')");
 
     List<PagoDetalle> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => PagoDetalle.fromJsontofire(e)).toList()
@@ -543,8 +584,8 @@ class DatabaseHelper {
 
   Future<List<Pago>> obtenerPagosPorClientes(String cliente) async {
     Database db = await instance.database;
-    var pagos =
-        await db.rawQuery("SELECT * FROM Pago where clienteId ='$cliente'");
+    var pagos = await db.rawQuery(
+        "SELECT * FROM Pago where clienteId ='$cliente' and compagnia = '$compagnia')");
 
     List<Pago> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
@@ -555,7 +596,8 @@ class DatabaseHelper {
 
   Future<List<Pago>> obtenerPagosPorFecha() async {
     Database db = await instance.database;
-    var pagos = await db.rawQuery("SELECT * FROM Pago");
+    var pagos = await db
+        .rawQuery("SELECT * FROM Pago  where   compagnia = '$compagnia')");
 
     List<Pago> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
@@ -567,8 +609,8 @@ class DatabaseHelper {
   Future<List<Pago>> obtenerPagosPorClientesConNumeroDeFactura(
       String cliente) async {
     Database db = await instance.database;
-    var pagos = await db
-        .rawQuery("SELECT * FROM Pago inner join where clienteId ='$cliente'");
+    var pagos = await db.rawQuery(
+        "SELECT * FROM Pago inner join where clienteId ='$cliente' and compagnia = '$compagnia')");
 
     List<Pago> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
@@ -600,7 +642,7 @@ class DatabaseHelper {
       String ProductoCodigo, Producto producto) async {
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT * FROM Productos WHERE Codigo = '$ProductoCodigo' and IsDelete = 0");
+        "SELECT * FROM Productos WHERE Codigo = '$ProductoCodigo' and IsDelete = 0 and compagnia = '$compagnia')");
 
     if (res.length < 0) {
       addWProduct(producto);
@@ -618,7 +660,7 @@ class DatabaseHelper {
     Database db = await instance.database;
 
     var res = await db.rawQuery(
-        "SELECT * FROM Pedidos where Sincronizado = 1 and  IsDelete = 1");
+        "SELECT * FROM Pedidos where Sincronizado = 1 and  IsDelete = 1 and compagnia = '$compagnia')");
 
     List<Pedido> ordenesLista =
         res.isNotEmpty ? res.map((c) => Pedido.fromMapsqlite(c)).toList() : [];
@@ -629,8 +671,8 @@ class DatabaseHelper {
       obtenerDetallePedidosPendienteDeSincornizacion() async {
     Database db = await instance.database;
 
-    var res =
-        await db.rawQuery("SELECT * FROM PedidoDetalle where Sincronizado = 1");
+    var res = await db.rawQuery(
+        "SELECT * FROM PedidoDetalle where Sincronizado = 1 and compagnia = '$compagnia')");
 
     List<PedidoDetalle> ordenesLista = res.isNotEmpty
         ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()
@@ -641,8 +683,8 @@ class DatabaseHelper {
   Future<List<Pedido>> obtenerPedidosPorClient(String clienteid) async {
     Database db = await instance.database;
 
-    var res = await db
-        .rawQuery("SELECT * FROM Pedidos where clienteId = '$clienteid'");
+    var res = await db.rawQuery(
+        "SELECT * FROM Pedidos where clienteId = '$clienteid' and compagnia = '$compagnia')");
 
     List<Pedido> ordenesLista =
         res.isNotEmpty ? res.map((c) => Pedido.fromMapsqlite(c)).toList() : [];
@@ -685,7 +727,7 @@ class DatabaseHelper {
 
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM Pedidos WHERE idfirebase= '$idFirebase' )");
+        "SELECT EXISTS(SELECT 1 FROM Pedidos WHERE idfirebase= '$idFirebase' and compagnia = '$compagnia'))");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {
@@ -705,7 +747,7 @@ class DatabaseHelper {
 
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM PedidoDetalle WHERE idfirebase= '$idfirebase')");
+        "SELECT EXISTS(SELECT 1 FROM PedidoDetalle WHERE idfirebase= '$idfirebase'and compagnia = '$compagnia'))");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {
