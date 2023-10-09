@@ -6,6 +6,7 @@ import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/pantallas/NavigationDrawer.dart';
 import 'package:sigalogin/pantallas/productos/products_detail.dart';
+import 'package:sigalogin/servicios/UsuarioServicios.dart';
 import 'package:sigalogin/servicios/detalleDePago_servicio.dart';
 import 'package:sigalogin/servicios/facturaDetalle_servicio.dart';
 import 'package:sigalogin/servicios/factura_service.dart';
@@ -42,8 +43,10 @@ class PincronizarListState extends State<PincronizarLista> {
   }
 
   Widget build(BuildContext context) {
+    final servicioUsuarios = Provider.of<UsuarioServicios>(context);
     final servicioProductos = Provider.of<ProductoServices>(context);
-    // final servicioClientes = Provider.of<ClienteSevices>(context);
+    final servicioClientes = Provider.of<ClienteSevices>(context);
+
     // final servicioPedidos = Provider.of<PedidoServicio>(context);
     // final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
 

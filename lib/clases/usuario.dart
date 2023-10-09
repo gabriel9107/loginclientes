@@ -50,6 +50,16 @@ class Usuario {
           "Activo": activo,
           "sincronizado": sincronizado
         };
+
+    Map<String, dynamic> toJsonUp() => {
+          "Nombre": nombre,
+          "Apellido": apellido,
+          "UsuarioNombre": usuarioNombre,
+          "UsuarioClave": usuarioClave,
+          "Compagnia": compania,
+          "Activo": activo,
+          "sincronizado": sincronizado
+        };
   }
 }
 

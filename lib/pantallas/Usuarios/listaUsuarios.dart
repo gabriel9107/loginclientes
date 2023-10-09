@@ -3,6 +3,7 @@ import 'package:http/http.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/modelos/clientes.dart';
 import 'package:sigalogin/clases/usuario.dart';
+import 'package:sigalogin/pantallas/Usuarios/editarUsuario.dart';
 import 'package:sigalogin/pantallas/clientes/detalleDelCLiente.dart';
 import 'package:sigalogin/pantallas/clientes/new_cliente.dart';
 
@@ -88,13 +89,12 @@ class UsariosListState extends State<listaUsuarios> {
                                   color: red,
                                 ),
                                 onPressed: () {
-                                  //Editar el usuario
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => CartPage(
-                                  //             customer.codigo.toString(),
-                                  //             customer.nombre.toString())));
+                                  // Editar el usuario
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditarUsuario(usuarios)));
                                 },
                               ),
                             ],

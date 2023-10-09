@@ -177,113 +177,6 @@ class DatabaseHelper {
         ,Activo INTEGER
         , sincronizado INTEGER 
         )''');
-
-    // await db.execute('''CREATE TABLE InvoiceHeaders(
-    //        id INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,SALESID TEXT
-    //     ,INVOICEID TEXT
-    //     ,PAYMENT TEXT
-    //     ,INVOICEDATE TEXT
-    //     ,DUEDATE TEXT
-    //     ,INVOICEAMOUNT TEXT
-    //     ,INVOICINGNAME TEXT
-    //     ,PrintCounterDevolution TEXT
-    //     ,PrintCounterCreditNote TEXT
-    //     ,INVOICEACCOUNT TEXT
-    //     ,PayedAmount TEXT
-    //     )''');
-
-    // await db.execute('''CREATE TABLE SalesOrders(
-    //       ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,ordenNumero TEXT
-    //     ,Cash TEXT
-    //     ,Change TEXT
-    //     ,CustomerID TEXT
-    //     ,Date TEXT
-    //     ,GPID TEXT
-    //     ,IsDelete TEXT
-    //     ,Totals TEXT
-    //     ,VAT TEXT
-    //     ,UserName TEXT
-    //     ,Status TEXT
-    //     ,Commets TEXT
-    //     )''');
-
-    // await db.execute('''CREATE TABLE SalesLines(
-    // ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,SalesOrdersID TEXT
-    //     ,Price TEXT
-    //     ,Qty TEXT
-    //     ,ProductID TEXT
-    //     ,ProductCode TEXT
-    //     ,Products_ID TEXT
-    //     ,ProductName TEXT
-    //     )''');
-
-    // await db.execute('''CREATE TABLE PaymentOrders(
-    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,VendorID TEXT
-    //     ,Datetime TEXT
-    //     ,Amount TEXT
-    //     ,Method TEXT
-    //     ,BankName TEXT
-    //     ,CheckNumber TEXT
-    //     ,CheckDate TEXT
-    //     ,IsEnabled TEXT
-    //     ,Customer_Code TEXT
-    //     ,IsOpen TEXT
-    //     ,Imported TEXT
-    //     )''');
-    // await db.execute('''CREATE TABLE PaymentItems(
-    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,PaymentOrderId TEXT
-    //     ,InvoiceNumber TEXT
-    //     ,AmountApply TEXT
-    //     ,InvoiveAmountAtMoment TEXT
-    //     ,IsEnabled TEXT
-    //     )''');
-
-    // ///creando 2 tablas Factura y Factura detalle para cambiarle la forma del flujo y que sea mas entendible por los idiomas
-    // ///
-
-    // ///
-
-    // ///
-    // ///
-    // await db.execute('''CREATE TABLE FacturaDetalle(
-    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,FacturaNumero TEXT
-    //     ,LineaNumero1 TEXT
-    //     ,Nombre TEXT
-    //     ,PrecioVenta TEXT
-    //     ,ProductoCodigo TEXT
-    //     ,Qty TEXT
-    //     ,montoLinea TEXT
-    //     )''');
-
-    // await db.execute('''CREATE TABLE Pago(
-    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     ,banco TEXT,
-    //     clienteId INTEGER,
-    //     clienteNombre TEXT,
-    //     fechaCheque TEXT,
-    //     formadePago TEXT,
-    //     numeroDeCheque TEXT,
-    //     valordelpago TEXT,
-    //     vendedor TEXT
-    //     )''');
-
-    // await db.execute('''CREATE TABLE DetalleDePago(
-    //      ID INTEGER PRIMARY KEY AUTOINCREMENT
-    //     , fechaEmision TEXT
-    //     , fechavencimiento TEXT
-    //     , montoPagado TEXT
-    //     , numeroDeFactura TEXT
-    //     , pago INTEGER
-    //     , valorfactura TEXT
-    //     , valorpendiente TEXT
-    //     , int activo INTEGER
-    //     )''');
   }
 
 //Agregar Clientes
@@ -324,6 +217,17 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [usuario.id],
     );
+  }
+
+  Future<int> actualizarUsarioCargado(int id) async {
+    Database db = await instance.database;
+    final data = {
+      'sincronizado': 0,
+    };
+
+    final result =
+        await db.update('Usuario', data, where: "ID = ?", whereArgs: [id]);
+    return result;
   }
 
 //Verificar si existe el Cliente antes de sincronizarlo

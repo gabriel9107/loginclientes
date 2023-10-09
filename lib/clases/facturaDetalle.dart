@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/services.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/ordenDeventa.dart';
@@ -34,7 +32,7 @@ class FacturaMaster {
   static totales() {
     int facturaNumeriI = 1;
     int cantidadArticulos = 0;
-    Double montoDescuento;
+    double montoDescuento;
     int descuentoI = 0;
 
     double impuestoI;

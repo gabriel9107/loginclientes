@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Resumen {
   String? accion;
   String? cantidad;
