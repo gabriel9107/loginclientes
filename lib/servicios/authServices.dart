@@ -37,9 +37,9 @@ class AuthServices extends ChangeNotifier {
     }
   }
 
-  Future<String?> login(String email, String password) async {
+  Future<String?> login(String email, String password, int compagnia) async {
     usuariovalidado _usuarioLocal =
-        await verificarUsuarioLocal(email, password);
+        await verificarUsuarioLocal(email, password, compagnia);
 
     usuario = email;
 
@@ -51,16 +51,16 @@ class AuthServices extends ChangeNotifier {
 ///1 - Clave  inccorrecta
 ///2 - Seccion inicada
 Future<usuariovalidado> verificarUsuarioLocal(
-    String usuario, String clave) async {
+    String usuario, String clave, int companiga) async {
   var validarUsuario =
-      await DatabaseHelper.instance.obtenerUsuario(usuario, clave);
+      await DatabaseHelper.instance.obtenerUsuario(usuario, clave, companiga);
   if (validarUsuario == 0) {
     return usuariovalidado(0, 'El usuario no existe');
   } else if (validarUsuario == 1) {
     return usuariovalidado(1, ' Clave  inccorrecta');
   }
 
-  // informacionUsuario();
+  informacionUsuario(usuario, companiga);
   return usuariovalidado(2, 'validado');
 }
 
@@ -69,9 +69,14 @@ Future logout() async {
   return;
 }
 
-informacionUsuario(String usuarionombre) {
+informacionUsuario(String usuarionombre, int compagnia) {
   var eusuario = DatabaseHelper.instance
       .obtenerInformacionUsuario(compagnia, usuarionombre);
+
+  eusuario.then((value) => {
+        usuario = value.first.usuarioNombre.toString(),
+        compagniaTexto = "Siga"
+      });
 }
 
 class usuariovalidado {

@@ -189,17 +189,19 @@ class DatabaseHelper {
   ///1 - Clave  inccorrecta
   ///2 - Seccion inicada
 
-  Future<int> obtenerUsuario(String usuario, String clave) async {
+  Future<int> obtenerUsuario(
+      String usuario, String clave, int compagnia) async {
     var user = usuario;
     var password = clave;
+
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM Usuario WHERE usuarioNombre= '$user')");
+        "SELECT EXISTS(SELECT 1 FROM Usuario WHERE usuarioNombre= '$user'and Compagnia='$compagnia')");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 1) {
       var validar = await dbClient.rawQuery(
-          "SELECT EXISTS(SELECT 1 FROM Usuario WHERE usuarioNombre= '$user' and usuarioClave = '$password')");
+          "SELECT EXISTS(SELECT 1 FROM Usuario WHERE usuarioNombre= '$user' and usuarioClave = '$password' and Compagnia='$compagnia' )");
       int? iniciando = Sqflite.firstIntValue(validar);
       if (iniciando == 1) return 2;
 
@@ -564,7 +566,7 @@ class DatabaseHelper {
     Database db = await instance.database;
 
     var res = await db.rawQuery(
-        "SELECT * FROM Pedidos where Sincronizado = 1 and  IsDelete = 1 and compagnia = '$compagnia')");
+        "SELECT * FROM Pedidos where Sincronizado = 1 and  IsDelete = 1 and compagnia = '$compagnia'");
 
     List<Pedido> ordenesLista =
         res.isNotEmpty ? res.map((c) => Pedido.fromMapsqlite(c)).toList() : [];

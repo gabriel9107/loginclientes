@@ -172,33 +172,33 @@ class _login_pageState extends State<LoginScreen> {
                           ),
                           onPressed: () async {
                             FocusScope.of(context).unfocus();
-                            if (permiso == true) {
-                              var correo =
-                                  email.text.replaceAll('@gmail.com', '');
-                              correo = email.text.replaceAll('@siga.local', '');
+                            // if (permiso == true) {
+                            //   var correo =
+                            //       email.text.replaceAll('@gmail.com', '');
+                            //   correo = email.text.replaceAll('@siga.local', '');
 
-                              usuario = correo;
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => DashboardScreen()));
-                            } else {
-                              final authServices = Provider.of<AuthServices>(
-                                  context,
-                                  listen: false);
-                              if (_formlogin.currentState!.validate()) {
-                                final String? errorMessage = await authServices
-                                    .login(email.text, password.text);
-                                if (errorMessage == 'validado') {
-                                  isLoading = true;
-                                  login(isChecked, isLoading);
-                                  Navigator.of(context)
-                                      .pushReplacementNamed('home');
-                                } else {
-                                  NotificationsService.showSnackbar(
-                                      errorMessage!);
-                                }
+                            //   usuario = correo;
+                            //   Navigator.of(context).pushReplacement(
+                            //       MaterialPageRoute(
+                            //           builder: (context) => DashboardScreen()));
+                            // } else {
+                            final authServices = Provider.of<AuthServices>(
+                                context,
+                                listen: false);
+                            if (_formlogin.currentState!.validate()) {
+                              final String? errorMessage = await authServices
+                                  .login(email.text, password.text, compagnia);
+                              if (errorMessage == 'validado') {
+                                isLoading = true;
+                                login(isChecked, isLoading);
+                                Navigator.of(context)
+                                    .pushReplacementNamed('home');
+                              } else {
+                                NotificationsService.showSnackbar(
+                                    errorMessage!);
                               }
                             }
+                            // }
                           }),
                     ],
                   )),

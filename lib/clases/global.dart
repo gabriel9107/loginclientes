@@ -4,8 +4,9 @@ import 'package:sigalogin/clases/modelos/clientes.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
 
 import 'factura.dart';
-//compania 1 = Siga, compania 2 = SisaSRl
 
+//compania 0 = AX, compania 1 = GP
+String compagniaTexto = '';
 int compagnia = 0;
 String usuario = '';
 double _impuesto = 18;
