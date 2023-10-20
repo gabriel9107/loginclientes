@@ -66,11 +66,11 @@ class navegacions extends StatelessWidget {
               //   style: TextStyle(fontSize: 28, color: Colors.white),
               // ),
               Text(
-                usuario.replaceAll('@gmail.com', ''),
+                nombre_Usuario.replaceAll('@gmail.com', ''),
                 style: TextStyle(fontSize: 28, color: Colors.white),
               ),
               Text(
-                compagnia.toString(),
+                compagniaTexto.toString(),
                 style: TextStyle(fontSize: 28, color: Colors.white),
               )
             ],

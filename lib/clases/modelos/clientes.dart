@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import '../../servicios/db_helper.dart';
 
+import '../global.dart' as global;
+
 Map<String, Cliente> clienteFromMap(String str) => Map.from(json.decode(str))
     .map((k, v) => MapEntry<String, Cliente>(k, Cliente.fromMap(v)));
 
@@ -60,9 +62,9 @@ class Cliente {
         telefono1: json["telefono1"].toString().trim(),
         comentario: json["comentario"].toString().trim(),
         codigoVendedor: json["codigoVendedor"].toString().trim(),
-        compagnia: 0,
-        sincronizado: 0,
-        activo: 0,
+        compagnia: json["compagnia"],
+        sincronizado: json["sincronizado"],
+        activo: json["activo"],
       );
 
   factory Cliente.fromMap(Map<String, dynamic> json) => new Cliente(
@@ -74,7 +76,7 @@ class Cliente {
         telefono1: json["telefono1"].toString().trim(),
         comentario: json["comentario"].toString().trim(),
         codigoVendedor: json["codigoVendedor"].toString().trim(),
-        compagnia: 0,
+        compagnia: json["compagnia"],
         sincronizado: int.parse(json["sincronizado"]),
         activo: int.parse(json["activo"]),
       );

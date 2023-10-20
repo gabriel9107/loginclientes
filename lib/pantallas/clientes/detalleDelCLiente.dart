@@ -183,12 +183,12 @@ class ListadoPedidos extends StatelessWidget {
                                   ),
                                   Text(
                                       pedido.sincronizado == 1
-                                          ? 'Pendiente'
-                                          : 'Recibido',
+                                          ? 'Recibido'
+                                          : 'Pendiente',
                                       style: TextStyle(
                                           color: pedido.sincronizado == 1
-                                              ? Colors.deepOrange
-                                              : Colors.blue),
+                                              ? Colors.blue
+                                              : Colors.deepOrange),
                                       textAlign: TextAlign.left),
                                 ],
                               )

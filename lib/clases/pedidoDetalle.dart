@@ -72,7 +72,7 @@ class PedidoDetalle {
         pedidoId: json["PedidoId"].toString(),
         precio: json["Precio"].toDouble(),
         productoId: json["ProductoId"],
-        sincronizado: 0,
+        sincronizado: json["sincronizado"],
         codigo: json["Codigo"],
         nombre: json["Nombre"],
       );

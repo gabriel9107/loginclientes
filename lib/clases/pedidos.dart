@@ -129,7 +129,7 @@ class Pedido {
         "Impuestos": impuestos,
         "IsDelete": isDelete,
         "NumeroOrden": numeroOrden,
-        "Sincronizado": 0,
+        "Sincronizado": sincronizado,
         "totalAPagar": totalAPagar,
         "Estado": estado,
         "vendorId": usuario,

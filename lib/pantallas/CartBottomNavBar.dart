@@ -137,9 +137,9 @@ class CartBottomNavBar extends StatelessWidget {
                               impuestos: totales.montoImpuesto,
                               totalAPagar: totales.totalApagar,
                               compagnia: compagnia,
-                              sincronizado: 1,
+                              sincronizado: 0,
                               vendorId: usuario,
-                              isDelete: 1,
+                              isDelete: 0,
                               estado: 'Pendiente');
 
                           DatabaseHelper.instance
@@ -153,8 +153,8 @@ class CartBottomNavBar extends StatelessWidget {
                                           precio: element.montoproducto,
                                           pedidoId: value.toString(),
                                           compagnia: compagnia,
-                                          isDelete: 1,
-                                          sincronizado: 1);
+                                          isDelete: 0,
+                                          sincronizado: 0);
 
                                       DatabaseHelper.instance
                                           .AddSalesDetalle(detalle);

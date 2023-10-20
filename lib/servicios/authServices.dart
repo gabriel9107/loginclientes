@@ -75,7 +75,8 @@ informacionUsuario(String usuarionombre, int compagnia) {
 
   eusuario.then((value) => {
         usuario = value.first.usuarioNombre.toString(),
-        compagniaTexto = "Siga"
+        nombre_Usuario = (value.first.nombre + ' ' + value.first.apellido),
+        compagniaTexto = compagnia == 0 ? "Siga SRL" : "Siga New "
       });
 }
 
