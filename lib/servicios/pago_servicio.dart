@@ -76,7 +76,7 @@ class PagoServices extends ChangeNotifier {
       }
     });
     Resumen.resumentList.add(
-        Resumen(accion: 'Pagos Carhados', cantidad: pagos.length.toString()));
+        Resumen(accion: 'Pagos Cargados', cantidad: pagos.length.toString()));
   }
 
   sincronizarDetalle(List<PagoDetalle> pago, String _pagoIdFirebase) async {

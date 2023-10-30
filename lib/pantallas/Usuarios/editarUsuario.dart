@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/usuario.dart';
 import 'package:sigalogin/pantallas/Usuarios/listaUsuarios.dart';
+import 'package:sigalogin/ui/InputDecorations.dart';
 
 import '../../servicios/db_helper.dart';
 
@@ -134,10 +135,13 @@ class _editUsuarioScreenState extends State<EditarUsuario> {
                 child: TextFormField(
                   controller: claveController,
                   keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Clave del Usuario',
-                  ),
+                  decoration: InputDecorations.authInputDecoration(
+                      hinText: '********', labelText: 'Clave del usuario'),
+                  validator: (value) {
+                    return (value != null && value.length >= 6)
+                        ? null
+                        : 'La contraseña debe de ser de 6 caracteres';
+                  },
                 ),
               ),
               Padding(

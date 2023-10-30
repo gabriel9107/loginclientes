@@ -132,12 +132,12 @@ class ResumenDePagos extends StatelessWidget {
 
                           //  Pago.pago.montoPagado = 0;
 
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       // builder: (_) => MyAppPrinter(),
-                          //       builder: (_) => PrintPage(factura),
-                          //     ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                // builder: (_) => MyAppPrinter(),
+                                builder: (_) => PrintPage(factura),
+                              ));
 
                           Pago.pago.montoPagado = 0;
                         }

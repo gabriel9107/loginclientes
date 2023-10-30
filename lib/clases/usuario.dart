@@ -18,6 +18,33 @@ class Usuario {
   int activo;
   int sincronizado;
 
+  // factory Usuario.fromMapDown(Map<String, dynamic> json) => Usuario(
+  //     nombre: json["nombre"],
+  //     apellido: json["apellido"],
+  //     usuarioNombre: json["usuarioNombre"],
+  //     usuarioClave: json["usuarioClave"],
+  //     compania: json["compagnia"],
+  //     activo: json["activo"],
+  //     sincronizado: 1);
+
+  factory Usuario.fromMap(Map<String, dynamic> json) => Usuario(
+      nombre: json["Nombre"],
+      apellido: json["Apellido"],
+      usuarioNombre: json["UsuarioNombre"],
+      usuarioClave: json["UsuarioClave"],
+      compania: json["Compagnia"],
+      activo: json["Activo"],
+      sincronizado: json["sincronizado"]);
+
+  factory Usuario.fromMapUpFire(Map<String, dynamic> json) => new Usuario(
+      nombre: json["nombre"],
+      apellido: json["apellido"],
+      usuarioNombre: json["usuarioNombre"].toString(),
+      usuarioClave: json["usuarioClave"],
+      compania: json["compania"],
+      activo: json["activo"],
+      sincronizado: json["sincronizado"]);
+
   factory Usuario.fromMapSql(Map<String, dynamic> json) => new Usuario(
       id: json["id"],
       nombre: json["Nombre"],
@@ -27,6 +54,20 @@ class Usuario {
       compania: json["Compagnia"],
       activo: json["Activo"],
       sincronizado: json["sincronizado"]);
+
+  ///Map para firebase con actualizado marcado como sincronizado
+  Map<String, dynamic> toMapFireActualizado() {
+    return {
+      'id': id,
+      'Nombre': nombre,
+      'Apellido': apellido,
+      'UsuarioNombre': usuarioNombre,
+      'UsuarioClave': usuarioClave,
+      'Compagnia': compania,
+      'Activo': activo,
+      'sincronizado': 1
+    };
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -63,18 +104,16 @@ class Usuario {
   }
 }
 
+//Leyenda
 
-//Leyenda 
-
-//false = 0 
+//false = 0
 //true = 1
 
-//Activo = 1 
-//Inactivo = 0  
+//Activo = 1
+//Inactivo = 0
 
 //Sincornizado = 1
-//NO Sincornizado = 0 
+//NO Sincornizado = 0
 
-
-//Siga AX = 0 
+//Siga AX = 0
 //Siga New (GP) = 1

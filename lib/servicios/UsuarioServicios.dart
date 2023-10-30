@@ -20,7 +20,9 @@ class UsuarioServicios extends ChangeNotifier {
   }
 
   Future bajarUsuarios() async {
-    final url = Uri.https(_baseUrl, 'Usuarios.json');
+    final List<Usuario> List_usuarios = [];
+    int usuarioCargado = 0;
+    final url = Uri.https(_baseUrl, 'Usuario.json');
     final resp = await http.get(url);
 
     final response =
@@ -28,23 +30,32 @@ class UsuarioServicios extends ChangeNotifier {
     final Map<String, dynamic> usuariosMap = json.decode(resp.body);
 
     usuariosMap.forEach((key, value) {
-      final tempUsuarios = Usuario.fromMapSql(value);
-      usuarios.add(tempUsuarios);
+      final tempUsuarios = Usuario.fromMap(value);
+
+      List_usuarios.add(tempUsuarios);
+
+      List_usuarios.forEach((element) {
+        var cargado =
+            DatabaseHelper.instance.verificarUsuarioASincronizar(element);
+
+        if (cargado == 1) {
+          usuarioCargado + 1;
+        }
+      });
     });
 
     Resumen.resumentList.add(Resumen(
-        accion: 'Usuarios Sincrinizados',
-        cantidad: usuarios.length.toString()));
+        accion: 'Usuarios Sincrinizados', cantidad: usuarioCargado.toString()));
   }
 
   Future subirUsuarios() async {
     var usuarios = await DatabaseHelper.instance
-        .obtenerListaDeUsuarios(compagnia)
+        .obtenerListaDeUsuariosPendienteASincronizar(compagnia)
         .then((value) => (sincronizarUsuarios(value)));
   }
 
   sincronizarUsuarios(List<Usuario> listaDeUsuarios) async {
-    final url = Uri.https(_baseUrl, 'Usuarios.json');
+    final url = Uri.https(_baseUrl, 'Usuario.json');
 
     listaDeUsuarios.forEach((element) async {
       final resp = await http.post(url, body: json.encode(element.toMap()));
@@ -55,8 +66,7 @@ class UsuarioServicios extends ChangeNotifier {
 
       //Notificar que el usuario fue cargado
       Resumen.resumentList.add(Resumen(
-          accion: 'Usuario Subidos',
-          cantidad: listaDeUsuarios.length.toString()));
+          accion: 'Usuario     ', cantidad: listaDeUsuarios.length.toString()));
     });
   }
 }
