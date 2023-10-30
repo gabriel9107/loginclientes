@@ -70,6 +70,8 @@ dependencies:
   bluetooth_print: ^4.3.0
   flutter_blue_plus: ^1.14.23
   
+ 
+
 
   bluetooth_thermal_printer: ^0.0.6
   esc_pos_utils: ^1.1.0    
@@ -78,7 +80,25 @@ dependencies:
   # connectivity_plus: ^3.0.3
   
   
-    
+fonts:
+- family: Montserrat
+  fonts:
+    - asset: assets/fonts/Montserrat-Regular.ttf
+- family: OpenSans
+  fonts:
+    - asset: assets/OpenSans-Regular.ttf
+- family: MontserratMedium
+  fonts:
+    - asset: assets/fonts/MontserratMedium-Medium.ttf    
+- family: MontserratLight
+  fonts:
+    - asset: assets/fonts/MontserratLight-Light.otf    
+- family: Courier  
+  fonts:
+    - asset: assets/fonts/Courier BOLD.ttf
+- family: Helvetica
+  fonts:
+    - asset: fonts/Helvetica.ttf
 
 dev_dependencies:
   provider: ^6.0.5

@@ -18,7 +18,7 @@ class FacturaDetalleServices extends ChangeNotifier {
   }
 
   Future cargarDetalleFacturas() async {
-    final url = Uri.https(_baseUrl, 'FacturaDetalle.json');
+    final url = Uri.https(_baseUrl, 'FacturaDetalles.json');
 
     final resp = await http.get(url);
 

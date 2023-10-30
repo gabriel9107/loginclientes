@@ -4,6 +4,7 @@ import 'package:sigalogin/clases/ordenDeventa.dart';
 import 'package:sigalogin/pantallas/Pagos/pago.dart';
 import 'package:sigalogin/pantallas/Pagos/pagosForm.dart';
 import 'package:sigalogin/pantallas/pedidosLista.dart';
+import 'package:sigalogin/pantallas/reporte/Pagos/imprimirPagos.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../../clases/api/facturaRecibo.dart';
@@ -21,62 +22,6 @@ import '../reporte/Pagos/printPage.dart';
 class ResumenDePagos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final comprobanteDePago factura = comprobanteDePago(
-        clienteNombre: 'Gabriel Montero',
-        clienteCodigo: '40221025725',
-        fechaComprobante: DateTime.now(),
-        vendedorNombre: 'Gabriel Jose',
-        pagos: [
-          Pago(
-              clienteId: '40221025725',
-              compagni: 1,
-              fechaPago: DateTime.now().toString(),
-              isDelete: 1,
-              metodoDePago: 'Efectivo',
-              montoPagado: 4532.51,
-              pendiente: 1,
-              sincronizado: 1,
-              vendorId: 'gmontero'),
-          Pago(
-              clienteId: '40221025725',
-              compagni: 1,
-              fechaPago: DateTime.now().toString(),
-              isDelete: 1,
-              metodoDePago: 'Efectivo',
-              montoPagado: 1500.15,
-              pendiente: 1,
-              sincronizado: 1,
-              vendorId: 'gmontero'),
-          Pago(
-              clienteId: '40221025725',
-              compagni: 1,
-              fechaPago: DateTime.now().toString(),
-              isDelete: 1,
-              metodoDePago: 'Efectivo',
-              montoPagado: 12500.14,
-              pendiente: 1,
-              sincronizado: 1,
-              vendorId: 'gmontero'),
-          Pago(
-              clienteId: '40221025725',
-              compagni: 1,
-              fechaPago: DateTime.now().toString(),
-              isDelete: 1,
-              metodoDePago: 'Efectivo',
-              montoPagado: 682.3,
-              pendiente: 1,
-              sincronizado: 1,
-              vendorId: 'gmontero')
-        ]);
-
-    final List<Map<String, dynamic>> data = [
-      {'title': 'Cadbury Dairy Milk', 'price': 15, 'qty': 2},
-      {'title': 'Parle-G Gluco Biscut', 'price': 5, 'qty': 5},
-      {'title': 'Fresh Onion - 1KG', 'price': 20, 'qty': 1},
-      {'title': 'Fresh Sweet Lime', 'price': 20, 'qty': 5},
-      {'title': 'Maggi', 'price': 10, 'qty': 5},
-    ];
-
     var subtotal = PagoTemporal.obtenerSubtotal();
     var total = Pago.obtenermontodelpago();
 
@@ -162,14 +107,39 @@ class ResumenDePagos extends StatelessWidget {
                         if (total > 0 && subtotal != total) {
                           showAlertDialog(context);
                         } else {
-                          // Pago.guardarPago();
+                          Pago.pago.montoPagado = total;
 
-                          // Pago.pago.montoPagado = 0;
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => PrintPage(factura),
-                              ));
+                          var pagot = Pago(
+                              clienteId: Pago.pago.clienteId,
+                              compania: compagnia,
+                              fechaPago: DateTime.now().toString(),
+                              isDelete: 0,
+                              metodoDePago: Pago.pago.metodoDePago,
+                              montoPagado: total,
+                              pendiente: 0,
+                              sincronizado: 0,
+                              vendorId: nombre_Usuario);
+                          var reciboId = Pago.guardarPagoConID(pagot);
+
+                          final comprobanteDePago factura = comprobanteDePago(
+                              clienteCodigo: Pago.pago.clienteId.toString(),
+                              clienteNombre: Pago.pago.clienteId.toString(),
+                              fechaComprobante: DateTime.now(),
+                              numeroComprobante: reciboId,
+                              vendedorNombre: nombre_Usuario.toString(),
+                              montoPagado: total,
+                              pagos: PagoTemporal.pagos);
+
+                          //  Pago.pago.montoPagado = 0;
+
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       // builder: (_) => MyAppPrinter(),
+                          //       builder: (_) => PrintPage(factura),
+                          //     ));
+
+                          Pago.pago.montoPagado = 0;
                         }
                       }),
                     )

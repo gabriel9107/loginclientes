@@ -109,6 +109,7 @@
 
 import 'dart:convert';
 
+import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 Map<String, PagoDetalle> pagoDetalleFromJson(String str) =>
@@ -181,6 +182,17 @@ class PagoDetalle {
         formaDePago: 'N/A',
       );
 
+  Map<String, dynamic> toInsertSql() => {
+        "pagoId": pagoId,
+        "Compagni": compagnia,
+        "facturaId": facturaId,
+        "IsDelete": isDelete,
+        "montoAplicado": montoAplicado,
+        "sincronizado": sincronizado,
+        "montoDeFacturaAlMomento": montoDeFacturaAlMomento,
+        "idfirebase": pagoIdFirebase
+      };
+
   Map<String, dynamic> toJson() => {
         "pagoId": pagoId,
         "Compagni": compagni,
@@ -238,7 +250,8 @@ class PagoDetalleLista {
       required this.fechaPago,
       this.metodoDePago,
       this.montoPagado,
-      this.estado});
+      this.estado,
+      this.compagni});
 
   int? id;
   DateTime fechaPago;
@@ -246,15 +259,17 @@ class PagoDetalleLista {
   String? metodoDePago;
   double? montoPagado;
   String? estado;
+  int? compagni;
 
   factory PagoDetalleLista.fromMapSqlLiteWitId(Map<String, dynamic> json) =>
       PagoDetalleLista(
           id: json["id"],
           fechaPago: DateTime.parse(json["fechaPago"]),
           metodoDePago: json["MetodoDePago"],
-          montoPagado: json["montoPagado"]?.toDouble(),
+          montoPagado: json["montoPagado"],
           facturaId: json["facturaId"],
-          estado: json["estado"]);
+          estado: json["estado"],
+          compagni: json["compagni"]);
 
   // int sincronizado;
   // int compagni;

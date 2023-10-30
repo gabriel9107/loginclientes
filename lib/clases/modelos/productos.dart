@@ -129,7 +129,7 @@ class Producto {
   factory Producto.fromMap(Map<String, dynamic> json) => new Producto(
         cantidad: json["Cantidad"],
         codigo: json["Codigo"],
-        compagnia: json["Compagnia"],
+        compagnia: 0,
         id: json["Id"],
         isDelete: 0,
         nombre: json["Nombre"],

@@ -38,7 +38,7 @@ class _editUsuarioScreenState extends State<EditarUsuario> {
     super.initState();
     nombreController.text = usuario.nombre.toString();
     apellidoController.text = usuario.apellido.toString();
-    usuarioController.text = usuario.usuarioClave.toString();
+    usuarioController.text = usuario.usuarioNombre.toString();
     claveController.text = usuario.usuarioClave.toString();
 
     // selectedValue = usuario.compania.toString();

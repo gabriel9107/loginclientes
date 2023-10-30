@@ -8,7 +8,7 @@ import '../reporte/Pagos/printPagos.dart';
 class MyPagosHistoricos extends StatefulWidget {
   int pagoId;
 
-  MyPagosHistoricos(this.pagoId, {super.key});
+  MyPagosHistoricos(this.pagoId);
 
   @override
   State<MyPagosHistoricos> createState() =>
@@ -21,7 +21,7 @@ class _MyPagosHistoricosState extends State<MyPagosHistoricos> {
   int pagoId;
   _MyPagosHistoricosState(this.pagoId);
 
-  final detalle = <PagoDetalleLista>[];
+  late final detalle = <PagoDetalleLista>[];
   late DetalleFacturaDataSource _detalleFacturaDataSource;
 
   @override
@@ -60,10 +60,10 @@ class _MyPagosHistoricosState extends State<MyPagosHistoricos> {
             icon: const Icon(Icons.shopping_cart),
             tooltip: 'Open shopping cart',
             onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => PrintHome(),
-                // builder: (context) => Cart(),
-              ));
+              // Navigator.of(context).pushReplacement(MaterialPageRoute(
+              //   builder: (context) => PrintHome(),
+              //   // builder: (context) => Cart(),
+              // ));
 
               // handle the press
             },

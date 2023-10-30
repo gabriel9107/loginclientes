@@ -72,7 +72,23 @@ class _MyAppState extends State<MyAppPrinter> {
     // Print Barcode using native function
     final List<int> barData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4];
     bytes += generator.barcode(Barcode.upcA(barData));
-
+    generator.row([
+      PosColumn(
+        text: 'col3',
+        width: 3,
+        styles: PosStyles(align: PosAlign.center, underline: true),
+      ),
+      PosColumn(
+        text: 'col6',
+        width: 6,
+        styles: PosStyles(align: PosAlign.center, underline: true),
+      ),
+      PosColumn(
+        text: 'col3',
+        width: 3,
+        styles: PosStyles(align: PosAlign.center, underline: true),
+      ),
+    ]);
     bytes += generator.cut();
 
     return bytes;

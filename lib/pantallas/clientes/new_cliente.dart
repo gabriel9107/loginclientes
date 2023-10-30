@@ -38,7 +38,7 @@ class NewClient extends StatelessWidget {
                 onPressed: () {
                   if (selectedValue != null) {
                     DatabaseHelper.instance.agregarNuevoCLiente(Cliente(
-                        codigo: customerCodeController.text,
+                        codigo: customerCodeController.text.toString().trim(),
                         codigoVendedor: usuario,
                         comentario: commentController.text,
                         compagnia: compagnia,
@@ -47,7 +47,7 @@ class NewClient extends StatelessWidget {
                         telefono1: phone1Controller.text,
                         telefono2: phone2Controller.text,
                         descuento: descuentoController.text,
-                        sincronizado: 1,
+                        sincronizado: 0,
                         activo: 0,
                         creadoEn: DateTime.now().toIso8601String()));
                     Navigator.push(

@@ -41,7 +41,7 @@ class NuevoUsuario extends StatelessWidget {
                           nombre: nombreController.text,
                           apellido: apellidoController.text,
                           usuarioNombre: usuarioController.text,
-                          usuarioClave: usuarioController.text,
+                          usuarioClave: claveController.text,
                           compania: compagnia,
                           sincronizado: 0),
                     );

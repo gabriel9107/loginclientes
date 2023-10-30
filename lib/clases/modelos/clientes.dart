@@ -27,18 +27,18 @@ class Cliente {
       this.descuento});
 
   int? id;
-  int activo;
   String codigo;
   String codigoVendedor;
   String comentario;
-  int compagnia;
   String direccion;
   String nombre;
-  int sincronizado;
   String telefono1;
   String telefono2;
   String? creadoEn;
   String? descuento;
+  int compagnia;
+  int sincronizado;
+  int activo;
 
   factory Cliente.fromMapSql(Map<String, dynamic> json) => new Cliente(
       id: json["ID"],
@@ -78,7 +78,7 @@ class Cliente {
         codigoVendedor: json["codigoVendedor"].toString().trim(),
         compagnia: json["compagnia"],
         sincronizado: int.parse(json["sincronizado"]),
-        activo: int.parse(json["activo"]),
+        activo: json["activo"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -129,7 +129,7 @@ class Cliente {
         "codigo": codigo,
         "codigoVendedor": codigoVendedor,
         "comentario": comentario,
-        "compagnia": compagnia.toString(),
+        "compagnia": compagnia,
         "direccion": direccion,
         "nombre": nombre,
         "sincronizado": sincronizado,

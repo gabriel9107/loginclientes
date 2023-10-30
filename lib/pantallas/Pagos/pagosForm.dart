@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:sigalogin/clases/formatos.dart';
+import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/modelos/pagodetalle.dart';
 import 'package:sigalogin/pantallas/Pagos/resumenDePago.dart';
@@ -106,10 +107,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
             icon: const Icon(Icons.shopping_cart),
             tooltip: 'Open shopping cart',
             onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => MyAppPrinter(),
-                // builder: (context) => Cart(),
-              ));
+              // builder: (context) => Cart(),
 
               // handle the press
             },
@@ -274,7 +272,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Container(
-                              width: 650,
+                              width: 750,
                               height: 100,
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -551,7 +549,7 @@ class PagoTemporal {
       var detale = PagoDetalle(
           pagoId: pagoId,
           formaDePago: formaPago,
-          compagni: element.compagni,
+          compagni: compagnia,
           facturaId: element.facturaId,
           id: 0,
           activo: 0,

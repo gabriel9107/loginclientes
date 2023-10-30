@@ -360,7 +360,8 @@ class ListPagos extends StatelessWidget {
                             ),
                           ),
 
-                          title: Text('Numero de Pago : ' + pago.id.toString()),
+                          title: Text(
+                              'Numero de Pago : ' + pago.id.toString() + '  '),
 
                           subtitle: Text('Fecha del pago : ' +
                               DateFormat('dd-MM-yyy').format(pago.fechaPago)),

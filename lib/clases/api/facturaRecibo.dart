@@ -1,21 +1,23 @@
-import 'package:sigalogin/clases/factura.dart';
-import 'package:sigalogin/clases/modelos/pago.dart';
+import 'package:sigalogin/pantallas/Pagos/pagosForm.dart';
 
 class comprobanteDePago {
   final String clienteNombre;
   final String clienteCodigo;
   final String vendedorNombre;
   final DateTime fechaComprobante;
+  final String numeroComprobante;
+  final double montoPagado;
 
-  final List<Pago> pagos;
+  final List<PagoTemporal> pagos;
 
-  const comprobanteDePago({
-    required this.clienteNombre,
-    required this.clienteCodigo,
-    required this.fechaComprobante,
-    required this.vendedorNombre,
-    required this.pagos,
-  });
+  const comprobanteDePago(
+      {required this.clienteNombre,
+      required this.clienteCodigo,
+      required this.fechaComprobante,
+      required this.numeroComprobante,
+      required this.vendedorNombre,
+      required this.pagos,
+      required this.montoPagado});
 }
 
 class reciboDePago {

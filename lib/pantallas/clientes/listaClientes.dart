@@ -83,13 +83,15 @@ class CustomerListState extends State<clienteLista> {
                         child: ListTile(
                           leading: CircleAvatar(
                             backgroundColor: customer.sincronizado == 0
-                                ? Colors.blue
-                                : Colors.red,
+                                ? Colors.red
+                                : Colors.blue,
                             child: Icon(Icons.emoji_people),
                           ),
                           title: Text(customer.codigo.toString() +
                               ' | ' +
-                              customer.nombre),
+                              customer.nombre +
+                              ' ' +
+                              customer.sincronizado.toString()),
                           subtitle: Text(
                               customer.direccion + ' | ' + customer.telefono1),
                           trailing: Row(
@@ -114,8 +116,8 @@ class CustomerListState extends State<clienteLista> {
                                 icon: Icon(
                                   Icons.edit,
                                   color: customer.sincronizado == 0
-                                      ? Colors.white
-                                      : Colors.blue,
+                                      ? Colors.blue
+                                      : Colors.white,
                                 ),
                                 onPressed: customer.sincronizado == 0
                                     ? () {
@@ -146,7 +148,8 @@ class CustomerListState extends State<clienteLista> {
                               //       context,
                               //       MaterialPageRoute(
                               //           builder: (context) =>
-                              //               NewClient('Editar Cliente')),
+                              //               NewClient('
+                              // Cliente')),
                               //     );
                               //   },
                               // ),

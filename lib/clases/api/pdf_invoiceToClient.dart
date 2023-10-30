@@ -26,7 +26,10 @@ class pdfFacturaAPi {
         children: [
           Text(
             'SISTEMA SIGA, SRL',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                font: Font.courierBold()),
           ),
           SizedBox(height: 0.8 * PdfPageFormat.cm),
           Text('Cuadre de transacciones por origen del ingreso'),

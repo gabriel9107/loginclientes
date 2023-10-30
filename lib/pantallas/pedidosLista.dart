@@ -319,7 +319,7 @@ class _ListaOedidosState extends State<pedidosLista> {
                               IconButton(
                                 icon: Icon(
                                   Icons.check,
-                                  color: pedidos.sincronizado == 1
+                                  color: pedidos.sincronizado == 0
                                       ? Colors.red
                                       : Colors.blue,
                                 ),

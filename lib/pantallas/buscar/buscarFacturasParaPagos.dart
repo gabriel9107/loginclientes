@@ -82,7 +82,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
               Container(
                 width: 100,
                 child: Text(NumberFormat.simpleCurrency()
-                    .format(suggestion.montoPendiente)),
+                    .format(suggestion.montoFactura)),
               ),
               Container(
                 alignment: Alignment.topRight,

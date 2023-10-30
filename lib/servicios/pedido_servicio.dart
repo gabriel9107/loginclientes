@@ -20,7 +20,7 @@ class PedidoServicio extends ChangeNotifier {
   final int pedidosSincronizados = 0;
 
   PedidoServicio() {
-    // sincronizar();
+    sincronizar();
     cargarPedidos();
   }
 

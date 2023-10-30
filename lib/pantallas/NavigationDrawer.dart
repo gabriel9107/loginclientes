@@ -160,7 +160,6 @@ class navegacions extends StatelessWidget {
 }
 
 Future cargarClientes() async {
-  print('este es un reporte');
   var clientes = await DatabaseHelper.instance
       .obtenerClientesNuevos()
       .then((value) => sincronizaClienteFire(value));

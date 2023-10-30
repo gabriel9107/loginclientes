@@ -132,6 +132,7 @@
 
 import 'dart:convert';
 
+import 'package:sigalogin/clases/api/facturaRecibo.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/pantallas/Pagos/pago.dart';
 import 'package:sigalogin/pantallas/Pagos/pagosForm.dart';
@@ -150,7 +151,7 @@ class Pago {
       {this.id,
       this.banco,
       required this.clienteId,
-      required this.compagni,
+      required this.compania,
       this.fechaDeCheque,
       required this.fechaPago,
       required this.isDelete,
@@ -173,7 +174,7 @@ class Pago {
   String? metodoDePago;
   double montoPagado;
   int pendiente;
-  int compagni;
+  int compania;
   int sincronizado;
   int isDelete;
   String? estado;
@@ -182,7 +183,7 @@ class Pago {
   factory Pago.fromJson(Map<String, dynamic> json) => Pago(
         banco: json["Banco"]!,
         clienteId: json["ClienteId"],
-        compagni: json["Compagni"],
+        compania: json["Compagni"],
         fechaDeCheque: json["FechaDeCheque"],
         fechaPago: json["FechaPago"],
         id: json["ID"],
@@ -198,7 +199,7 @@ class Pago {
   Map<String, dynamic> toJsonFire() => {
         "Banco": banco,
         "ClienteId": clienteId,
-        "Compagni": compagni,
+        "Compagni": compania,
         "FechaDeCheque": fechaDeCheque,
         "FechaPago": fechaPago,
         "IsDelete": isDelete,
@@ -213,12 +214,26 @@ class Pago {
   Map<String, dynamic> toJson() => {
         "Banco": banco,
         "ClienteId": clienteId,
-        "Compagni": compagni,
+        "Compagni": compania,
         "FechaDeCheque": fechaDeCheque,
         "FechaPago": fechaPago,
         "IsDelete": isDelete,
         "MetodoDePago": metodoDePago,
-        "MontoPagado": montoPagado,
+        "montoPagado": montoPagado,
+        "Pendiente": pendiente,
+        "Sincronizado": sincronizado,
+        "VendorID": vendorId,
+        "NumeroDeCheque": numeroDeCheque,
+      };
+  Map<String, dynamic> toJsonsql2() => {
+        "Banco": banco,
+        "ClienteId": clienteId,
+        "compagni": compagnia,
+        "FechaDeCheque": fechaDeCheque,
+        "FechaPago": fechaPago,
+        "IsDelete": isDelete,
+        "MetodoDePago": metodoDePago,
+        "montoPagado": montoPagado,
         "Pendiente": pendiente,
         "Sincronizado": sincronizado,
         "VendorID": vendorId,
@@ -228,12 +243,12 @@ class Pago {
         "id": id,
         "Banco": banco,
         "ClienteId": clienteId,
-        "Compagni": compagni,
+        "Compagni": compagnia,
         "FechaDeCheque": fechaDeCheque,
         "FechaPago": fechaPago,
         "IsDelete": isDelete,
         "MetodoDePago": metodoDePago,
-        "MontoPagado": montoPagado,
+        "montoPagado": montoPagado,
         "Pendiente": pendiente,
         "Sincronizado": sincronizado,
         "VendorID": vendorId,
@@ -242,12 +257,27 @@ class Pago {
   Map<String, dynamic> toJsonsqlinsert() => {
         "Banco": banco,
         "ClienteId": clienteId,
-        "Compagni": compagni,
+        "Compagni": compania,
         "FechaDeCheque": fechaDeCheque,
         "FechaPago": fechaPago,
         "IsDelete": isDelete,
         "MetodoDePago": metodoDePago,
-        "MontoPagado": montoPagado,
+        "montoPagado": montoPagado,
+        "Pendiente": pendiente,
+        "Sincronizado": sincronizado,
+        "VendorID": vendorId,
+        "NumeroDeCheque": numeroDeCheque,
+      };
+
+  Map<String, dynamic> toInsertSql() => {
+        "Banco": banco,
+        "ClienteId": clienteId,
+        "compagni": compania,
+        "FechaDeCheque": fechaDeCheque,
+        "FechaPago": fechaPago,
+        "IsDelete": isDelete,
+        "MetodoDePago": metodoDePago,
+        "montoPagado": montoPagado,
         "Pendiente": pendiente,
         "Sincronizado": sincronizado,
         "VendorID": vendorId,
@@ -262,10 +292,10 @@ class Pago {
         fechaDeCheque: json["FechaDeCheque"],
         fechaPago: json["FechaPago"],
         metodoDePago: json["MetodoDePago"],
-        montoPagado: json["MontoPagado"]?.toDouble(),
+        montoPagado: json["montoPagado"]?.toDouble(),
         pendiente: json["Pendiente"],
         vendorId: json["VendorID"],
-        compagni: json["Compagni"],
+        compania: json["Compagni"],
         estado: json["Estado"],
         sincronizado: json["Sincronizado"],
         isDelete: 1,
@@ -282,7 +312,7 @@ class Pago {
         montoPagado: json["montoPagado"]?.toDouble(),
         pendiente: 0,
         vendorId: json["vendorId"],
-        compagni: json["compagni"],
+        compania: json["compagni"],
         sincronizado: json["sincronizado"],
         isDelete: json["isDelete"],
       );
@@ -296,7 +326,7 @@ class Pago {
         montoPagado: json["montoPagado"]?.toDouble(),
         pendiente: 0,
         vendorId: json["vendorId"],
-        compagni: json["compagni"],
+        compania: json["compagni"],
         sincronizado: json["sincronizado"],
         isDelete: json["isDelete"],
       );
@@ -304,7 +334,7 @@ class Pago {
 
   static var pago = Pago(
       clienteId: 'null',
-      compagni: 1,
+      compania: compagnia,
       fechaPago: DateTime.now().toString(),
       id: 1,
       isDelete: 0,
@@ -405,6 +435,8 @@ class Pago {
   }
 
   static void guardarPago() {
+    //crear ticket de impresion
+
     var formaDePago = pago.metodoDePago.toString();
 
     DatabaseHelper.instance
@@ -412,5 +444,19 @@ class Pago {
         .then((value) => PagoTemporal.guardarDetallePago(value, formaDePago));
 
     // Pagodetalle.ActualizarFacutas();
+  }
+
+  static String guardarPagoConID(Pago pagotemp) {
+    var result;
+    var formaDePago = pago.metodoDePago.toString();
+
+    obtenermontodelpago();
+
+    DatabaseHelper.instance.agregarPagoconID(pagotemp).then((value) =>
+        {PagoTemporal.guardarDetallePago(value, formaDePago), result = value});
+
+    // => PagoTemporal.guardarDetallePago(value, formaDePago));
+
+    return result.toString();
   }
 }

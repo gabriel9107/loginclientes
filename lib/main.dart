@@ -20,6 +20,7 @@ import 'package:sigalogin/servicios/pedido_servicio.dart';
 import 'package:sigalogin/servicios/productos_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
