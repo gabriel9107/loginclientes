@@ -19,7 +19,7 @@ class PedidoDetalleServicio extends ChangeNotifier {
   final int bajado = 0;
 
   PedidoDetalleServicio() {
-//    this.sincronizar();
+    sincronizar();
     cargarDetallePedidos();
   }
 

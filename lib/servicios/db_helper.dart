@@ -457,7 +457,7 @@ class DatabaseHelper {
       int pagoId) async {
     Database db = await instance.database;
     var detalle = await db.rawQuery(
-        "SELECT Pago.id, pago.fechaPago, PagoDetalle.facturaId, Pago.MetodoDePago, Pago.montoPagado, Pago.Estado FROM Pago INNER JOIN PagoDetalle ON Pago.Id = PagoDetalle.pagoId Where pago.id ='$pagoId' and Pago.compagnia =$compagnia");
+        "SELECT Pago.id, pago.fechaPago, PagoDetalle.facturaId, Pago.MetodoDePago, Pago.montoPagado, Pago.Estado FROM Pago INNER JOIN PagoDetalle ON Pago.Id = PagoDetalle.pagoId Where pago.id ='$pagoId' and Pago.compagni =$compagnia");
 
     List<PagoDetalleLista> listadePagos = detalle.isNotEmpty
         ? detalle.map((e) => PagoDetalleLista.fromMapSqlLiteWitId(e)).toList()
@@ -933,8 +933,8 @@ class DatabaseHelper {
 
   Future<List<PedidoDetalle>> getDetallesporId(String id) async {
     Database db = await instance.database;
-    var detalle =
-        await db.rawQuery("SELECT * FROM PedidoDetalle WHERE PedidoId = '$id'");
+    var detalle = await db.rawQuery(
+        "SELECT * FROM PedidoDetalle WHERE PedidoId = '$id' and Compagnia =$compagnia");
     // await db.rawQuery("SELECT * FROM PedidoDetalle");
 
     List<PedidoDetalle> ordenesDetalleLista = detalle.isNotEmpty
