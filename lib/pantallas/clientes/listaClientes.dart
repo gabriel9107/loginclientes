@@ -112,33 +112,33 @@ class CustomerListState extends State<clienteLista> {
                                               customer.nombre.toString())));
                                 },
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: customer.sincronizado == 0
-                                      ? Colors.blue
-                                      : Colors.white,
-                                ),
-                                onPressed: customer.sincronizado == 0
-                                    ? () {
-                                        FacturaDetalle.limpiarfacturas();
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => CartPage(
-                                                    customer.codigo.toString(),
-                                                    customer.nombre
-                                                        .toString())));
-                                      }
-                                    : () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditarCliente(customer)),
-                                        );
-                                      },
-                              ),
+                              // IconButton(
+                              //   icon: Icon(
+                              //     Icons.edit,
+                              //     color: customer.sincronizado == 0
+                              //         ? Colors.blue
+                              //         : Colors.white,
+                              //   ),
+                              //   onPressed: customer.sincronizado == 0
+                              //       ? () {
+                              //           FacturaDetalle.limpiarfacturas();
+                              //           Navigator.push(
+                              //               context,
+                              //               MaterialPageRoute(
+                              //                   builder: (context) => CartPage(
+                              //                       customer.codigo.toString(),
+                              //                       customer.nombre
+                              //                           .toString())));
+                              //         }
+                              //       : () {
+                              //           Navigator.push(
+                              //             context,
+                              //             MaterialPageRoute(
+                              //                 builder: (context) =>
+                              //                     EditarCliente(customer)),
+                              //           );
+                              //         },
+                              // ),
                               // IconButton(
                               //   icon: Icon(
                               //     Icons.delete,

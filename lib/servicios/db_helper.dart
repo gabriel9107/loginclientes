@@ -32,7 +32,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '65.db');
+    String path = join(documentsDirectory.path, '66.db');
     return await openDatabase(
       path,
       version: 7,
@@ -636,6 +636,16 @@ class DatabaseHelper {
         ? ordenes.map((c) => Pedido.fromMapsqlite(c)).toList()
         : [];
     return ordenesLista;
+  }
+
+  Future<List<PedidoLista>> getFacturasporClientescompleto() async {
+    Database db = await instance.database;
+    var pedido = await db.rawQuery(
+        "select Pedidos.*, Clientes.nombre clienteNombre from Pedidos inner join Clientes where Pedidos.ClienteId = Clientes.codigo and Pedidos.Compagnia  = Clientes.compagnia and Pedidos.vendorId = '$usuario'");
+
+    List<PedidoLista> pedidoLista =
+        pedido.map((c) => PedidoLista.fromMapsqlite(c)).toList();
+    return pedidoLista;
   }
 
   Future<List<Pedido>> getOrdenesPorvendedor() async {

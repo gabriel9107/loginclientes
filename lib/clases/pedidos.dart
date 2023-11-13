@@ -28,6 +28,50 @@ class pedidos {
 //
 //     final pedido = pedidoFromMap(jsonString);
 
+class PedidoLista {
+  int? id;
+  String clienteId;
+  String clienteNombre;
+  DateTime fechaOrden;
+  double impuestos;
+  double totalAPagar;
+  String? numeroOrden;
+  int sincronizado;
+  int isDelete;
+  int compagnia;
+  String? estado;
+  String? vendorId;
+  String? idfirebase;
+
+  PedidoLista(
+      {this.id,
+      required this.clienteId,
+      required this.clienteNombre,
+      required this.fechaOrden,
+      this.numeroOrden,
+      required this.impuestos,
+      required this.totalAPagar,
+      required this.compagnia,
+      required this.sincronizado,
+      required this.isDelete,
+      this.estado,
+      this.vendorId,
+      this.idfirebase});
+
+  factory PedidoLista.fromMapsqlite(Map<String, dynamic> json) => PedidoLista(
+      id: json["ID"],
+      clienteId: json["ClienteId"].toString().trim(),
+      clienteNombre: json["clienteNombre"].toString().trim(),
+      compagnia: json["Compagnia"],
+      fechaOrden: DateTime.parse(json["FechaOrden"]),
+      impuestos: json["Impuestos"],
+      isDelete: json["IsDelete"],
+      numeroOrden: json["NumeroOrden"],
+      sincronizado: json["Sincronizado"],
+      totalAPagar: json["TotalAPagar"],
+      vendorId: json["vendorId"]);
+}
+
 class Pedido {
   Pedido(
       {this.id,

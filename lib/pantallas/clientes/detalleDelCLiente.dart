@@ -58,7 +58,7 @@ class DetalleDelCliente extends StatelessWidget {
                 ],
               ),
               title: Text(
-                  'Detalle del Cliente ' + this.nombredelcliente.toString()),
+                  'Detalle del Cliente :' + this.nombredelcliente.toString()),
             ),
             drawer: navegacions(),
             floatingActionButton: FloatingActionButton(

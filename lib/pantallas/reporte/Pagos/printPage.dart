@@ -179,7 +179,9 @@ class _PrintPageState extends State<PrintPage> {
                                     linefeed: 1));
                                 list.add(LineText(
                                     type: LineText.TYPE_TEXT,
-                                    content: 'RNC.: 1-30-0115-7',
+                                    content: compagnia == 1
+                                        ? 'RNC.: 1-30-0115-75'
+                                        : '',
                                     align: LineText.ALIGN_CENTER,
                                     linefeed: 1));
 
@@ -213,8 +215,7 @@ class _PrintPageState extends State<PrintPage> {
 
                                 list.add(LineText(
                                     type: LineText.TYPE_TEXT,
-                                    content: 'RECIBO NO.: RCS000' +
-                                        widget.data.numeroComprobante,
+                                    content: 'RECIBO NO.: RCS0001',
                                     linefeed: 1));
 
                                 list.add(LineText(
@@ -257,14 +258,18 @@ class _PrintPageState extends State<PrintPage> {
 
                                 list.add(LineText(
                                     type: LineText.TYPE_TEXT,
+                                    content: '===============================',
+                                    linefeed: 1));
+                                list.add(LineText(
+                                    type: LineText.TYPE_TEXT,
                                     content: 'FACTURA     PAGADO    CONCEPTO',
                                     align: LineText.ALIGN_CENTER,
                                     linefeed: 1));
+                                list.add(LineText(
+                                    type: LineText.TYPE_TEXT,
+                                    content: '===============================',
+                                    linefeed: 1));
 
-                                print("Aca arriba ");
-
-                                print(widget.data.pagos.length);
-                                print("Aca abajo");
                                 for (var i = 0;
                                     i < widget.data.pagos.length;
                                     i++) {

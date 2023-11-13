@@ -21,3 +21,6 @@ List<Producto> TodosProductos = [];
 List<dynamic> Lista = [];
 
 String CurrentUserName = null.toString();
+
+
+// 0 (false) and 1 (true) 

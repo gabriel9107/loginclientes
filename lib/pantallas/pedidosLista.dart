@@ -283,15 +283,15 @@ class _ListaOedidosState extends State<pedidosLista> {
         ),
       ),
       body: Center(
-        child: FutureBuilder<List<Pedido>>(
-          future: DatabaseHelper.instance.getOrdenesPorvendedor(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Pedido>> snapshot) {
+        child: FutureBuilder<List<PedidoLista>>(
+          future: DatabaseHelper.instance.getFacturasporClientescompleto(),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<PedidoLista>> snapshot) {
             if (!snapshot.hasData) {
               return Center(child: Text('Cargando...'));
             }
             return snapshot.data!.isEmpty
-                ? Center(child: Text('No existen Orenes en el momento...'))
+                ? Center(child: Text('No existen Ordenes en el momento...'))
                 : ListView(
                     children: snapshot.data!.map((pedidos) {
                       return Card(
@@ -304,7 +304,9 @@ class _ListaOedidosState extends State<pedidosLista> {
                           ),
                           title: Text("Pre orden :" +
                               pedidos.id.toString() +
-                              ' |  Cliente Numero :' +
+                              '| Cliente Nombre :  ' +
+                              pedidos.clienteNombre.toString() +
+                              '   |  Cliente Numero  :' +
                               pedidos.clienteId),
                           subtitle: Text("Fecha Orden : " +
                               DateFormat('dd-MM-yyy')
@@ -330,12 +332,12 @@ class _ListaOedidosState extends State<pedidosLista> {
                             ],
                           ),
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      PedidoHistorico(pedidos)),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) =>
+                            //           PedidoHistorico(pedidos)),
+                            // );
                             // NavigateDetail('Edit Product');
                           },
                         ),

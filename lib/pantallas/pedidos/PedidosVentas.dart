@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sigalogin/clases/global.dart';
 
 import '../../clases/facturaDetalle.dart';
 import '../../servicios/db_helper.dart';
@@ -59,6 +60,9 @@ class _mainPage extends State<CartPage> {
                 tooltip: 'Search',
                 icon: const Icon(Icons.search),
                 onPressed: () async {
+                  TodosProductos =
+                      (await DatabaseHelper.instance.getProductos());
+
                   await showSearch(
                       context: context,
                       delegate: MySearchDelegateParaProductosEnPedidos());
