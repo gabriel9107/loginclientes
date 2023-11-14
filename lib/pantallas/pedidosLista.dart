@@ -219,136 +219,117 @@ class pedidosLista extends StatefulWidget {
 }
 
 class _ListaOedidosState extends State<pedidosLista> {
-  late DatabaseReference dbref;
-  // late List<Client> Clients;
-  int count = 0;
+  List<PedidoLista> data = [];
 
   @override
   void initState() {
-    dbref = FirebaseDatabase.instance.ref().child('Pedidos');
-    // Clients = Client.getClients();
     super.initState();
+    loadList();
   }
 
-  Widget build(BuildContext context) {
-    // Clients.sort();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pedido de Ventas'),
+  Future loadList() async {
+    final dataList = await DatabaseHelper.instance.getPedidosClientescompleto();
 
-        // backgroundColor: Color.fromARGB(255, 25, 28, 228),
+    setState(() {
+      this.data = dataList.cast<PedidoLista>();
+    });
+  }
 
-        actions: [
-          IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () => {
-                    // DatabaseHelper.instance
-                    //     .obtenerPedidosPendienteDeSincornizacion()
-                    //     .then(
-                    //   (value) {
-                    //     value.forEach((element) {
-                    //       Map<String, dynamic> pedido = {
-                    //         "ClienteId": element.clienteId,
-                    //         "Compagnia": element.compagnia,
-                    //         "FechaOrden": element.fechaOrden.toIso8601String(),
-                    //         "Id": element.id,
-                    //         "Impuestos": element.impuestos,
-                    //         "IsDelete": element.isDelete,
-                    //         "NumeroOrden": element.numeroOrden,
-                    //         "Sincronizado": element.sincronizado,
-                    //         "totalAPagar": element.totalAPagar,
-                    //         "Estado": element.estado
-                    //       };
+  Future loadList2() async {
+    await cargarClientes();
+    final dataList = await DatabaseHelper.instance.getPedidosClientescompleto();
 
-                    //       dbref.push().set(pedido);
-                    //     });
-                    //   },
-                    // )
+    setState(() {
+      this.data = dataList.cast<PedidoLista>();
+    });
+  }
 
-                    cargarPedidos()
-                  })
-        ],
-      ),
-      drawer: navegacions(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => clienteLista()),
-          );
-        },
-        tooltip: 'Agregar',
-        child: Icon(
-          Icons.add,
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text('Pedido de Ventas'),
+          actions: [
+            IconButton(onPressed: loadList2, icon: const Icon(Icons.refresh))
+          ],
         ),
-      ),
-      body: Center(
-        child: FutureBuilder<List<PedidoLista>>(
-          future: DatabaseHelper.instance.getFacturasporClientescompleto(),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<PedidoLista>> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text('Cargando...'));
-            }
-            return snapshot.data!.isEmpty
-                ? Center(child: Text('No existen Ordenes en el momento...'))
-                : ListView(
-                    children: snapshot.data!.map((pedidos) {
-                      return Card(
-                        color: Colors.white,
-                        elevation: 2.0,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Icon(Icons.emoji_people),
-                          ),
-                          title: Text("Pre orden :" +
-                              pedidos.id.toString() +
-                              '| Cliente Nombre :  ' +
-                              pedidos.clienteNombre.toString() +
-                              '   |  Cliente Numero  :' +
-                              pedidos.clienteId),
-                          subtitle: Text("Fecha Orden : " +
-                              DateFormat('dd-MM-yyy')
-                                  .format(pedidos.fechaOrden) +
-
-                              // pedidos.fechaOrden.toString() +
-                              ' | Total : ' +
-                              pedidos.totalAPagar.toStringAsFixed(2)),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(
-                                  Icons.check,
-                                  color: pedidos.sincronizado == 0
-                                      ? Colors.red
-                                      : Colors.blue,
-                                ),
-                                onPressed: () {
-                                  print("debe de sincronizar la orden");
-                                },
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) =>
-                            //           PedidoHistorico(pedidos)),
-                            // );
-                            // NavigateDetail('Edit Product');
-                          },
-                        ),
-                      );
-                    }).toList(),
-                  );
+        drawer: navegacions(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => clienteLista()),
+            );
           },
+          tooltip: 'Agregar',
+          child: Icon(
+            Icons.add,
+          ),
         ),
-      ),
-    );
-  }
+        body: buildList(),
+      );
+
+  Widget buildList() => data.isEmpty
+      ? Center(child: CircularProgressIndicator())
+      : ListView.builder(
+          padding: EdgeInsets.all(16),
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            return buildItem(data);
+          },
+        );
+
+  Widget buildItem(List<PedidoLista> data) => ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: data.map((pedidos) {
+          return Card(
+            color: Colors.white,
+            elevation: 2.0,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: Icon(Icons.emoji_people),
+              ),
+              title: Text("Pre orden :" +
+                  pedidos.id.toString() +
+                  '| Cliente Nombre :  ' +
+                  pedidos.clienteNombre.toString() +
+                  '   |  Cliente Numero  :' +
+                  pedidos.clienteId),
+              subtitle: Text("Fecha Orden : " +
+                  DateFormat('dd-MM-yyy').format(pedidos.fechaOrden) +
+
+                  // pedidos.fechaOrden.toString() +
+                  ' | Total : ' +
+                  pedidos.totalAPagar.toStringAsFixed(2)),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.check,
+                      color:
+                          pedidos.sincronizado == 0 ? Colors.red : Colors.blue,
+                    ),
+                    onPressed: () {
+                      print("debe de sincronizar la orden");
+                    },
+                  ),
+                ],
+              ),
+              onTap: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) =>
+                //           PedidoHistorico(pedidos)),
+                // );
+                // NavigateDetail('Edit Product');
+              },
+            ),
+          );
+        }).toList(),
+      );
 }
 
 Future cargarPedidos() async {

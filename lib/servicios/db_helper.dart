@@ -638,7 +638,17 @@ class DatabaseHelper {
     return ordenesLista;
   }
 
-  Future<List<PedidoLista>> getFacturasporClientescompleto() async {
+  Future<List<PedidoLista>> getPedidosClientescompletoNoSincronizado() async {
+    Database db = await instance.database;
+    var pedido = await db.rawQuery(
+        "select Pedidos.*, Clientes.nombre clienteNombre from Pedidos inner join Clientes where Pedidos.ClienteId = Clientes.codigo and Pedidos.Compagnia  = Clientes.compagnia and Pedidos.vendorId = '$usuario' and Pedidos.Compagnia =$compagnia");
+
+    List<PedidoLista> pedidoLista =
+        pedido.map((c) => PedidoLista.fromMapsqlite(c)).toList();
+    return pedidoLista;
+  }
+
+  Future<List<PedidoLista>> getPedidosClientescompleto() async {
     Database db = await instance.database;
     var pedido = await db.rawQuery(
         "select Pedidos.*, Clientes.nombre clienteNombre from Pedidos inner join Clientes where Pedidos.ClienteId = Clientes.codigo and Pedidos.Compagnia  = Clientes.compagnia and Pedidos.vendorId = '$usuario'");

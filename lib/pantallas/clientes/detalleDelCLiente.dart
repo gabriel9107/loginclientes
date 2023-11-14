@@ -276,14 +276,20 @@ class ListFactura extends StatelessWidget {
                             children: <Widget>[
                               Column(
                                 children: [
-                                  Text('Monto Pagado : ',
+                                  Text('Valor Original Facturado : ',
                                       textAlign: TextAlign.left)
                                 ],
                               ),
                               Column(
                                 children: [
                                   Text('Monto Pendiente : ',
-                                      textAlign: TextAlign.left)
+                                      textAlign: TextAlign.left),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text('Fecha Factura : ',
+                                      textAlign: TextAlign.left),
                                 ],
                               ),
                             ],
@@ -301,6 +307,8 @@ class ListFactura extends StatelessWidget {
                                               (factura.montoFactura -
                                                   factura.totalPagado)))
                                           .toString(),
+                                      textAlign: TextAlign.left),
+                                  Text(factura.facturaFecha.substring(1, 10),
                                       textAlign: TextAlign.left),
                                 ],
                               )
