@@ -74,8 +74,32 @@ class ProductsListState extends State<ProductsList> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text('En Existencia :  '),
-                              Text(producto.cantidad.toString())
+                              Row(
+                                children: [
+                                  Text(
+                                    'En Existencia :  ' +
+                                        producto.cantidad.toString(),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [Text("           ")],
+                              ),
+
+                              Column(
+                                children: [
+                                  Text('Precio de venta :  ' +
+                                      producto.precio.toStringAsFixed(2)),
+                                  Text(' Unidad de Medida :  ' + producto.ouM),
+                                ],
+                              )
+                              // Text('En Existencia :  '),
+                              // Text(
+                              //   producto.cantidad.toString(),
+                              // ),
+                              // Text(
+                              //   producto.cantidad.toString(),
+                              // )
                             ],
                           ),
                           onTap: () {
