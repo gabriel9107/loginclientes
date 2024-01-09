@@ -159,7 +159,9 @@ class _mainPage extends State<CartPage> {
                                 style: TextStyle(fontSize: 14),
                               ),
                               Text(
-                                detalleFactura[index].montoproducto.toString(),
+                                detalleFactura[index]
+                                    .montoproducto
+                                    .toStringAsFixed(2),
                                 style:
                                     TextStyle(fontSize: 20, color: Colors.red),
                               )

@@ -76,6 +76,7 @@ class Pedido {
   Pedido(
       {this.id,
       required this.clienteId,
+      required this.clienteNombre,
       required this.fechaOrden,
       this.numeroOrden,
       required this.impuestos,
@@ -89,6 +90,7 @@ class Pedido {
 
   int? id;
   String clienteId;
+  String clienteNombre;
   DateTime fechaOrden;
   double impuestos;
   double totalAPagar;
@@ -106,6 +108,7 @@ class Pedido {
 
   Map<String, dynamic> toJsonUp() => {
         "ClienteId": clienteId,
+        "clienteNombre": clienteNombre,
         "Compagnia": compagnia,
         "FechaOrden": fechaOrden.toIso8601String(),
         "Id": id,
@@ -117,7 +120,7 @@ class Pedido {
         "Estado": estado
       };
 
-  factory Pedido.fromMap(Map<String, dynamic> json) => new Pedido(
+  factory Pedido.fromMap(Map<String, dynamic> json) => Pedido(
         id: json["Id"],
         clienteId: json["ClienteId"].toString().trim(),
         compagnia: json["Compagnia"],
@@ -127,6 +130,7 @@ class Pedido {
         numeroOrden: json["NumeroOrden"],
         sincronizado: json["Sincronizado"],
         totalAPagar: json["totalAPagar"],
+        clienteNombre: json["clienteNombre"],
       );
   factory Pedido.fromMapsqlite(Map<String, dynamic> json) => Pedido(
       id: json["ID"],
@@ -138,10 +142,12 @@ class Pedido {
       numeroOrden: json["NumeroOrden"],
       sincronizado: json["Sincronizado"],
       totalAPagar: json["TotalAPagar"],
-      vendorId: json["vendorId"]);
+      vendorId: json["vendorId"],
+      clienteNombre: json["clienteNombre"]);
 
   Map<String, dynamic> toMap() => {
         "ClienteId": clienteId,
+        "clienteNombre": clienteNombre,
         "Compagnia": compagnia,
         "FechaOrden": fechaOrden.toIso8601String(),
         "Id": id,
@@ -155,6 +161,7 @@ class Pedido {
 
   Map<String, dynamic> toMapSql() => {
         "ClienteId": clienteId,
+        "clienteNombre": clienteNombre,
         "Compagnia": compagnia,
         "FechaOrden": fechaOrden.toIso8601String(),
         "Impuestos": impuestos,
@@ -168,6 +175,7 @@ class Pedido {
 
   Map<String, dynamic> toMapSqli() => {
         "ClienteId": clienteId,
+        "clienteNombre": clienteNombre,
         "Compagnia": compagnia,
         "FechaOrden": fechaOrden.toIso8601String(),
         "Impuestos": impuestos,

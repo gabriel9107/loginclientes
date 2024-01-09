@@ -86,7 +86,9 @@ class _mainPage extends State<PedidoHistorico> {
                                           style: TextStyle(fontSize: 14),
                                         ),
                                         Text(
-                                          detalles![index].precio.toString(),
+                                          detalles[index]
+                                              .precio
+                                              .toStringAsFixed(2),
                                           style: TextStyle(
                                               fontSize: 20, color: Colors.red),
                                         )

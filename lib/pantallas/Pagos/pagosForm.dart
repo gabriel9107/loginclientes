@@ -96,23 +96,26 @@ class _MyCustomFormState extends State<MyCustomForm> {
   GlobalKey<FormState> _claveFormulario = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     // final _claveFormulario = GlobalKey<FormState>();
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Realizar Pagos  A : ' + this.clienteName.toString()),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            tooltip: 'Open shopping cart',
-            onPressed: () {
-              // builder: (context) => Cart(),
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: const Icon(Icons.shopping_cart),
+        //     tooltip: 'Open shopping cart',
+        //     onPressed: () {
+        //       // builder: (context) => Cart(),
 
-              // handle the press
-            },
-          ),
-        ],
+        //       // handle the press
+        //     },
+        //   ),
+        // ],
       ),
       body: Form(
         key: _claveFormulario,
@@ -198,6 +201,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   }
                 },
                 controller: formadelpagoController,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(labelText: 'Num. Cheque	'),
                 readOnly: _isReadonly,
                 enabled: !_isDisabled,
@@ -439,9 +443,12 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                     ),
                                   ),
                                   Container(
-                                    height: 25,
+                                    height: 50,
                                     child: IconButton(
-                                      icon: Icon(Icons.add),
+                                      icon: Icon(
+                                        Icons.add,
+                                        size: 40,
+                                      ),
                                       onPressed: () {
                                         int? _index = index as int;
                                         double? monto = double.tryParse(

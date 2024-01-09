@@ -94,7 +94,7 @@ class MySearchDelegateParaProductosEnPedidos extends SearchDelegate {
               suggestion.codigo +
               "             " +
               'Costo : ' +
-              suggestion.precio.toString()),
+              suggestion.precio.toStringAsFixed(2)),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[

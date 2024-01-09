@@ -1,19 +1,15 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/api/pdf_api.dart';
 import 'package:sigalogin/clases/api/pdf_invoice_api.dart';
+import 'package:sigalogin/clases/model/customer.dart';
+import 'package:sigalogin/clases/model/supplier.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
-
 import 'package:sigalogin/clases/themes.dart';
-import 'package:sigalogin/helper/model/customer.dart';
 import 'package:sigalogin/helper/model/invoice.dart';
+import 'package:sigalogin/helper/pdf_helper.dart';
 import 'package:sigalogin/pantallas/NavigationDrawer.dart';
-
-import 'package:sqflite/sqflite.dart';
-
-import '../../../clases/model/supplier.dart';
-import '../../../servicios/db_helper.dart';
+import 'package:sigalogin/pantallas/Usuarios/listaUsuarios.dart';
+import 'package:sigalogin/servicios/db_helper.dart';
 
 class ReportePagos extends StatefulWidget {
   @override
@@ -25,12 +21,15 @@ class ReportePagos extends StatefulWidget {
 
 class ProductsListState extends State<ReportePagos> {
   Future<List<Pago>> pagos = DatabaseHelper.instance.obtenerPagosPorFecha();
+
+  List<Pago> pagoList = [];
   TextEditingController desdeController = TextEditingController();
   TextEditingController hastaController = TextEditingController();
 
   @override
   void initState() {
     pagos = DatabaseHelper.instance.obtenerPagosPorFecha();
+    pagos.then((value) => {pagoList.add(value[0])});
     super.initState();
   }
 
@@ -44,98 +43,10 @@ class ProductsListState extends State<ReportePagos> {
           IconButton(
             icon: const Icon(Icons.print),
             onPressed: () async {
-              // final invoice = CuadreHeader(
-              //     sistema: 'SISTEMA SIGA SRL.',
-              //     vendedor: 'GABRIEL MONTERO TERRERO',
-              //     tema: 'CUADRE DE TRANSACCIONES POR ORIGEN DEL INGRESO',
-              //     items: [
-              //       detalleCuadre(
-              //           codigo: 4554,
-              //           nombre: 'Taller y Respuesto Juan',
-              //           numeroRecibo: 1,
-              //           montoRecibo: 7500.00,
-              //           facturaNumero: 'fVS025351',
-              //           metodoPago: 'Efectivo',
-              //           referencia: 'null',
-              //           fechaRecibo: DateTime.now())
-              //     ]);
-
-              final date = DateTime.now();
-              final dueDate = date.add(
-                const Duration(days: 7),
-              );
-
-              final invoice = Invoice(
-                supplier: const Supplier(
-                  name: 'Faysal Neowaz',
-                  address: 'Dhaka, Bangladesh',
-                  paymentInfo: 'https://paypal.me/codespec',
-                ),
-                customer: const Customer(
-                  name: 'Google',
-                  address: 'Mountain View, California, United States',
-                ),
-                info: InvoiceInfo(
-                  date: date,
-                  dueDate: dueDate,
-                  description: 'First Order Invoice',
-                  number: '${DateTime.now().year}-9999',
-                ),
-                items: [
-                  InvoiceItem(
-                    description: 'Coffee',
-                    date: DateTime.now(),
-                    quantity: 3,
-                    vat: 0.19,
-                    unitPrice: 5.99,
-                  ),
-                  InvoiceItem(
-                    description: 'Water',
-                    date: DateTime.now(),
-                    quantity: 8,
-                    vat: 0.19,
-                    unitPrice: 0.99,
-                  ),
-                  InvoiceItem(
-                    description: 'Orange',
-                    date: DateTime.now(),
-                    quantity: 3,
-                    vat: 0.19,
-                    unitPrice: 2.99,
-                  ),
-                  InvoiceItem(
-                    description: 'Apple',
-                    date: DateTime.now(),
-                    quantity: 8,
-                    vat: 0.19,
-                    unitPrice: 3.99,
-                  ),
-                  InvoiceItem(
-                    description: 'Mango',
-                    date: DateTime.now(),
-                    quantity: 1,
-                    vat: 0.19,
-                    unitPrice: 1.59,
-                  ),
-                  InvoiceItem(
-                    description: 'Blue Berries',
-                    date: DateTime.now(),
-                    quantity: 5,
-                    vat: 0.19,
-                    unitPrice: 0.99,
-                  ),
-                  InvoiceItem(
-                    description: 'Lemon',
-                    date: DateTime.now(),
-                    quantity: 4,
-                    vat: 0.19,
-                    unitPrice: 1.29,
-                  ),
-                ],
-              );
-
-              final pdfFile = await PdfInvoicePdfHelper.generate(invoice);
-              PdfFile.openFile(pdfFile);
+              if (pagoList.length > 0) {
+                final data = await pdfInvoiceServices.createInvoice(pagoList);
+                pdfInvoiceServices.savePdfFile("Invociee", data);
+              }
             },
           )
         ],

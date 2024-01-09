@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:sigalogin/clases/api/pdf_api.dart';
-
-import '../model/invoice.dart';
+import 'package:sigalogin/helper/model/invoice.dart';
 
 class pdfFacturaAPi {
   static Future<File> generarFactura(Invoice invoice) async {

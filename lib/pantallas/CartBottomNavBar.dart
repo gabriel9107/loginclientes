@@ -133,6 +133,7 @@ class CartBottomNavBar extends StatelessWidget {
                         if (totales.totalApagar > 1) {
                           Pedido pedido = Pedido(
                               clienteId: this.idCliente.toString().trim(),
+                              clienteNombre: this.clienteNombre.toString(),
                               fechaOrden: DateTime.now(),
                               impuestos: totales.montoImpuesto,
                               totalAPagar: totales.totalApagar,

@@ -26,9 +26,7 @@ class PedidoServicio extends ChangeNotifier {
 
   Future sincronizar() async {
     final url = Uri.https(_baseUrl, 'Pedidos.json');
-
     final resp = await http.get(url);
-
     final Map<String, dynamic> map = json.decode(resp.body);
     map.forEach((key, value) {
       final temp = Pedido.fromMap(value);
@@ -37,16 +35,16 @@ class PedidoServicio extends ChangeNotifier {
       this.pedidos.add(temp);
     });
 
-    print(this.pedidos[0].clienteId);
     pedidos.forEach((pedido) {
       DatabaseHelper.instance.AgregarPedidoNoDescargado(pedido).then((value) {
         if (value == 1) {
           pedidosSincronizados + 1;
+          buscarDetalleaSincronizar(pedido);
         }
       });
     });
     Resumen.resumentList.add(Resumen(
-        accion: 'Pedidos Sincronizados',
+        accion: 'Pedidos Descargados',
         cantidad: pedidosSincronizados.toString()));
   }
 
@@ -75,7 +73,7 @@ class PedidoServicio extends ChangeNotifier {
     });
 
     Resumen.resumentList.add(Resumen(
-        accion: 'Pedidos Subidos', cantidad: pedidos.length.toString()));
+        accion: 'Pedidos Cargados', cantidad: pedidos.length.toString()));
   }
 
   sincronizarDetallePedido(
@@ -97,5 +95,10 @@ class PedidoServicio extends ChangeNotifier {
           accion: 'Pedidos Detalle Cargado',
           cantidad: pedidoLista.length.toString()));
     });
+  }
+
+  void buscarDetalleaSincronizar(Pedido pedido) async {
+    var detalle = DatabaseHelper.instance
+        .obtenerDetallePedidosPendienteDeSincornizacion();
   }
 }

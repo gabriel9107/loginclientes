@@ -75,7 +75,7 @@ class FacturaMaster {
 
     impuestoI = 5;
 
-    compagnia == 0 ? impuesto = ((subtotal * 18) / 1000).toDouble() : 0;
+    compagnia == 3 ? impuesto = ((subtotal * 18) / 1000).toDouble() : 0;
     // impuesto = 0;
 
     totalApagar = ((subtotal - descuento) + impuesto);

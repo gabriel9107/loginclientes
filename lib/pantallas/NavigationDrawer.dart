@@ -124,16 +124,16 @@ class navegacions extends StatelessWidget {
               ));
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.padding_outlined),
-            title: const Text('Usuarios'),
-            onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => listaUsuarios(),
-                // builder: (context) => Cart(),
-              ));
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.padding_outlined),
+          //   title: const Text('Usuarios'),
+          //   onTap: () {
+          //     Navigator.of(context).pushReplacement(MaterialPageRoute(
+          //       builder: (context) => listaUsuarios(),
+          //       // builder: (context) => Cart(),
+          //     ));
+          //   },
+          // ),
           const Divider(color: Colors.black54),
           ListTile(
             leading: const Icon(Icons.update),
@@ -157,38 +157,4 @@ class navegacions extends StatelessWidget {
           ),
         ],
       ));
-}
-
-Future cargarClientes() async {
-  var clientes = await DatabaseHelper.instance
-      .obtenerClientesNuevos()
-      .then((value) => sincronizaClienteFire(value));
-}
-
-sincronizaClienteFire(List<Cliente> clienteList) async {
-  print(clienteList);
-
-  // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
-  CollectionReference users = FirebaseFirestore.instance.collection('Clientes');
-  final databaseReference = FirebaseDatabase.instance.ref('Clientes');
-
-  clienteList.forEach((element) async {
-    await databaseReference.child(element.id.toString()).set({
-      "ID": element.id,
-      "activo": element.activo.toString(),
-      "codigo": element.codigo,
-      "codigoVendedor": element.codigoVendedor,
-      "comentario": "n/a",
-      "compagnia": element.compagnia,
-      "direccion": element.direccion,
-      "nombre": element.nombre,
-      "sincronizado": "1",
-      "telefono1": element.telefono1,
-      "telefono2": element.telefono1,
-    });
-  });
-
-  Resumen.resumentList.add(Resumen(
-      accion: 'Clientes Sincronizados',
-      cantidad: clienteList.length.toString()));
 }

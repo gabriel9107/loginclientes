@@ -32,16 +32,14 @@ class UsuarioServicios extends ChangeNotifier {
     usuariosMap.forEach((key, value) {
       final tempUsuarios = Usuario.fromMap(value);
 
-      List_usuarios.add(tempUsuarios);
+      // List_usuarios.add(tempUsuarios);
 
-      List_usuarios.forEach((element) {
-        var cargado =
-            DatabaseHelper.instance.verificarUsuarioASincronizar(element);
+      var cargado =
+          DatabaseHelper.instance.verificarUsuarioASincronizar(tempUsuarios);
 
-        if (cargado == 1) {
-          usuarioCargado + 1;
-        }
-      });
+      if (cargado == 1) {
+        usuarioCargado += 1;
+      }
     });
 
     Resumen.resumentList.add(Resumen(

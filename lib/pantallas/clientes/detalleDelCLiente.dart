@@ -45,12 +45,13 @@ class DetalleDelCliente extends StatelessWidget {
             appBar: AppBar(
               bottom: const TabBar(
                 tabs: [
-                  Tab(icon: Icon(Icons.card_giftcard), text: 'Pedidos'),
                   Tab(
                     icon: Icon(Icons.inventory),
                     text: 'Facturas',
                   ),
                   Tab(icon: Icon(Icons.paypal), text: 'Pagos'),
+                  Tab(icon: Icon(Icons.card_giftcard), text: 'Pedidos'),
+
                   // Tab(
                   //   icon: Icon(Icons.directions_bike),
                   //   text: 'Pedidos',
@@ -64,7 +65,7 @@ class DetalleDelCliente extends StatelessWidget {
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 // PagoTemporal.limpiarDetalle();
-                if (controller.index == 0) {
+                if (controller.index == 3) {
                   FacturaDetalle.limpiarfacturas();
                   Navigator.push(
                       context,
@@ -73,7 +74,7 @@ class DetalleDelCliente extends StatelessWidget {
                               customerCode.toString(),
                               nombredelcliente.toString())));
                 }
-                if (controller.index == 2) {
+                if (controller.index == 1) {
                   //limpiar detalle de la factura
                   PagoTemporal.limpiarDetalle();
                   Pago.eliminartotalpago();
@@ -93,11 +94,11 @@ class DetalleDelCliente extends StatelessWidget {
             body: TabBarView(
               children: [
                 // ListadoPedidos(const Icon(Icons.send), customerCode.toString()),
-                ListadoPedidos(
-                    const Icon(Icons.directions_car), customerCode.toString()),
                 ListFactura(
                     const Icon(Icons.directions_car), customerCode.toString()),
                 ListPagos(
+                    const Icon(Icons.directions_car), customerCode.toString()),
+                ListadoPedidos(
                     const Icon(Icons.directions_car), customerCode.toString()),
                 // ListPedidos(const Icon(Icons.directions_car)),
               ],

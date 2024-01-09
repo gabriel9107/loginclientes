@@ -1,264 +1,364 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+// import 'package:open_document/open_document.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
-import 'package:sigalogin/clases/model/supplier.dart';
+import 'package:pdf/widgets.dart' as pdfLib;
+import 'package:sigalogin/clases/global.dart';
+import 'package:sigalogin/clases/model/customer.dart';
+import 'package:sigalogin/clases/modelos/pago.dart';
+import 'package:sigalogin/clases/utils.dart';
 import 'package:sigalogin/helper/model/invoice.dart';
-import 'package:sigalogin/helper/model/utils.dart';
-import 'package:sigalogin/helper/pdf_helper.dart';
 
-import '../../helper/model/customer.dart';
+import '../../helper/pdf_helper.dart';
+import '../model/supplier.dart';
 
-class PdfInvoicePdfHelper {
-  static Future<File> generate(Invoice invoice) async {
-    final pdf = Document();
+class customRow {
+  final String itemName;
+  final String itemPrice;
+  final String ammount;
+  final String total;
+  final String vat;
 
-    pdf.addPage(MultiPage(
-      build: (context) => [
-        buildHeader(invoice),
-        SizedBox(height: 3 * PdfPageFormat.cm),
-        buildTitle(invoice),
-        buildInvoice(invoice),
-        Divider(),
-        buildTotal(invoice),
-      ],
-      footer: (context) => buildFooter(invoice),
-    ));
+  customRow(this.itemName, this.itemPrice, this.ammount, this.total, this.vat);
+}
 
-    return PdfHelper.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
-  }
+class customRowPago {
+  final String numeroRecibo;
+  final String codigo;
+  final String nombre;
+  final String fechaRecibo;
+  final String montoRecibo;
+  final String facturaPagada;
+  final String tipoPago;
 
-  static Widget buildHeader(Invoice invoice) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 1 * PdfPageFormat.cm),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              buildSupplierAddress(invoice.supplier),
-              Container(
-                height: 50,
-                width: 50,
-                child: BarcodeWidget(
-                  barcode: Barcode.qrCode(),
-                  data: invoice.info.number,
+  final String fechaCorrecta;
+  final String noCheque;
+
+  customRowPago(
+      this.numeroRecibo,
+      this.codigo,
+      this.nombre,
+      this.fechaRecibo,
+      this.montoRecibo,
+      this.facturaPagada,
+      this.tipoPago,
+      this.fechaCorrecta,
+      this.noCheque);
+}
+
+class pdfInvoiceServices {
+  static Future<Uint8List> createInvoice(List<Pago> pagos) async {
+    final pdf = pw.Document();
+
+    // final List<customRowPago> element = [
+    //   customRowPago(
+    //       "Numero recibo",
+    //       "Codigo",
+    //       "Nombre",
+    //       "Fecha Recibo",
+    //       "Monto Recibido",
+    //       "Factura Pagada",
+    //       "Tipo De Pago",
+    //       "Fecha Correcta",
+    //       "No cheque"),
+    //   for (var pago in pagos)
+    //     customRowPago(
+    //         pago.id.toString(),
+    //         pago.clienteId,
+    //         pago.clienteId,
+    //         pago.fechaPago,
+    //         pago.montoPagado.toString(),
+    //         pago.factura.toString(),
+    //         pago.metodoDePago.toString(),
+    //         "",
+    //         ""),
+    //         customRowPago("Total", "", "","", "", "", "", "", noCheque)
+    // ];
+
+    // pdf.addPage(pw.Page(
+    //   pageFormat: PdfPageFormat.a4,
+    //   build: (pw.Context context) {
+    //     return pw.Column(
+    //       children: [address()],
+    //     );
+    //   },
+    // ));
+
+    pdf.addPage(
+      Page(
+          pageFormat:
+              PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+          margin: EdgeInsets.all(20),
+          orientation: PageOrientation.landscape,
+          build: (Context context) {
+            return ListView(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(bottom: 20),
+                  alignment: Alignment.bottomLeft,
+                  child: Text(compagniaTexto,
+                      style: TextStyle(color: PdfColors.black, fontSize: 20)),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 1 * PdfPageFormat.cm),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              buildCustomerAddress(invoice.customer),
-              buildInvoiceInfo(invoice.info),
-            ],
-          ),
-        ],
-      );
-
-  static Widget buildCustomerAddress(Customer customer) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(customer.name, style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(customer.address),
-        ],
-      );
-
-  static Widget buildInvoiceInfo(InvoiceInfo info) {
-    final paymentTerms = '${info.dueDate.difference(info.date).inDays} days';
-    final titles = <String>[
-      'Invoice Number:',
-      'Invoice Date:',
-      'Payment Terms:',
-      'Due Date:'
-    ];
-    final data = <String>[
-      info.number,
-      Utils.formatDate(info.date),
-      paymentTerms,
-      Utils.formatDate(info.dueDate),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(titles.length, (index) {
-        final title = titles[index];
-        final value = data[index];
-
-        return buildText(title: title, value: value, width: 200);
-      }),
-    );
-  }
-
-  static Widget buildSupplierAddress(Supplier supplier) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(supplier.name,
-              style: TextStyle(
-                  fontBold: Font.courierBold(),
-                  fontWeight: FontWeight.bold,
-                  font: Font.courierBold())),
-          SizedBox(height: 1 * PdfPageFormat.mm),
-          Text(supplier.address),
-        ],
-      );
-
-  static Widget buildTitle(Invoice invoice) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Fist PDF',
-            style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                font: Font.courierBold()),
-          ),
-          SizedBox(height: 0.8 * PdfPageFormat.cm),
-          Text(invoice.info.description),
-          SizedBox(height: 0.8 * PdfPageFormat.cm),
-        ],
-      );
-
-  static Widget buildInvoice(Invoice invoice) {
-    final headers = [
-      'Description',
-      'Date',
-      'Quantity',
-      'Unit Price',
-      'VAT',
-      'Total'
-    ];
-    final data = invoice.items.map((item) {
-      final total = item.unitPrice * item.quantity * (1 + item.vat);
-
-      return [
-        item.description,
-        Utils.formatDate(item.date),
-        '${item.quantity}',
-        '\$ ${item.unitPrice}',
-        '${item.vat} %',
-        '\$ ${total.toStringAsFixed(2)}',
-      ];
-    }).toList();
-
-    return Table.fromTextArray(
-      headers: headers,
-      data: data,
-      border: null,
-      headerStyle:
-          TextStyle(fontWeight: FontWeight.bold, font: Font.courierBold()),
-      headerDecoration: const BoxDecoration(color: PdfColors.grey300),
-      cellHeight: 30,
-      cellAlignments: {
-        0: Alignment.centerLeft,
-        1: Alignment.centerRight,
-        2: Alignment.centerRight,
-        3: Alignment.centerRight,
-        4: Alignment.centerRight,
-        5: Alignment.centerRight,
-      },
-    );
-  }
-
-  static Widget buildTotal(Invoice invoice) {
-    final netTotal = invoice.items
-        .map((item) => item.unitPrice * item.quantity)
-        .reduce((item1, item2) => item1 + item2);
-    final vatPercent = invoice.items.first.vat;
-    final vat = netTotal * vatPercent;
-    final total = netTotal + vat;
-
-    return Container(
-      alignment: Alignment.centerRight,
-      child: Row(
-        children: [
-          Spacer(flex: 6),
-          Expanded(
-            flex: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildText(
-                  title: 'Net total',
-                  value: Utils.formatPrice(netTotal),
-                  unite: true,
+                Container(
+                  padding: EdgeInsets.only(bottom: 20),
+                  alignment: Alignment.topLeft,
+                  child: Text("CUADRE DE TRANSACIONES POR ORIGEN DEL INGRESO",
+                      style: TextStyle(color: PdfColors.black, fontSize: 20)),
                 ),
-                buildText(
-                  title: 'Vat ${vatPercent * 100} %',
-                  value: Utils.formatPrice(vat),
-                  unite: true,
+                Container(
+                    height: 1.0,
+                    width: 600.0,
+                    color: PdfColors.red,
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 10)),
+                Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(10),
+                      ),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text("Gabriel Montero Terrero",
+                                  style: TextStyle(color: PdfColors.red)),
+                            ),
+                            Container(
+                              child: Text("402-21025725-5"),
+                            ),
+                          ]),
+                      SizedBox(height: 30, width: 30),
+                      // Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: <Widget>[
+                      //       SizedBox(height: 30),
+                      //       Container(child: Text("GSTIN")),
+                      //       Container(child: Text("State")),
+                      //       Container(child: Text("Pan")),
+                      //     ]),
+                      // Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.end,
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: <Widget>[
+                      //       SizedBox(height: 30),
+                      //       Container(child: Text("  0727232387A8")),
+                      //       Container(child: Text("07-Delhi")),
+                      //       Container(child: Text("AAGCB9745G")),
+                      //     ]),
+                      // Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //     children: <Widget>[
+                      //       SizedBox(height: 30),
+                      //       Container(child: Text("Invoice Date")),
+                      //       Container(child: Text("Invoice No.")),
+                      //       Container(child: Text("Refrence No.")),
+                      //     ]),
+                      // Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.end,
+                      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //     children: <Widget>[
+                      //       SizedBox(height: 30),
+                      //       Container(child: Text("12/07/2019")),
+                      //       Container(child: Text("BNMK/2020/18")),
+                      //       Container(child: Text("")),
+                      //     ]),
+                    ]),
+                // //Create a line
+
+                Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[]),
+                Container(
+                    height: 1.0,
+                    width: 600.0,
+                    color: PdfColors.red,
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 10)),
+                Container(
+                  color: PdfColors.yellow200,
+                  padding: EdgeInsets.all(20),
+                  child: Table(
+                      tableWidth: TableWidth.max,
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: <TableRow>[
+                        TableRow(children: <Widget>[
+                          Container(child: Text("Numero\nRecibo")),
+                          Container(width: 50, child: Text('Codigo')),
+                          Container(width: 80, child: Text("Nombre")),
+                          Container(child: Text("Fecha recibo")),
+                          Container(child: Text("Monto Recibo")),
+                          Container(child: Text("Factura pgada")),
+                          Container(child: Text("Tipo De Pago")),
+                          Container(child: Text("Fecha ")),
+                          Container(child: Text("Referencia")),
+                        ]),
+
+                        // TableRow(children: <Widget>[
+                        //   Container(child: Text("4456")),
+                        //   Container(width: 30, child: Text("90600142658")),
+                        //   Container(
+                        //       width: 80,
+                        //       child: Text("Taller y Rep. Juan (Navarrete)")),
+                        //   Container(child: Text("3/28/2023")),
+                        //   Container(child: Text("3280.00")),
+                        //   Container(child: Text("FVS02531")),
+                        //   Container(child: Text("Cheque")),
+                        //   Container(child: Text("3/28/2023")),
+                        //   Container(height: 30, child: Text("5702")),
+
+                        // TableRow(children: <Widget>[
+                        //   SizedBox(),
+                        //   Container(child: Text("Total")),
+                        //   Container(child: Text("1")),
+                        //   Container(child: Text("4000.00")),
+                        //   Container(child: Text("3280.00")),
+                        //   Container(child: Text("720.00")),
+                        //   Container(child: Text("4000.00")),
+                        // ]),
+                      ]),
                 ),
-                Divider(),
-                buildText(
-                  title: 'Total amount due',
-                  titleStyle: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  value: Utils.formatPrice(total),
-                  unite: true,
+
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Table(
+                      tableWidth: TableWidth.max,
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: <TableRow>[
+                        TableRow(children: <Widget>[
+                          Container(child: Text("4456")),
+                          Container(width: 50, child: Text("90600142658")),
+                          Container(
+                              width: 80,
+                              child: Text("Taller y Rep. Juan (Navarrete)")),
+                          Container(child: Text("3/28/2023")),
+                          Container(child: Text("3280.00")),
+                          Container(child: Text("FVS02531")),
+                          Container(child: Text("Cheque")),
+                          Container(child: Text("3/28/2023")),
+                          Container(height: 30, child: Text("5702")),
+                        ]),
+                      ]),
                 ),
-                SizedBox(height: 2 * PdfPageFormat.mm),
-                Container(height: 1, color: PdfColors.grey400),
-                SizedBox(height: 0.5 * PdfPageFormat.mm),
-                Container(height: 1, color: PdfColors.grey400),
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            SizedBox(height: 15),
+                            Container(child: Text("Grand Total")),
+                            SizedBox(width: 15),
+                            Container(child: Text("4000")),
+                          ]),
+                      SizedBox(height: 15),
+                      // Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     children: <Widget>[
+                      //       Container(child: Text("SNA SISTEC Pvt Ltd")),
+                      //       Container(child: PdfLogo()),
+                      //       Container(child: Text("Authorized Signatory")),
+                      //     ])
+                    ]),
+                // Container(
+                //     height: 1.0,
+                //     width: 600.0,
+                //     color: PdfColors.black,
+                //     margin: const EdgeInsets.fromLTRB(0, 10, 0, 10)),
+                // Text("Terms and Condition Applied*")
               ],
-            ),
+            );
+          }),
+    );
+    return pdf.save();
+  }
+
+  static Future<Uint8List> createHelloWorld() async {
+    // final font = await rootBundle.load("assets/OpenSans-Bold.ttf");
+    // final ttf = pdfLib.Font.ttf(font);
+    // final fontBold = await rootBundle.load("assets/OpenSans-BoldItalic.ttf");
+    // final ttfBold = pdfLib.Font.ttf(fontBold);
+    // final fontItalic = await rootBundle.load("assets/OpenSans-Italic.ttf");
+    // final ttfItalic = pdfLib.Font.ttf(fontItalic);
+    // final fontBoldItalic = await rootBundle.load("assets/OpenSans-Regular.ttf");
+    // final ttfBoldItalic = pdfLib.Font.ttf(fontBoldItalic);
+
+    // var myTheme = ThemeData.withFont(
+    //   base: ttf,
+    //   bold: ttfBold,
+    //   italic: ttfItalic,
+    //   boldItalic: ttfBoldItalic,
+    // );
+
+    final font = await rootBundle.load("assets/OpenSans-Bold.ttf");
+    final ttf = Font.ttf(font);
+
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+              child: pw.Text("hello world", style: pw.TextStyle(font: ttf)));
+        },
+      ),
+    );
+    return pdf.save();
+  }
+
+  static Future<void> savePdfFile(String fileName, Uint8List byteList) async {
+    final output = await getTemporaryDirectory();
+    var filePath = "${output.path}/$fileName.pdf";
+    final file = File(filePath);
+    await file.writeAsBytes(byteList);
+
+    await OpenFile.open(filePath);
+    //  await OpenDocument.openDocument(filePath: filePath);
+  }
+
+  static Future<File> saveDocument(
+      {required String name, required Document pdf}) async {
+    final bytes = await pdf.save();
+
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/$name');
+
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  static Future openFile(File file) async {
+    final Url = file.path;
+
+    await OpenFile.open(Url);
+  }
+
+  static pw.Row address() {
+    return pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Column(
+            children: [
+              pw.Text("Nombre Vendedor"),
+              pw.Text("Codigo Vendedor"),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-
-  static Widget buildFooter(Invoice invoice) => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Divider(),
-          SizedBox(height: 2 * PdfPageFormat.mm),
-          buildSimpleText(title: 'Address', value: invoice.supplier.address),
-          SizedBox(height: 1 * PdfPageFormat.mm),
-          buildSimpleText(title: 'Paypal', value: invoice.supplier.paymentInfo),
-        ],
-      );
-
-  static buildSimpleText({
-    required String title,
-    required String value,
-  }) {
-    final style = TextStyle(fontWeight: FontWeight.bold);
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
-      children: [
-        Text(title, style: style),
-        SizedBox(width: 2 * PdfPageFormat.mm),
-        Text(value),
-      ],
-    );
-  }
-
-  static buildText({
-    required String title,
-    required String value,
-    double width = double.infinity,
-    TextStyle? titleStyle,
-    bool unite = false,
-  }) {
-    final style = titleStyle ?? TextStyle(fontWeight: FontWeight.bold);
-
-    return Container(
-      width: width,
-      child: Row(
-        children: [
-          Expanded(child: Text(title, style: style)),
-          Text(value, style: unite ? style : null),
-        ],
-      ),
-    );
+          pw.Column(
+            children: [pw.Text("Gabriel Montero"), pw.Text("40221025725")],
+          )
+        ]);
   }
 }

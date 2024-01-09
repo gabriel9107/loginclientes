@@ -446,14 +446,18 @@ class Pago {
     // Pagodetalle.ActualizarFacutas();
   }
 
-  static String guardarPagoConID(Pago pagotemp) {
+  static Future<String> guardarPagoConID(Pago pagotemp) async {
     var result;
     var formaDePago = pago.metodoDePago.toString();
 
     obtenermontodelpago();
 
-    DatabaseHelper.instance.agregarPagoconID(pagotemp).then((value) =>
-        {PagoTemporal.guardarDetallePago(value, formaDePago), result = value});
+    var reciboid = await DatabaseHelper.instance
+        .agregarPagoconID(pagotemp)
+        .then((value) => {
+              PagoTemporal.guardarDetallePago(value, formaDePago),
+              result = value,
+            });
 
     // => PagoTemporal.guardarDetallePago(value, formaDePago));
 

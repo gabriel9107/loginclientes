@@ -1,5 +1,5 @@
-import 'package:sigalogin/clases/model/supplier.dart';
-import 'package:sigalogin/helper/model/customer.dart';
+import '../../clases/model/customer.dart';
+import '../../clases/model/supplier.dart';
 
 class Invoice {
   final InvoiceInfo info;

@@ -25,7 +25,7 @@ class NewClient extends StatelessWidget {
   String? selectedValue;
   // const NewClient({super.key});
 
-  static final _loginformKey = GlobalKey<FormState>();
+  GlobalKey _loginNew_Cliente = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class NewClient extends StatelessWidget {
           ],
         ),
         body: Form(
-          key: _loginformKey,
+          key: _loginNew_Cliente,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[

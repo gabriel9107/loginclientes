@@ -90,8 +90,7 @@ class CustomerListState extends State<clienteLista> {
                           title: Text(customer.codigo.toString() +
                               ' | ' +
                               customer.nombre +
-                              ' ' +
-                              customer.sincronizado.toString()),
+                              ' '),
                           subtitle: Text(
                               customer.direccion + ' | ' + customer.telefono1),
                           trailing: Row(

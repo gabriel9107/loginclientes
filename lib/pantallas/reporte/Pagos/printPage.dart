@@ -40,7 +40,7 @@ class _PrintPageState extends State<PrintPage> {
     bool isConnected = await bluetoothPrint.isConnected ?? false;
 
     bluetoothPrint.state.listen((state) {
-      print('******************* cur device status: $state');
+      // print('******************* cur device status: $state');
 
       switch (state) {
         case BluetoothPrint.CONNECTED:
@@ -215,7 +215,8 @@ class _PrintPageState extends State<PrintPage> {
 
                                 list.add(LineText(
                                     type: LineText.TYPE_TEXT,
-                                    content: 'RECIBO NO.: RCS0001',
+                                    content: 'RECIBO NO.: RCS00' +
+                                        widget.data.numeroComprobante,
                                     linefeed: 1));
 
                                 list.add(LineText(
@@ -282,7 +283,12 @@ class _PrintPageState extends State<PrintPage> {
                                           widget.data.pagos[i].montoAplicado
                                               .toString() +
                                           '     ' +
-                                          "SALDO",
+                                          (widget.data.pagos[i].montoAplicado
+                                                      .toString() ==
+                                                  widget.data.pagos[i]
+                                                      .montoDeFacturaAlMomento
+                                              ? 'SALDO'
+                                              : 'ABONO'),
                                       // 'FSV024943     8,544.00  SALDO',
                                       weight: 0,
                                       align: LineText.ALIGN_LEFT,
@@ -291,11 +297,6 @@ class _PrintPageState extends State<PrintPage> {
                                   );
                                 }
 
-                                // list.add(LineText(
-                                //     type: LineText.TYPE_TEXT,
-                                //     content: 'FSV024943     8,544.00  SALDO',
-                                //     align: LineText.ALIGN_CENTER,
-                                //     linefeed: 1));
                                 list.add(LineText(
                                     type: LineText.TYPE_TEXT,
                                     content: '================================',
