@@ -57,40 +57,6 @@ class pdfInvoiceServices {
   static Future<Uint8List> createInvoice(List<Pago> pagos) async {
     final pdf = pw.Document();
 
-    // final List<customRowPago> element = [
-    //   customRowPago(
-    //       "Numero recibo",
-    //       "Codigo",
-    //       "Nombre",
-    //       "Fecha Recibo",
-    //       "Monto Recibido",
-    //       "Factura Pagada",
-    //       "Tipo De Pago",
-    //       "Fecha Correcta",
-    //       "No cheque"),
-    //   for (var pago in pagos)
-    //     customRowPago(
-    //         pago.id.toString(),
-    //         pago.clienteId,
-    //         pago.clienteId,
-    //         pago.fechaPago,
-    //         pago.montoPagado.toString(),
-    //         pago.factura.toString(),
-    //         pago.metodoDePago.toString(),
-    //         "",
-    //         ""),
-    //         customRowPago("Total", "", "","", "", "", "", "", noCheque)
-    // ];
-
-    // pdf.addPage(pw.Page(
-    //   pageFormat: PdfPageFormat.a4,
-    //   build: (pw.Context context) {
-    //     return pw.Column(
-    //       children: [address()],
-    //     );
-    //   },
-    // ));
-
     pdf.addPage(
       Page(
           pageFormat:

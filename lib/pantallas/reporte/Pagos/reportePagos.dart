@@ -43,10 +43,13 @@ class ProductsListState extends State<ReportePagos> {
           IconButton(
             icon: const Icon(Icons.print),
             onPressed: () async {
-              if (pagoList.length > 0) {
-                final data = await pdfInvoiceServices.createInvoice(pagoList);
-                pdfInvoiceServices.savePdfFile("Invociee", data);
-              }
+              final pagos = await DatabaseHelper.instance
+                  .obtenerPagosPorFechaParaReporte(
+                      desdeController.text, hastaController.text);
+
+//las dos lineas de abajo son semi funcional tener
+              // final data = await pdfInvoiceServices.createInvoice(pagos);
+              // pdfInvoiceServices.savePdfFile("Invociee", data);
             },
           )
         ],

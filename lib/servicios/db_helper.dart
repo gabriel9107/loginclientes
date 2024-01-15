@@ -541,6 +541,22 @@ class DatabaseHelper {
     return listadePagos;
   }
 
+  Future<List<Pago>> obtenerPagosPorFechaParaReporte(
+      String fechaInicio, String fechaFin) async {
+    Database db = await instance.database;
+
+    var pagos =
+        await db.rawQuery("SELECT * FROM Pago where compagni = $compagnia");
+
+    // var pagos = await db.rawQuery(
+    //     "SELECT * FROM Pago where compagni = $compagnia and fechaPago BETWEEN $fechaInicio and $fechaFin and vendorId = $usuario");
+    List<Pago> listadePagos = pagos.isNotEmpty
+        ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
+        : [];
+
+    return listadePagos;
+  }
+
   Future<List<Pago>> obtenerPagosPorClientesConNumeroDeFactura(
       String cliente) async {
     Database db = await instance.database;
