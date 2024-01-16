@@ -133,6 +133,18 @@ class FacturaDetalle {
         isDelete: json["IsDelete"],
       );
 
+  Map<String, dynamic> toMapSql() => {
+        "Compagnia": compagnia,
+        "FacturaId": facturaId,
+        "isDelete": isDelete,
+        "LineaNumero": lineaNumero,
+        "Nombre": nombre,
+        "PrecioVenta": precioVenta,
+        "ProductoCodigo": productoCodigo,
+        "Qty": qty,
+        "Sincronizado": sincronizado,
+        "MontoLinea": montoLinea,
+      };
   Map<String, dynamic> toMap() => {
         "Compagnia": compagnia,
         "FacturaId": facturaId,

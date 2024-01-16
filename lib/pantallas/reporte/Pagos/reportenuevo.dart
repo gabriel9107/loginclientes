@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/pantallas/NavigationDrawer.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
+
+import 'package:sigalogin/clases/api/pdf_api.dart';
+import 'package:sigalogin/clases/api/pdf_invoice_api.dart';
 
 class MyReportePage extends StatefulWidget {
   @override
@@ -42,19 +44,14 @@ class _MyHomePageState extends State<MyReportePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Reporte de cobro"),
+          title: const Text("Reporte de cobro"),
           backgroundColor: navBar,
           actions: [
             IconButton(
               icon: const Icon(Icons.print),
               onPressed: () async {
-                pagoList = await DatabaseHelper.instance
-                    .obtenerPagosPorFechaParaReporte(
-                        fromDate.toString(), toDate.toString());
-
-//las dos lineas de abajo son semi funcional tener
-                // final data = await pdfInvoiceServices.createInvoice(pagos);
-                // pdfInvoiceServices.savePdfFile("Invociee", data);
+                final data = await pdfInvoiceServices.createInvoice(pagoList);
+                pdfInvoiceServices.savePdfFile("Invociee", data);
               },
             )
           ],
@@ -89,16 +86,17 @@ class _MyHomePageState extends State<MyReportePage> {
                       ),
                       Text('${formatter.format(toDate)}'),
                       IconButton(
-                        icon: const Icon(Icons.search),
-                        color: Colors.blue,
-                        onPressed: () => {
-                          setState(() async {
-                            pagoList = await DatabaseHelper.instance
+                          icon: const Icon(Icons.search),
+                          color: Colors.blue,
+                          onPressed: () async {
+                            List<Pago> pagos = await DatabaseHelper.instance
                                 .obtenerPagosPorFechaParaReporte(
                                     fromDate.toString(), toDate.toString());
+                            setState(() {
+                              pagoList = pagos;
+                            });
+                            print(pagoList);
                           })
-                        },
-                      )
                     ])),
 
                 Column(
@@ -115,12 +113,16 @@ class _MyHomePageState extends State<MyReportePage> {
                           child: ListTile(
                             leading: CircleAvatar(
                               backgroundColor: Colors.white,
-                              child: Icon(Icons.money),
+                              child: const Icon(Icons.money),
                             ),
                             title: Text(
-                                "Cliente ID :" + item.clienteId.toString()),
+                                "Nombre Cliente : Cliente de Prueba (Cambiar Nombre)      "
+                                        "Cliente ID :" +
+                                    item.clienteId.toString()),
                             subtitle: Text("Monto Recibido" +
-                                item.montoPagado.toStringAsFixed(2)),
+                                item.montoPagado.toStringAsFixed(2) +
+                                "                     Fecha Pago : " +
+                                item.fechaPago.toString()),
                           ),
                         );
                       },

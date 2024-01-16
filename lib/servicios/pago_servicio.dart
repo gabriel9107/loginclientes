@@ -17,35 +17,36 @@ class PagoServices extends ChangeNotifier {
 
   PagoServices() {
     this.cargarPago();
-    // this.sincronizar();
+    this.sincronizar();
   }
 
-  // Future sincronizar() async {
-  //   final url = Uri.https(_baseUrl, 'Pago.json');
+  Future sincronizar() async {
+    final url = Uri.https(_baseUrl, 'Pago.json');
 
-  //   final resp = await http.get(url);
+    final resp = await http.get(url);
 
-  //   final response =
-  //       await http.get(url, headers: {"Content-Type": "application/json"});
-  //   // final jsonList = jsonDecode(response.body) as List<dynamic>;
+    final response =
+        await http.get(url, headers: {"Content-Type": "application/json"});
+    // final jsonList = jsonDecode(response.body) as List<dynamic>;
 
-  //   // DatabaseHelper.instance.Deleteproducto();
-  //   if (response != "Null") {
-  //     final Map<String, dynamic> map = json.decode(response.body);
+    // DatabaseHelper.instance.Deleteproducto();
+    if (response != "Null") {
+      final Map<String, dynamic> map = json.decode(response.body);
 
-  //     map.forEach((key, value) {
-  //       final temp = Pago.fromMap(value);
-  //       pagos.add(temp);
-  //     });
+      map.forEach((key, value) {
+        final temp = Pago.fromMapInsert(value);
+        temp.idFirebase = key;
+        pagos.add(temp);
+      });
 
-  //     pagos.forEach((pago) {
-  //       DatabaseHelper.instance.AgregarPagoDescargado(pago);
-  //     });
-  //   }
+      pagos.forEach((pago) {
+        DatabaseHelper.instance.AgregarPagoDescargado(pago);
+      });
+    }
 
-  //   Resumen.resumentList.add(Resumen(
-  //       accion: 'Pagos Descargados', cantidad: pagos.length.toString()));
-  // }
+    Resumen.resumentList.add(Resumen(
+        accion: 'Pagos Descargados', cantidad: pagos.length.toString()));
+  }
 
   Future cargarPago() async {
     await DatabaseHelper.instance

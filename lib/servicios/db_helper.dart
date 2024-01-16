@@ -32,7 +32,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '80.db');
+    String path = join(documentsDirectory.path, '82.db');
     return await openDatabase(
       path,
       version: 7,
@@ -435,7 +435,7 @@ class DatabaseHelper {
 
     var dbClient = await instance.database;
     var res = await dbClient.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM Pago WHERE idfirebase= '$idFirebase' and compagnia = $compagnia )");
+        "SELECT EXISTS(SELECT 1 FROM Pago WHERE idfirebase= '$idFirebase' and compagni = $compagnia )");
 
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {
@@ -927,7 +927,7 @@ class DatabaseHelper {
 
   Future<int> AddDetalleFactura(FacturaDetalle factura) async {
     Database db = await instance.database;
-    return await db.insert('FacturaDetalle', factura.toMap());
+    return await db.insert('FacturaDetalle', factura.toMapSql());
   }
 
   Future<int> SincronizarFactura(Factura factura) async {

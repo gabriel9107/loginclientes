@@ -199,7 +199,7 @@ class Pago {
   Map<String, dynamic> toJsonFire() => {
         "Banco": banco,
         "ClienteId": clienteId,
-        "Compagni": compania,
+        "compagni": compania,
         "FechaDeCheque": fechaDeCheque,
         "FechaPago": fechaPago,
         "IsDelete": isDelete,
@@ -284,6 +284,23 @@ class Pago {
         "NumeroDeCheque": numeroDeCheque,
       };
 
+  //insertando pago descargado de firebase
+  factory Pago.fromMapInsert(Map<String, dynamic> json) => Pago(
+        clienteId: json["ClienteId"].toString(),
+        banco: json["Banco"],
+        numeroDeCheque: json["NumeroDeCheque"],
+        fechaDeCheque: json["FechaDeCheque"],
+        fechaPago: json["FechaPago"],
+        metodoDePago: json["MetodoDePago"],
+        montoPagado: json["montoPagado"]?.toDouble(),
+        pendiente: json["Pendiente"],
+        vendorId: json["VendorID"],
+        compania: json["Compagni"],
+        estado: json["Estado"],
+        sincronizado: json["Sincronizado"],
+        isDelete: 1,
+      );
+
   factory Pago.fromMap(Map<String, dynamic> json) => Pago(
         id: json["ID"],
         clienteId: json["ClienteId"].toString(),
@@ -295,7 +312,7 @@ class Pago {
         montoPagado: json["montoPagado"]?.toDouble(),
         pendiente: json["Pendiente"],
         vendorId: json["VendorID"],
-        compania: json["Compagni"],
+        compania: json["compagni"],
         estado: json["Estado"],
         sincronizado: json["Sincronizado"],
         isDelete: 1,

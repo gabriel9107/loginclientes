@@ -197,28 +197,29 @@ class pdfInvoiceServices {
                       ]),
                 ),
 
-                Container(
-                  padding: EdgeInsets.all(20),
-                  child: Table(
-                      tableWidth: TableWidth.max,
-                      defaultVerticalAlignment:
-                          TableCellVerticalAlignment.middle,
-                      children: <TableRow>[
-                        TableRow(children: <Widget>[
-                          Container(child: Text("4456")),
-                          Container(width: 50, child: Text("90600142658")),
-                          Container(
-                              width: 80,
-                              child: Text("Taller y Rep. Juan (Navarrete)")),
-                          Container(child: Text("3/28/2023")),
-                          Container(child: Text("3280.00")),
-                          Container(child: Text("FVS02531")),
-                          Container(child: Text("Cheque")),
-                          Container(child: Text("3/28/2023")),
-                          Container(height: 30, child: Text("5702")),
+                for (var item in pagos)
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    child: Table(
+                        tableWidth: TableWidth.max,
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: <TableRow>[
+                          TableRow(children: <Widget>[
+                            Container(width: 50, child: Text("90600142658")),
+                            Container(
+                                width: 80,
+                                child: Text("Taller y Rep. Juan (Navarrete)")),
+                            Container(child: Text("3/28/2023")),
+                            Container(child: Text("3280.00")),
+                            Container(child: Text("FVS02531")),
+                            Container(child: Text("Cheque")),
+                            Container(child: Text("3/28/2023")),
+                            Container(height: 30, child: Text("5702")),
+                          ]),
                         ]),
-                      ]),
-                ),
+                  ),
+
                 Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
