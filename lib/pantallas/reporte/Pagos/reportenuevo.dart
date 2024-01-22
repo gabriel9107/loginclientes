@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/pantallas/NavigationDrawer.dart';
+import 'package:sigalogin/pantallas/reporte/Pagos/file_handle_api.dart';
+import 'package:sigalogin/pantallas/reporte/Pagos/pdf_invoice_api.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 
 import 'package:sigalogin/clases/api/pdf_api.dart';
@@ -50,8 +52,13 @@ class _MyHomePageState extends State<MyReportePage> {
             IconButton(
               icon: const Icon(Icons.print),
               onPressed: () async {
-                final data = await pdfInvoiceServices.createInvoice(pagoList);
-                pdfInvoiceServices.savePdfFile("Invociee", data);
+                final pdfFile = await PdfInvoiceApi.generate();
+
+                // opening the pdf file
+                FileHandleApi.openFile(pdfFile);
+
+                // final data = await pdfInvoiceServices.createInvoice(pagoList);
+                // pdfInvoiceServices.savePdfFile("Invociee", data);
               },
             )
           ],

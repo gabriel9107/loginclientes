@@ -1,4 +1,3 @@
-import 'package:http/http.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/modelos/clientes.dart';
 
