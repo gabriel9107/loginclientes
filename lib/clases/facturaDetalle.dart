@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:sigalogin/clases/global.dart';
-import 'package:sigalogin/clases/ordenDeventa.dart';
 import 'package:sigalogin/clases/pedidoDetalle.dart';
 import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/servicios/db_helper.dart';

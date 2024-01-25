@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyReportePage> {
             IconButton(
               icon: const Icon(Icons.print),
               onPressed: () async {
-                final pdfFile = await PdfInvoiceApi.generate();
+                final pdfFile = await PdfInvoiceApi.generate(pagoList);
 
                 // opening the pdf file
                 FileHandleApi.openFile(pdfFile);

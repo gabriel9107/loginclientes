@@ -6,6 +6,7 @@ import 'package:sigalogin/clases/modelos/productos.dart';
 import 'factura.dart';
 
 //compania 0 = AX, compania 1 = GP
+
 String compagniaTexto = '';
 String nombre_Usuario = '';
 int compagnia = 0;

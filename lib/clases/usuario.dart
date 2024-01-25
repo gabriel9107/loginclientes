@@ -18,14 +18,7 @@ class Usuario {
   int activo;
   int sincronizado;
 
-  // factory Usuario.fromMapDown(Map<String, dynamic> json) => Usuario(
-  //     nombre: json["nombre"],
-  //     apellido: json["apellido"],
-  //     usuarioNombre: json["usuarioNombre"],
-  //     usuarioClave: json["usuarioClave"],
-  //     compania: json["compagnia"],
-  //     activo: json["activo"],
-  //     sincronizado: 1);
+ 
 
   factory Usuario.fromMap(Map<String, dynamic> json) => Usuario(
       nombre: json["Nombre"],

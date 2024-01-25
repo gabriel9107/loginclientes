@@ -11,15 +11,14 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/utils/utils.dart';
 
-import '../clases/customers.dart';
+
 import '../clases/detalleFactura.dart';
 import '../clases/formatos.dart';
 import '../clases/global.dart';
 import '../clases/modelos/clientes.dart';
 import '../clases/modelos/pagodetalle.dart';
-import '../clases/ordenDeventa.dart';
+
 import '../clases/usuario.dart';
 import '../pantallas/Pagos/pagosForm.dart';
 
@@ -120,8 +119,9 @@ class DatabaseHelper {
     ,IsDelete	 INTEGER
     ,Compagnia	 INTEGER
         )''');
+
     await db.execute('''CREATE TABLE FacturaDetalle(
-       ID	INTEGER PRIMARY KEY AUTOINCREMENT 
+       ID	INTEGER PRIMARY KEY AUTOINCREMENT
       ,idfirebase TEXT
       ,FacturaId	 TEXT
       ,LineaNumero	  REAL
@@ -132,8 +132,7 @@ class DatabaseHelper {
       ,montoLinea	 REAL
       ,Sincronizado INTEGER
       ,IsDelete	INTEGER
-      ,Compagnia INTEGER
-        )''');
+      ,Compagnia INTEGER)''');
 
     await db.execute('''CREATE TABLE Pago(
         id  INTEGER PRIMARY KEY AUTOINCREMENT
@@ -156,7 +155,7 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE PagoDetalle(
           ID INTEGER PRIMARY KEY AUTOINCREMENT
-          ,idfirebase TEXT
+         ,idfirebase TEXT
          ,pagoId INTEGER
          ,facturaId TEXT
          ,formaDePago TEXT
@@ -170,9 +169,9 @@ class DatabaseHelper {
              )''');
 
     await db.execute('''CREATE TABLE Usuario(
-           id INTEGER PRIMARY KEY AUTOINCREMENT, 
-           Nombre TEXT, 
-           Apellido TEXT       
+           id INTEGER PRIMARY KEY AUTOINCREMENT
+           ,Nombre TEXT
+           ,Apellido TEXT       
         ,UsuarioNombre TEXT
         ,UsuarioClave TEXT
         ,Compagnia INTEGER
@@ -893,25 +892,38 @@ class DatabaseHelper {
       String facturaId) async {
     int compa = compagnia;
     Database db = await instance.database;
-    var detalleFactura = await db
-        .rawQuery("SELECT * FROM FacturaDetalle WHERE FacturaId= '$facturaId'");
-
+    var detalleFactura = await db.rawQuery(
+        "SELECT * FROM FacturaDetalle WHERE FacturaId= '$facturaId' and compagnia = $compa");
     List<FacturaDetalle> productoLista =
         detalleFactura.map((e) => FacturaDetalle.fromMapSql(e)).toList();
-
     return productoLista;
+  }
+
+  Future<int> AddDetalleFactura(FacturaDetalle factura) async {
+    Database db = await instance.database;
+    return await db.insert('FacturaDetalle', factura.toMapSql());
+  }
+
+  Future<int> SincronizarDefalleFactura(FacturaDetalle factura) async {
+    String facturaNumero = factura.facturaId;
+    String productoCodigo = factura.productoCodigo;
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM facturaDetalle WHERE FacturaId= '$facturaNumero' and ProductoCodigo = '$productoCodigo' and IsDelete = 1 )");
+
+    int? exists = Sqflite.firstIntValue(res);
+    if (exists == 0) {
+      AddDetalleFactura(factura);
+    }
+    return 0;
   }
 
   Future<List<Factura>> getFacturasById(String clienteId) async {
     Database db = await instance.database;
     var facturas = await db
-        .rawQuery("SELECT * FROM Factura where clienteId = '$clienteId' ");
-    // )
-    // var factura = await db.query('Factura', orderBy: 'ID', where: clienteId);
-
+        .rawQuery("SELECT * FROM Factura where clienteId = '$clienteId'");
     List<Factura> facturaLista =
         facturas.map((e) => Factura.fromMap(e)).toList();
-
     return facturaLista;
   }
 
@@ -925,11 +937,6 @@ class DatabaseHelper {
     return productoLista;
   }
 
-  Future<int> AddDetalleFactura(FacturaDetalle factura) async {
-    Database db = await instance.database;
-    return await db.insert('FacturaDetalle', factura.toMapSql());
-  }
-
   Future<int> SincronizarFactura(Factura factura) async {
     String facturaNumero = factura.facturaId.toString();
     Database db = await instance.database;
@@ -941,20 +948,6 @@ class DatabaseHelper {
       AddFactura(factura);
     } else {
       actualizarFactura(factura);
-    }
-    return 0;
-  }
-
-  Future<int> SincronizarDefalleFactura(FacturaDetalle factura) async {
-    String facturaNumero = factura.facturaId;
-    String productoCodigo = factura.productoCodigo;
-    Database db = await instance.database;
-    var res = await db.rawQuery(
-        "SELECT EXISTS(SELECT 1 FROM facturaDetalle WHERE FacturaId= '$facturaNumero' and ProductoCodigo = '$productoCodigo' and IsDelete = 1 )");
-
-    int? exists = Sqflite.firstIntValue(res);
-    if (exists == 0) {
-      AddDetalleFactura(factura);
     }
     return 0;
   }
