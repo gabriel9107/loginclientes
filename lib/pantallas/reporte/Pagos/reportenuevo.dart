@@ -102,10 +102,8 @@ class _MyHomePageState extends State<MyReportePage> {
                             setState(() {
                               pagoList = pagos;
                             });
-                            print(pagoList);
                           })
                     ])),
-
                 Column(
                   children: <Widget>[
                     ListView.builder(
@@ -136,15 +134,6 @@ class _MyHomePageState extends State<MyReportePage> {
                     ),
                   ],
                 )
-
-                // Column(children: [
-                //   ListView.builder(
-                //     itemCount: pagoList.length,
-                //     itemBuilder: (BuildContext context, int index) {
-                //       return;
-                //     },
-                //   ),
-                // ])
               ],
             )));
   }

@@ -146,7 +146,48 @@ Map<String, Pago> pagoFromJson(String str) => Map.from(json.decode(str))
 String pagoToJson(Map<String, Pago> data) => json.encode(
     Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
 
+//  'id',
+//   'Codigo',
+//   'Nombre',
+//   'Fecha Recibo',
+//   'Monto Recibo',
+//   'Factura',
+//   'Tipo de Pago',
+//   'Soporte'
+// ];
 class Pago {
+  String getIndex(int index) {
+    switch (index) {
+      // //id
+      case 0:
+        return id.toString();
+
+      //Codigo del cliente o Cliente Id
+      case 1:
+        // //Codigo
+        return clienteId.toString();
+      // Nombre
+      case 2:
+        return id.toString();
+// Fecha recibo
+      case 3:
+        return fechaPago.toString().substring(1, 10);
+// //Monto recibido
+      case 4:
+        return montoPagado.toStringAsFixed(2);
+// factura
+      case 5:
+        return factura.toString();
+// Tipo de Pago
+      case 6:
+        return metodoDePago.toString();
+      //so[]porte
+      case 7:
+        return '______________';
+    }
+    return '';
+  }
+
   Pago(
       {this.id,
       this.banco,

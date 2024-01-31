@@ -1,4 +1,6 @@
+import 'dart:ffi';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
@@ -23,7 +25,6 @@ class PdfInvoiceApi {
       'Tipo de Pago',
       'Soporte'
     ];
- 
 
     // final tableData = [
     //   [
@@ -152,7 +153,10 @@ class PdfInvoiceApi {
             ///
             pw.Table.fromTextArray(
               headers: tableHeaders,
-              data: tableDataa,
+              data: List<List<String>>.generate(
+                  tableDataa.length,
+                  (row) => List<String>.generate(tableHeaders.length,
+                      (col) => tableDataa[row].getIndex(col))),
               border: null,
               headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               headerDecoration:

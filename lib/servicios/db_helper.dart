@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'package:sigalogin/clases/factura.dart';
+import 'package:intl/intl.dart';
 
 import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
@@ -11,7 +9,6 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-
 
 import '../clases/detalleFactura.dart';
 import '../clases/formatos.dart';
@@ -544,9 +541,18 @@ class DatabaseHelper {
       String fechaInicio, String fechaFin) async {
     Database db = await instance.database;
 
-    var pagos =
-        await db.rawQuery("SELECT * FROM Pago where compagni = $compagnia");
+    var fechaInicioL = fechaInicio.substring(0, 10);
+    print(fechaInicioL);
+    var fechaFinL = fechaFin.substring(0, 10);
+    // var pagos = await db.rawQuery(
 
+    //     "SELECT * FROM Pago where compagni = $compagnia and vendorId = '$usuario'");
+
+    // var pagos = await db.rawQuery(
+    //     "SELECT * FROM Pago where vendorId = 'Anderson Adames' and compagni = $compagnia and BETWEEN  $fechaInicio and $fechaFin");
+
+    var pagos = await db.rawQuery(
+        "SELECT * FROM Pago where compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
     // var pagos = await db.rawQuery(
     //     "SELECT * FROM Pago where compagni = $compagnia and fechaPago BETWEEN $fechaInicio and $fechaFin and vendorId = $usuario");
     List<Pago> listadePagos = pagos.isNotEmpty
