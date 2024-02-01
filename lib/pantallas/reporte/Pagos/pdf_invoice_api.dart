@@ -9,11 +9,13 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class PdfInvoiceApi {
-  static Future<File> generate(List<Pago> tableDataa) async {
+  static Future<File> generate(List<PagoReporte> tableDataa) async {
     final pdf = pw.Document();
 
-    // final iconImage =
-    //     (await rootBundle.load('')).buffer.asUint8List();
+    double totalMonto = 0;
+    tableDataa.forEach((element) {
+      totalMonto += element.montoPagado;
+    });
 
     final tableHeaders = [
       'Numero Recibo',
@@ -123,7 +125,7 @@ class PdfInvoiceApi {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      "Gabriel Montero ",
+                      nombre_Usuario,
                       style: pw.TextStyle(
                         fontSize: 15.5,
                         fontWeight: pw.FontWeight.bold,
@@ -133,7 +135,7 @@ class PdfInvoiceApi {
                       usuario,
                     ),
                     pw.Text(
-                      DateTime.now().toString(),
+                      DateTime.now().toString().substring(1, 10),
                     ),
                   ],
                 ),
@@ -142,10 +144,10 @@ class PdfInvoiceApi {
             pw.SizedBox(height: 1 * PdfPageFormat.mm),
             pw.Divider(),
             pw.SizedBox(height: 1 * PdfPageFormat.mm),
-            pw.Text(
-              'Dear John,\nLorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error',
-              textAlign: pw.TextAlign.justify,
-            ),
+            // pw.Text(
+            //   'Dear John,\nLorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error',
+            //   textAlign: pw.TextAlign.justify,
+            // ),
             pw.SizedBox(height: 5 * PdfPageFormat.mm),
 
             ///
@@ -194,7 +196,7 @@ class PdfInvoiceApi {
                               ),
                             ),
                             pw.Text(
-                              '\$ 554.48',
+                              '\$' + totalMonto.toStringAsFixed(2),
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                               ),

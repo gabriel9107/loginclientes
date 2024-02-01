@@ -537,7 +537,7 @@ class DatabaseHelper {
     return listadePagos;
   }
 
-  Future<List<Pago>> obtenerPagosPorFechaParaReporte(
+  Future<List<PagoReporte>> obtenerPagosPorFechaParaReporte(
       String fechaInicio, String fechaFin) async {
     Database db = await instance.database;
 
@@ -552,13 +552,28 @@ class DatabaseHelper {
     //     "SELECT * FROM Pago where vendorId = 'Anderson Adames' and compagni = $compagnia and BETWEEN  $fechaInicio and $fechaFin");
 
     var pagos = await db.rawQuery(
-        "SELECT * FROM Pago where compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
+        "SELECT Pago.*, Clientes.nombre FROM Pago INNER JOIN Clientes ON Pago.clienteId = Clientes.codigo where compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
     // var pagos = await db.rawQuery(
     //     "SELECT * FROM Pago where compagni = $compagnia and fechaPago BETWEEN $fechaInicio and $fechaFin and vendorId = $usuario");
-    List<Pago> listadePagos = pagos.isNotEmpty
-        ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()
+    List<PagoReporte> listadePagos = pagos.isNotEmpty
+        ? pagos.map((e) => PagoReporte.fromMapSqlLiteWitId(e)).toList()
         : [];
 
+    return listadePagos;
+  }
+
+  Future<List<PagoReporte>> obtenerDetalleDepagos(
+      String fechaInicio, String fechaFin) async {
+    Database db = await instance.database;
+
+    var fechaInicioL = fechaInicio.substring(0, 10);
+    print(fechaInicioL);
+    var fechaFinL = fechaFin.substring(0, 10);
+    var pagos = await db.rawQuery(
+        "SELECT Pago.*,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDealle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo   where compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
+    List<PagoReporte> listadePagos = pagos.isNotEmpty
+        ? pagos.map((e) => PagoReporte.fromMapSqlLiteWitId(e)).toList()
+        : [];
     return listadePagos;
   }
 
@@ -566,7 +581,7 @@ class DatabaseHelper {
       String cliente) async {
     Database db = await instance.database;
     var pagos = await db.rawQuery(
-        "SELECT * FROM Pago inner join where clienteId ='$cliente' and compagni = $compagnia");
+        "SELECT * FROM Pago inner join  where clienteId ='$cliente' and compagni = $compagnia");
 
     List<Pago> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => Pago.fromMapSqlLiteWitId(e)).toList()

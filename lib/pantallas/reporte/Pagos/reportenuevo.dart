@@ -16,7 +16,7 @@ class MyReportePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyReportePage> {
-  List<Pago> pagoList = [];
+  List<PagoReporte> pagoList = [];
   var formatter = new DateFormat('yyyy-MM-dd');
   DateTime fromDate =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -65,76 +65,73 @@ class _MyHomePageState extends State<MyReportePage> {
         ),
         drawer: navegacions(),
         body: SafeArea(
-            top: true,
             child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                    width: 700,
-                    height: 80,
-                    child: Row(children: [
-                      Text("Desde"),
-                      IconButton(
-                        icon: Icon(Icons.calendar_today),
-                        onPressed: () async {
-                          fromDate = await selectDate(context, fromDate);
-                          setState(() {});
-                        },
+          children: [
+            Container(
+                width: 700,
+                height: 80,
+                child: Row(children: [
+                  Text("Desde"),
+                  IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    onPressed: () async {
+                      fromDate = await selectDate(context, fromDate);
+                      setState(() {});
+                    },
+                  ),
+                  Text('${formatter.format(fromDate)}'),
+                  Spacer(flex: 1),
+                  Text("Hasta"),
+                  IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    onPressed: () async {
+                      toDate = await selectDate(context, toDate);
+                      setState(() {});
+                    },
+                  ),
+                  Text('${formatter.format(toDate)}'),
+                  IconButton(
+                      icon: const Icon(Icons.search),
+                      color: Colors.blue,
+                      onPressed: () async {
+                        List<PagoReporte> pagos = await DatabaseHelper.instance
+                            .obtenerDetalleDepagos(
+                                fromDate.toString(), toDate.toString());
+                        setState(() {
+                          pagoList = pagos;
+                        });
+                      })
+                ])),
+            Column(
+              children: <Widget>[
+                ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: pagoList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final item = pagoList[index];
+                    return Card(
+                      color: Colors.white,
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: const Icon(Icons.money),
+                        ),
+                        title: Text("Nombre Cliente :  " +
+                            item.nombreCliente.toString() +
+                            "   Cliente ID :" +
+                            item.clienteId.toString()),
+                        subtitle: Text("Monto Recibido" +
+                            item.montoPagado.toStringAsFixed(2) +
+                            "                     Fecha Pago : " +
+                            item.fechaPago.toString()),
                       ),
-                      Text('${formatter.format(fromDate)}'),
-                      Spacer(flex: 1),
-                      Text("Hasta"),
-                      IconButton(
-                        icon: Icon(Icons.calendar_today),
-                        onPressed: () async {
-                          toDate = await selectDate(context, toDate);
-                          setState(() {});
-                        },
-                      ),
-                      Text('${formatter.format(toDate)}'),
-                      IconButton(
-                          icon: const Icon(Icons.search),
-                          color: Colors.blue,
-                          onPressed: () async {
-                            List<Pago> pagos = await DatabaseHelper.instance
-                                .obtenerPagosPorFechaParaReporte(
-                                    fromDate.toString(), toDate.toString());
-                            setState(() {
-                              pagoList = pagos;
-                            });
-                          })
-                    ])),
-                Column(
-                  children: <Widget>[
-                    ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: pagoList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final item = pagoList[index];
-                        return Card(
-                          color: Colors.white,
-                          elevation: 2.0,
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: const Icon(Icons.money),
-                            ),
-                            title: Text(
-                                "Nombre Cliente : Cliente de Prueba (Cambiar Nombre)      "
-                                        "Cliente ID :" +
-                                    item.clienteId.toString()),
-                            subtitle: Text("Monto Recibido" +
-                                item.montoPagado.toStringAsFixed(2) +
-                                "                     Fecha Pago : " +
-                                item.fechaPago.toString()),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                )
+                    );
+                  },
+                ),
               ],
-            )));
+            )
+          ],
+        )));
   }
 }
