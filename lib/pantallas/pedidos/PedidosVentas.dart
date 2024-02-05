@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/global.dart';
+import 'package:sigalogin/ui/InputDecorations.dart';
 
 import '../../clases/facturaDetalle.dart';
 import '../../servicios/db_helper.dart';
@@ -99,13 +100,6 @@ class _mainPage extends State<CartPage> {
                         ]),
                     child: Row(
                       children: [
-                        // Container(
-                        //   alignment: Alignment.center,
-                        //   child: const SizedBox(
-                        //     height: 50,
-                        //     width: 100,
-                        //   ),
-                        // ),
                         Container(
                           width: 30,
                           child: Column(

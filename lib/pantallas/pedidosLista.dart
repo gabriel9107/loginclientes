@@ -121,6 +121,11 @@ class _ListaOedidosState extends State<pedidosLista> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
+                              Checkbox(
+                                  value: false,
+                                  onChanged: (val) {
+                                    print(val);
+                                  }),
                               IconButton(
                                 icon: Icon(
                                   Icons.check,
@@ -135,13 +140,13 @@ class _ListaOedidosState extends State<pedidosLista> {
                             ],
                           ),
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      PedidoHistorico(pedidos)),
-                            );
-                            // NavigateDetail('Edit Product');
+                            // habilitar nuevamente
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) =>
+                            //           PedidoHistorico(pedidos)),
+                            // );
                           },
                         ),
                       );

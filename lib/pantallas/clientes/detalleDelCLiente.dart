@@ -65,7 +65,7 @@ class DetalleDelCliente extends StatelessWidget {
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 // PagoTemporal.limpiarDetalle();
-                if (controller.index == 3) {
+                if (controller.index == 2) {
                   FacturaDetalle.limpiarfacturas();
                   Navigator.push(
                       context,
@@ -137,7 +137,7 @@ class ListadoPedidos extends StatelessWidget {
           return Center(child: Text('Cargando...'));
         }
         return snapshot.data!.isEmpty
-            ? Center(child: Text('No existen Facturas en el momento...'))
+            ? Center(child: Text('No existen Pedidos en el momento...'))
             : ListView(
                 children: snapshot.data!.map((pedido) {
                   return Card(
