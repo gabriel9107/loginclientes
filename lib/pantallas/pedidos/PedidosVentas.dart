@@ -179,7 +179,7 @@ class _mainPage extends State<CartPage> {
                                         detalleFactura[index]
                                             .cantidadProducto += 1;
                                         FacturaDetalle.actualiarLinea(index);
-                                      });
+                                      });   
                                     },
                                     child: Icon(
                                       CupertinoIcons.plus,

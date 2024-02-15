@@ -117,7 +117,7 @@ class ResumenDePagos extends StatelessWidget {
                               montoPagado: total,
                               pendiente: 0,
                               sincronizado: 0,
-                              vendorId: nombre_Usuario);
+                              vendorId: usuario);
 
                           var reciboId = await Pago.guardarPagoConID(pagot);
                           final comprobanteDePago factura = comprobanteDePago(

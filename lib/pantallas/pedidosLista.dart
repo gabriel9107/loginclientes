@@ -25,6 +25,7 @@ class _ListaOedidosState extends State<pedidosLista> {
   late DatabaseReference dbref;
   // late List<Client> Clients;
   int count = 0;
+  bool updateMe = false;
 
   @override
   void initState() {
@@ -122,10 +123,13 @@ class _ListaOedidosState extends State<pedidosLista> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Checkbox(
-                                  value: false,
-                                  onChanged: (val) {
-                                    print(val);
-                                  }),
+                                  value:
+                                      pedidos.sincronizado == 1 ? true : false,
+                                  onChanged: pedidos.sincronizado == 1
+                                      ? null
+                                      : (val) {
+                                          setState(() {});
+                                        }),
                               IconButton(
                                 icon: Icon(
                                   Icons.check,
