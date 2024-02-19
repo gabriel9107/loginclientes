@@ -494,13 +494,99 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   },
                 ),
               ),
+              Positioned(child: _buildCartSummary(context))
             ],
           ),
         ),
       ),
-      bottomNavigationBar: ResumenDePagos(),
+      // bottomNavigationBar: ResumenDePagos(),
     );
   }
+}
+
+_buildCartSummary(BuildContext context) {
+  return Container(
+    height: 200,
+    color: Colors.white,
+    padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 0.0),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Detalle del Pago',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
+            ),
+            Text(
+              '\u20b9 480',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Subtotal de Pago',
+              style: TextStyle(fontSize: 15.0),
+            ),
+            Text(
+              '\u20b9 40',
+              style: TextStyle(fontSize: 15.0),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Total',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+            ),
+            Text(
+              '\u20b9 520',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
+            ),
+          ],
+        ),
+        MaterialButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: false,
+              builder: (context) => SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+//                    child: ShowPaymentOptionsScreen(),
+                ),
+              ),
+            );
+          },
+          height: 40.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          minWidth: double.infinity,
+          child: Text(
+            'PROCESS PAYMENT',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          color: Colors.green,
+        ),
+        SizedBox(height: 15.0),
+      ],
+    ),
+  );
 }
 
 class PagoTemporal {

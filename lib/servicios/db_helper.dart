@@ -570,7 +570,7 @@ class DatabaseHelper {
     print(fechaInicioL);
     var fechaFinL = fechaFin.substring(0, 10);
     var pagos = await db.rawQuery(
-        "SELECT  Pago.id, Pago.idfirebase, Pago.Banco, Pago.Estado, Pago.clienteId, Pago.vendorId, Pago.numeroDeCheque, Pago.MetodoDePago, Pago.fechaDeCheque, Pago.fechaPago, Pago.montoPagado, Pago.pendiente, Pago.sincronizado, Pago.habilitado ,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDetalle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo   where Pago.compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
+        "SELECT  Pago.id, Pago.idfirebase, Pago.Banco, Pago.Estado, Pago.clienteId, Pago.vendorId, Pago.numeroDeCheque, Pago.MetodoDePago, Pago.fechaDeCheque, Pago.fechaPago, Pago.montoPagado, Pago.pendiente, Pago.sincronizado, Pago.habilitado ,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDetalle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo   where Pago.compagni = $compagnia  and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
     List<PagoReporte> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => PagoReporte.fromMapSqlLiteWitId(e)).toList()
         : [];
