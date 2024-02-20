@@ -715,6 +715,21 @@ class DatabaseHelper {
 
 //Pedidos de ventas
 
+// Pedidos
+//   Sincronizado :
+//              0 : Pendiente
+//              1 : Sincronizado
+//              2 : Pausado
+
+  Future<int> UpdateEstadoPedido(int pedidoid, int estadoSincronizacion) async {
+    Database db = await instance.database;
+    final data = {'Sincronizado': estadoSincronizacion};
+
+    final result = await db
+        .update('Pedidos', data, where: "ID = ?", whereArgs: [pedidoid]);
+    return result;
+  }
+
   Future<int> AgregarPedidoNoDescargado(Pedido pedido) async {
     var idFirebase = pedido.idfirebase.toString().trim();
 

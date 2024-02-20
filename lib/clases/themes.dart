@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 Color navBar = Color.fromARGB(255, 61, 64, 238);
+Color navBar2 = Color.fromARGB(255, 19, 107, 240);
 Color bgColor = const Color(0xFFFFFDFD);
 Color sparatorColor = const Color(0xFFF5F4F4);
 Color gray = const Color(0xFFE7E7E7);
