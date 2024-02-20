@@ -85,7 +85,7 @@ class PagoReporte {
         return nombreCliente.toString();
 // Fecha recibo
       case 3:
-        return fechaPago.toString().substring(1, 10);
+        return fechaPago.toString().substring(0, 10);
 // //Monto recibido
       case 4:
         return montoPagado.toStringAsFixed(2);

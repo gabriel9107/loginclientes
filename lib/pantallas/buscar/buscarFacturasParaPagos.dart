@@ -50,11 +50,6 @@ class BuscarFacturaEnPagos extends SearchDelegate {
       if (value != null) value.forEach((item) => _ListFactura.add(item));
     });
 
-    //  Productos.getProductoPrueba().then((value) {
-    //   if (value != null) value.forEach((item) => _listProducts.add(item));
-    // });
-
-    // _ListFactura
     _ListFactura = TodasLasFacturas.toList() as List<Factura>;
 
     List<Factura> suggestions = _ListFactura.where((element) {
@@ -108,39 +103,8 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                       valorPendiente:
                           (suggestion.montoFactura - suggestion.totalPagado),
                     );
-
                     PagoTemporal.agregarFacturasaPagos(pago);
-
-                    // PagoTemporal.addfacturaDetalle(Factura(
-                    //     facturaFecha: suggestion.facturaFecha,
-                    //     facturaId: suggestion.facturaId,
-                    //     facturaVencimiento: suggestion.facturaVencimiento,
-                    //     id: suggestion.id,
-                    //     metodoDePago: suggestion.metodoDePago,
-                    //     montoFactura: suggestion.montoFactura,
-                    //     totalPagado: suggestion.totalPagado,
-                    //     clienteId: suggestion.clienteId,
-                    //     clienteNombre: suggestion.clienteNombre,
-                    //     compagnia: compagnia,
-                    //     isDelete: 0,
-                    //     montoPendiente:
-                    //         (suggestion.montoFactura - suggestion.totalPagado),
-                    //     pedidoId: suggestion.pedidoId,
-                    //     sincronizado: 0,
-                    //     vendedorId: usuario));
-
                     close(context, null);
-                    // double price = suggestion.price as double;
-
-                    // FacturaDetalle.addfacturaDetalle(FacturaDetalle(
-                    //     facturaNumero: "1",
-                    //     codigoProducto: suggestion.productoCodigo.toString(),
-                    //     montoproducto:
-                    //         double.parse(suggestion.price.toString()),
-                    //     nombreProducto: suggestion.nombre.toString(),
-                    //     cantidadProducto:
-                    //         int.parse(textController.text.toString())));
-                    // close(context, null);
                   },
                   child: Text('Agregar'),
                 ),

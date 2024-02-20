@@ -28,7 +28,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '82.db');
+    String path = join(documentsDirectory.path, '83.db');
     return await openDatabase(
       path,
       version: 7,
@@ -570,7 +570,8 @@ class DatabaseHelper {
     print(fechaInicioL);
     var fechaFinL = fechaFin.substring(0, 10);
     var pagos = await db.rawQuery(
-        "SELECT Pago.*,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDealle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo   where compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
+        // "SELECT Pago.*,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDealle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo   where compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
+        "SELECT Pago.*,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDetalle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo;");
     List<PagoReporte> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => PagoReporte.fromMapSqlLiteWitId(e)).toList()
         : [];
@@ -849,8 +850,6 @@ class DatabaseHelper {
     return res.toString();
   }
 
-// Relacionado a las Facturas
-
   Future<int> AddFactura(Factura factura) async {
     Database db = await instance.database;
     return await db.insert('Factura', factura.toMap());
@@ -858,13 +857,11 @@ class DatabaseHelper {
 
   Future<List<Factura>> getFacturasporClientes(String clienteId) async {
     Database db = await instance.database;
-    var factura = await db.rawQuery(
-        "SELECT * FROM Factura WHERE clienteId= '$clienteId' and MontoPendiente > 3 order by facturaFecha desc");
-
-// .rawQuery("SELECT * FROM Factura WHERE clienteId= '$clienteId' and facturaPagada = 1");
+    var factura =
+        // await db.rawQuery("SELECT * FROM Factura order by facturaFecha desc");
+        await db.rawQuery(
+            "SELECT * FROM Factura WHERE clienteId= '$clienteId' and Compagnia =$compagnia and MontoPendiente > 3 order by facturaFecha desc");
     List<Factura> facturaList = factura.map((c) => Factura.fromMap(c)).toList();
-    // Factura.fromJson(c)).toList();
-
     return facturaList;
   }
 

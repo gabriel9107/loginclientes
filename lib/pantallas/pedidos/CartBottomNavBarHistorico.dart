@@ -110,8 +110,8 @@ class CartBottomNavBarHistorico extends StatelessWidget {
                   child: Row(children: <Widget>[
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                        onPrimary: Colors.white,
+                        // primary: Colors.green,
+                        // onPrimary: Colors.white,
                         shadowColor: Colors.greenAccent,
                         elevation: 3,
                         shape: RoundedRectangleBorder(

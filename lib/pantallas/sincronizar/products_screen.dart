@@ -1,5 +1,7 @@
 // ignore_for_file: unused_local_variable
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
@@ -37,9 +39,13 @@ class PincronizarListState extends State<PincronizarLista> {
 
   @override
   void initState() {
-    resumenDeSincronizacion = Resumen.obtenerResumen();
-
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      resumenDeSincronizacion = Resumen.obtenerResumen();
+    });
     super.initState();
+    // resumenDeSincronizacion = Resumen.obtenerResumen();
+
+    // super.initState();
   }
 
   Widget build(BuildContext context) {
@@ -47,10 +53,10 @@ class PincronizarListState extends State<PincronizarLista> {
     final servicioProductos = Provider.of<ProductoServices>(context);
     final servicioClientes = Provider.of<ClienteSevices>(context);
 
-    // final servicioFactura = Provider.of<FacturaServices>(context);
-    // final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
-    final servicioPedido = Provider.of<PedidoServicio>(context);
-    final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
+    final servicioFactura = Provider.of<FacturaServices>(context);
+    final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
+    // final servicioPedido = Provider.of<PedidoServicio>(context);
+    // final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
     final servicioPago = Provider.of<PagoServices>(context);
     // final servicioPagoDetalle = Provider.of<PagodetalleServicio>(context);
 
@@ -59,12 +65,6 @@ class PincronizarListState extends State<PincronizarLista> {
         appBar: AppBar(
           title: const Text('Siga Mobile - Detalle de Sincronizacion'),
           backgroundColor: const Color.fromARGB(255, 61, 64, 238),
-          // actions: [
-          //   IconButton(
-          //     icon: const Icon(Icons.search),
-          //     onPressed: () => {},
-          //   )
-          // ],
         ),
         drawer: navegacions(),
         body: resumenDeSincronizacion.length > 0

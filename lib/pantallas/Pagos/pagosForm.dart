@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:select_form_field/select_form_field.dart';
+import 'package:sigalogin/clases/api/facturaRecibo.dart';
 import 'package:sigalogin/clases/formatos.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/modelos/pagodetalle.dart';
 import 'package:sigalogin/pantallas/Pagos/resumenDePago.dart';
 import 'package:sigalogin/pantallas/reporte/Pagos/imprimirPagos.dart';
+import 'package:sigalogin/pantallas/reporte/Pagos/printPage.dart';
 import 'package:sigalogin/servicios/db_helper.dart';
 import 'dart:math' as math;
 import '../../clases/factura.dart';
@@ -105,17 +107,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Realizar Pagos  A : ' + this.clienteName.toString()),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: const Icon(Icons.shopping_cart),
-        //     tooltip: 'Open shopping cart',
-        //     onPressed: () {
-        //       // builder: (context) => Cart(),
-
-        //       // handle the press
-        //     },
-        //   ),
-        // ],
       ),
       body: Form(
         key: _claveFormulario,
@@ -130,10 +121,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   }
                 },
                 decoration: InputDecoration(labelText: 'Forma de Pago.'),
-                // disabledHint: Text("-Seleccionar una forma de Pago"),
                 value: _selectedValueFormaDePago,
                 onChanged: (value) => {
-                  // _verificaformadePago(value.toString())
                   if (value == 'Efectivo')
                     {
                       setState(() {
@@ -494,13 +483,135 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   },
                 ),
               ),
+              Positioned(
+                  bottom: 0.0,
+                  right: 0.0,
+                  left: 0.0,
+                  child: _buildCartSummary(context))
             ],
           ),
         ),
       ),
-      bottomNavigationBar: ResumenDePagos(),
+      // bottomNavigationBar: ResumenDePagos(),
     );
   }
+}
+
+_buildCartSummary(BuildContext context) {
+  var subtotal = PagoTemporal.obtenerSubtotal();
+  var total = Pago.obtenermontodelpago();
+  return Container(
+    color: Colors.white,
+    padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 0.0),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Detalle del Pago',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Subtotal de Pago',
+              style: TextStyle(fontSize: 15.0),
+            ),
+            Text(
+              NumberFormat.simpleCurrency().format(subtotal),
+              style: TextStyle(fontSize: 15.0),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Total',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+            ),
+            Text(
+              NumberFormat.simpleCurrency().format(total),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
+            ),
+          ],
+        ),
+        SizedBox(height: 15.0),
+        Container(
+          alignment: Alignment.center,
+          height: 50,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(children: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                // onPrimary: Colors.white,
+                shadowColor: Colors.greenAccent,
+                // elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                minimumSize: Size(680, 140), //////// HERE
+              ),
+              child: Text(
+                "Finalizar Pago",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              onPressed: (() async {
+                if (total > 0 && subtotal != total) {
+                  showAlertDialog(context);
+                } else {
+                  Pago.pago.montoPagado = total;
+
+                  var pagot = Pago(
+                      clienteId: Pago.pago.clienteId,
+                      compania: compagnia,
+                      fechaPago: DateTime.now().toString(),
+                      isDelete: 0,
+                      metodoDePago: Pago.pago.metodoDePago,
+                      montoPagado: total,
+                      pendiente: 0,
+                      sincronizado: 0,
+                      vendorId: usuario);
+
+                  var reciboId = await Pago.guardarPagoConID(pagot);
+                  final comprobanteDePago factura = comprobanteDePago(
+                      clienteCodigo: Pago.pago.clienteId.toString(),
+                      clienteNombre: Pago.pago.clienteId.toString(),
+                      fechaComprobante: DateTime.now(),
+                      numeroComprobante: reciboId,
+                      vendedorNombre: nombre_Usuario.toString(),
+                      montoPagado: total,
+                      pagos: PagoTemporal.pagos);
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PrintPage(factura),
+                      ));
+                  Pago.pago.montoPagado = 0;
+                }
+//
+              }),
+            )
+          ]),
+        )
+      ],
+    ),
+  );
 }
 
 class PagoTemporal {

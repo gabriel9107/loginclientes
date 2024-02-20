@@ -87,7 +87,7 @@ class ResumenDePagos extends StatelessWidget {
                   child: Row(children: <Widget>[
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
+                        // primary: Colors.green,
                         // onPrimary: Colors.white,
                         shadowColor: Colors.greenAccent,
                         // elevation: 3,
@@ -136,49 +136,7 @@ class ResumenDePagos extends StatelessWidget {
                                 builder: (_) => PrintPage(factura),
                               ));
                           Pago.pago.montoPagado = 0;
-
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       // builder: (_) => MyAppPrinter(),
-                          //       builder: (_) => ResumenDePagos(),
-                          //     ));
-
-                          // //  Pago.pago.montoPagado = 0;
-
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       // builder: (_) => MyAppPrinter(),
-                          //       builder: (_) => PrintPage(factura),
-                          //     ));
-
-                          //
                         }
-//                         if (total > 0 && subtotal != total) {
-//                           showAlertDialog(context);
-//                         } else {
-//                           Pago.guardarPago();
-
-//                           // Pago.pago.montoPagado = 0;
-//                           Navigator.push(
-//                               context,
-//                               MaterialPageRoute(
-//                                   builder: (context) => clienteLista()));
-//                         }
-
-//                         //
-
-//                         // Navigator.push(
-//                         //     context,
-//                         //     MaterialPageRoute(
-//                         //         builder: (context) => clienteLista()));
-
-// //Guardar Factura
-//                         // // Pagos.eliminartodos();
-//                         // PagosDetalles.eliminarpago();
-
-//                         // DetalleDelCliente(totales.idClienteFactura)));
                       }),
                     )
                   ]),
@@ -193,10 +151,6 @@ showAlertDialog(BuildContext context) {
   Widget okButton = TextButton(
     child: Text("OK"),
     onPressed: () {
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => MyCustomForm(Pago.pago.clienteId)));
       Navigator.of(context).pop();
     },
   );

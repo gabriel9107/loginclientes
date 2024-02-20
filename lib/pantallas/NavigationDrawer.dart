@@ -126,16 +126,16 @@ class navegacions extends StatelessWidget {
               ));
             },
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.padding_outlined),
-          //   title: const Text('Usuarios'),
-          //   onTap: () {
-          //     Navigator.of(context).pushReplacement(MaterialPageRoute(
-          //       builder: (context) => listaUsuarios(),
-          //       // builder: (context) => Cart(),
-          //     ));
-          //   },
-          // ),
+          ListTile(
+            leading: const Icon(Icons.padding_outlined),
+            title: const Text('Usuarios'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => listaUsuarios(),
+                // builder: (context) => Cart(),
+              ));
+            },
+          ),
           const Divider(color: Colors.black54),
           ListTile(
             leading: const Icon(Icons.update),

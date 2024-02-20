@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyReportePage> {
                         subtitle: Text("Monto Recibido" +
                             item.montoPagado.toStringAsFixed(2) +
                             "                     Fecha Pago : " +
-                            item.fechaPago.toString()),
+                            item.fechaPago.toString().substring(0, 10)),
                       ),
                     );
                   },

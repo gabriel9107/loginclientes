@@ -16,7 +16,7 @@ class PagoServices extends ChangeNotifier {
   final List<Pago> pagos = [];
 
   PagoServices() {
-    this.cargarPago();
+    // this.cargarPago();
     this.sincronizar();
   }
 
