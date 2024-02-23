@@ -46,7 +46,10 @@ class _MyHomePageState extends State<MyReportePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Reporte de cobro"),
+          title: const Text(
+            "Reporte de cobro",
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: navBar,
           actions: [
             IconButton(

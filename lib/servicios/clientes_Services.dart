@@ -40,7 +40,7 @@ class ClienteSevices extends ChangeNotifier {
         this.clientes.add(tempCliente);
       }
     });
-
+    print('Usuario sincronizadas');
     clientes.forEach((cliente) {
       DatabaseHelper.instance.customerExists(cliente);
     });

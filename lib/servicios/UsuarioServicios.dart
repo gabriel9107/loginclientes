@@ -41,7 +41,7 @@ class UsuarioServicios extends ChangeNotifier {
         usuarioCargado += 1;
       }
     });
-
+    print('Usuario sincronizadas');
     Resumen.resumentList.add(Resumen(
         accion: 'Usuarios Sincrinizados', cantidad: usuarioCargado.toString()));
   }

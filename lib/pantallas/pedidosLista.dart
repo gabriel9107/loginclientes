@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sigalogin/clases/modelos/clientes.dart';
 import 'package:sigalogin/clases/pedidos.dart';
+import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/pantallas/clientes/listaClientes.dart';
 import 'package:sigalogin/pantallas/pedidos/PedidosVentas%20copy.dart';
 import 'package:sigalogin/servicios/PedidoDetalle_Servicio.dart';
@@ -28,8 +30,9 @@ class _ListaOedidosState extends State<pedidosLista> {
 
   @override
   void initState() {
-    dbref = FirebaseDatabase.instance.ref().child('Pedidos');
-    // Clients = Client.getClients();
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      dbref = FirebaseDatabase.instance.ref().child('Pedidos');
+    });
     super.initState();
   }
 
@@ -37,40 +40,8 @@ class _ListaOedidosState extends State<pedidosLista> {
     // Clients.sort();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: navBar2,
         title: Text('Pedido de Ventas'),
-
-        // backgroundColor: Color.fromARGB(255, 25, 28, 228),
-
-        // actions: [
-        //   IconButton(
-        //       icon: Icon(Icons.refresh),
-        //       onPressed: () => {
-        //             // DatabaseHelper.instance
-        //             //     .obtenerPedidosPendienteDeSincornizacion()
-        //             //     .then(
-        //             //   (value) {
-        //             //     value.forEach((element) {
-        //             //       Map<String, dynamic> pedido = {
-        //             //         "ClienteId": element.clienteId,
-        //             //         "Compagnia": element.compagnia,
-        //             //         "FechaOrden": element.fechaOrden.toIso8601String(),
-        //             //         "Id": element.id,
-        //             //         "Impuestos": element.impuestos,
-        //             //         "IsDelete": element.isDelete,
-        //             //         "NumeroOrden": element.numeroOrden,
-        //             //         "Sincronizado": element.sincronizado,
-        //             //         "totalAPagar": element.totalAPagar,
-        //             //         "Estado": element.estado
-        //             //       };
-
-        //             //       dbref.push().set(pedido);
-        //             //     });
-        //             //   },
-        //             // )
-
-        //             sincronizar()
-        //           })
-        // ],
       ),
       drawer: navegacions(),
       floatingActionButton: FloatingActionButton(
@@ -127,14 +98,21 @@ class _ListaOedidosState extends State<pedidosLista> {
                                     print(val);
                                   }),
                               IconButton(
-                                icon: Icon(
-                                  Icons.check,
-                                  color: pedidos.sincronizado == 0
-                                      ? Colors.red
-                                      : Colors.blue,
-                                ),
+                                icon: Icon(Icons.check,
+                                    color: getColor(pedidos.sincronizado)),
                                 onPressed: () {
-                                  print("debe de sincronizar la orden");
+                                  if (pedidos.sincronizado == 0) {
+                                    print(
+                                        'se actualizo el estado a no actualizar');
+
+                                    updateEstadoPedido(pedidos.id!, 3);
+                                  } else if (pedidos.sincronizado == 1) {
+                                    print('No hacer nada ');
+                                  } else if (pedidos.sincronizado == 1) {
+                                    print(
+                                        'Actualizado a pendiente nuevamente y se debe de poner el rojo');
+                                    updateEstadoPedido(pedidos.id!, 0);
+                                  }
                                 },
                               ),
                             ],
@@ -156,6 +134,28 @@ class _ListaOedidosState extends State<pedidosLista> {
         ),
       ),
     );
+  }
+}
+
+void updateEstadoPedido(int id, int estadoSincronizacion) {
+  var resultado =
+      DatabaseHelper.instance.UpdateEstadoPedido(id, estadoSincronizacion);
+}
+
+Color getColor(int index) {
+  switch (index) {
+    case 0:
+      return Colors.red;
+    case 1:
+      return Colors.blue;
+    case 2:
+      return Colors.green;
+    case 3:
+      return Colors.grey;
+    case 4:
+      return Colors.purple;
+    default:
+      return Colors.white;
   }
 }
 

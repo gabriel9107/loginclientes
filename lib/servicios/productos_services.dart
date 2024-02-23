@@ -32,7 +32,7 @@ class ProductoServices extends ChangeNotifier {
     final Map<String, dynamic> productosMap = json.decode(resp.body);
 
     // final productomap = Producto.fromJson(productosMap);
-
+    print('Usuario sincronizadas');
     productosMap.forEach((key, value) {
       final tempProductos = Producto.fromMap(value);
       productos.add(tempProductos);

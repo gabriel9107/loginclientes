@@ -33,7 +33,7 @@ class FacturaDetalleServices extends ChangeNotifier {
       final temp = FacturaDetalle.fromMap(value);
       detalles.add(temp);
     });
-
+    print('Usuario sincronizadas');
     detalles.forEach((element) {
       DatabaseHelper.instance.SincronizarDefalleFactura(element);
     });

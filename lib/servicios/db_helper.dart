@@ -28,7 +28,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '83.db');
+    String path = join(documentsDirectory.path, '86.db');
     return await openDatabase(
       path,
       version: 7,
@@ -37,7 +37,7 @@ class DatabaseHelper {
   }
 
   Future _onCreate(Database db, int version) async {
-    await db.execute('''CREATE TABLE Clientes(
+    await db.execute('''CREATE TABLE Clientes(  
    ID INTEGER PRIMARY KEY AUTOINCREMENT,
    
         codigo TEXT,
@@ -213,6 +213,21 @@ class DatabaseHelper {
     return 0;
   }
 
+//  Pedidos
+//   Sincro, nizado :
+//              0 : Pendiente
+//              1 : Sincronizado
+//              2 : Pausado
+
+  Future<int> UpdateEstadoPedido(int pedidoid, int estadoSincronizacion) async {
+    Database db = await instance.database;
+    final data = {'Sincronizado': estadoSincronizacion};
+
+    final result = await db
+        .update('Pedidos', data, where: "ID = ?", whereArgs: [pedidoid]);
+    return result;
+  }
+
   Future<void> actualizarUsuario(Usuario usuario) async {
     final db = await database;
 
@@ -325,7 +340,7 @@ class DatabaseHelper {
   Future<List<Cliente>> obtenerClientesNuevos() async {
     Database db = await instance.database;
     var clientes = await db.rawQuery(
-        "SELECT Clientes.* FROM Clientes INNER JOIN Pedidos  ON Clientes.codigo = Pedidos.ClienteId where Clientes.sincronizado =0 and  Pedidos.Sincronizado = 0;");
+        "SELECT Clientes.* FROM Clientes INNER JOIN Pedidos  ON Clientes.codigo = Pedidos.ClienteId where Clientes.sincronizado =0 and  Pedidos.Sincronizado = 0 and Clientes.compagnia=$compagnia;");
     // var clientes = await db.rawQuery("SELECT Clientes.* FROM Clientes INNER JOIN Pedidos ON Clientes.codigo = Pedidos.ClienteId where Clientes.sincronizado   = 0 and  Pedidos.Sincronizado = 0");
 
     List<Cliente> listadeClientes = clientes.isNotEmpty

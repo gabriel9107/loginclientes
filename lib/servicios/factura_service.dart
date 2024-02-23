@@ -40,6 +40,7 @@ class FacturaServices extends ChangeNotifier {
       DatabaseHelper.instance.SincronizarFactura(factura);
     });
 
+    print('Facturas sincronizadas');
     Resumen.resumentList.add(Resumen(
         accion: 'Facturas Sincronizados',
         cantidad: facturas.length.toString()));

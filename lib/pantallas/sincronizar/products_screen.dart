@@ -39,9 +39,10 @@ class PincronizarListState extends State<PincronizarLista> {
 
   @override
   void initState() {
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      resumenDeSincronizacion = Resumen.obtenerResumen();
-    });
+    resumenDeSincronizacion = Resumen.obtenerResumen();
+    // Timer.periodic(Duration(seconds: 5), (timer) {
+    //   resumenDeSincronizacion = Resumen.obtenerResumen();
+    // });
     super.initState();
     // resumenDeSincronizacion = Resumen.obtenerResumen();
 
@@ -55,8 +56,8 @@ class PincronizarListState extends State<PincronizarLista> {
 
     final servicioFactura = Provider.of<FacturaServices>(context);
     final servicioDetalleFactura = Provider.of<FacturaDetalleServices>(context);
-    // final servicioPedido = Provider.of<PedidoServicio>(context);
-    // final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
+    final servicioPedido = Provider.of<PedidoServicio>(context);
+    final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
     final servicioPago = Provider.of<PagoServices>(context);
     // final servicioPagoDetalle = Provider.of<PagodetalleServicio>(context);
 

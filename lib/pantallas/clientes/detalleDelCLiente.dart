@@ -43,6 +43,7 @@ class DetalleDelCliente extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
+              backgroundColor: Colors.blue,
               bottom: const TabBar(
                 tabs: [
                   Tab(
@@ -51,11 +52,6 @@ class DetalleDelCliente extends StatelessWidget {
                   ),
                   Tab(icon: Icon(Icons.paypal), text: 'Pagos'),
                   Tab(icon: Icon(Icons.card_giftcard), text: 'Pedidos'),
-
-                  // Tab(
-                  //   icon: Icon(Icons.directions_bike),
-                  //   text: 'Pedidos',
-                  // ),
                 ],
               ),
               title: Text(
@@ -63,6 +59,7 @@ class DetalleDelCliente extends StatelessWidget {
             ),
             drawer: navegacions(),
             floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.blue,
               onPressed: () {
                 // PagoTemporal.limpiarDetalle();
                 if (controller.index == 2) {
