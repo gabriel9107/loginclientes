@@ -16,37 +16,65 @@ class ProductoServices extends ChangeNotifier {
   final List<Producto> productos = [];
 
   ProductoServices() {
-    this.cargarProductos();
+    // this.cargarProductos();
+
+    this.downproductos();
+  }
+  Future downproductos() async {
+    var client = http.Client();
+    try {
+      var response = await client.get(
+          Uri.parse(
+              'https://siga-d5296-default-rtdb.firebaseio.com/Productos.json'),
+          headers: {"Content-Type": "application/json"});
+
+      final Map<String, dynamic> productosMap = json.decode(response.body);
+      productosMap.forEach((key, value) {
+        final tempProductos = Producto.fromMap(value);
+        productos.add(tempProductos);
+      });
+
+      DatabaseHelper.instance.eliminarProducto();
+      productos.forEach((producto) {
+        DatabaseHelper.instance.addProduct(producto);
+      });
+
+      Resumen.resumentList.add(Resumen(
+          accion: 'Productos Sincronizados',
+          cantidad: productos.length.toString()));
+    } finally {
+      client.close();
+    }
   }
 
-  Future cargarProductos() async {
-    final url = Uri.https(_baseUrl, 'Productos.json');
+  // Future cargarProductos() async {
+  //   final url = Uri.https(_baseUrl, 'Productos.json');
 
-    final resp = await http.get(url);
+  //   final resp = await http.get(url);
 
-    final response =
-        await http.get(url, headers: {"Content-Type": "application/json"});
-    // final jsonList = jsonDecode(response.body) as List<dynamic>;
+  //   final response =
+  //       await http.get(url, headers: {"Content-Type": "application/json"});
+  //   // final jsonList = jsonDecode(response.body) as List<dynamic>;
 
-    // DatabaseHelper.instance.Deleteproducto();
-    final Map<String, dynamic> productosMap = json.decode(resp.body);
+  //   // DatabaseHelper.instance.Deleteproducto();
+  //   final Map<String, dynamic> productosMap = json.decode(resp.body);
 
-    // final productomap = Producto.fromJson(productosMap);
-    print('Usuario sincronizadas');
-    productosMap.forEach((key, value) {
-      final tempProductos = Producto.fromMap(value);
-      productos.add(tempProductos);
-    });
+  //   // final productomap = Producto.fromJson(productosMap);
+  //   print('Usuario sincronizadas');
+  //   productosMap.forEach((key, value) {
+  //     final tempProductos = Producto.fromMap(value);
+  //     productos.add(tempProductos);
+  //   });
 
-    DatabaseHelper.instance.eliminarProducto();
-    productos.forEach((producto) {
-      DatabaseHelper.instance.addProduct(producto);
-    });
+  //   DatabaseHelper.instance.eliminarProducto();
+  //   productos.forEach((producto) {
+  //     DatabaseHelper.instance.addProduct(producto);
+  //   });
 
-    Resumen.resumentList.add(Resumen(
-        accion: 'Productos Sincronizados',
-        cantidad: productos.length.toString()));
-    // print(this.clientes[0].nombre);
-    //
-  }
+  //   Resumen.resumentList.add(Resumen(
+  //       accion: 'Productos Sincronizados',
+  //       cantidad: productos.length.toString()));
+  //   // print(this.clientes[0].nombre);
+  //   //
+  // }
 }

@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'file_handle_api.dart';
@@ -134,7 +135,9 @@ class PdfInvoiceApi {
                               ),
                             ),
                             pw.Text(
-                              '\$' + totalMonto.toStringAsFixed(2),
+                              '\$' +
+                                  NumberFormat.decimalPattern()
+                                      .format(totalMonto),
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                               ),

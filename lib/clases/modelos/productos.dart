@@ -127,7 +127,9 @@ class Producto {
   String toJson() => json.encode(toMap());
 
   factory Producto.fromMap(Map<String, dynamic> json) => new Producto(
-        cantidad: json["Cantidad"],
+        cantidad: 10,
+
+        // json["Cantidad"].toString().replaceAll('0', '1') as int,
         codigo: json["Codigo"],
         compagnia: json["Compagnia"],
         id: json["Id"],

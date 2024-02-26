@@ -74,6 +74,7 @@ dependencies:
   bluetooth_thermal_printer: ^0.0.6
   esc_pos_utils: ^1.1.0    
   syncfusion_flutter_pdf: ^22.2.12
+  intl: ^0.18.1
   # open_document: ^1.0.7
 
   # open_file: ^2.1.1
@@ -85,7 +86,6 @@ dependencies:
 dev_dependencies:
   provider: ^6.0.5
   flutter_local_notifications: ^15.1.1
-  intl: ^0.18.1
   flutter_test:
   
     sdk: flutter

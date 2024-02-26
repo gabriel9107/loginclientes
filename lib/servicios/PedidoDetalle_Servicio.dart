@@ -19,33 +19,60 @@ class PedidoDetalleServicio extends ChangeNotifier {
   final int bajado = 0;
 
   PedidoDetalleServicio() {
-    sincronizar();
-    cargarDetallePedidos();
+    downloadOrderDetalls();
+    // cargarDetallePedidos();
+  }
+  Future downloadOrderDetalls() async {
+    var client = http.Client();
+    int bajado = 0;
+    try {
+      var response = await client.get(
+          Uri.parse(
+              'https://siga-d5296-default-rtdb.firebaseio.com/PedidoDetalle.json'),
+          headers: {"Content-Type": "application/json"});
+
+      final Map<String, dynamic> ordersDetallsMap = json.decode(response.body);
+
+      ordersDetallsMap.forEach((key, value) {
+        final tempOrders = PedidoDetalle.fromMap(value);
+        detalle.add(tempOrders);
+      });
+
+      detalle.forEach((pedido) {
+        DatabaseHelper.instance
+            .AgregarPedidoDetalleNoDescargado(pedido)
+            .then((value) => {bajado + 1});
+      });
+      Resumen.resumentList.add(Resumen(
+          accion: 'Pedidos Detalle  Descargados', cantidad: bajado.toString()));
+    } finally {
+      client.close();
+    }
   }
 
-  Future sincronizar() async {
-    final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
+  // Future sincronizar() async {
+  //   final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
 
-    final resp = await http.get(url);
+  //   final resp = await http.get(url);
 
-    final Map<String, dynamic> map = json.decode(resp.body);
-    map.forEach((key, value) {
-      final temp = PedidoDetalle.fromMapFire(value);
-      temp.idfirebase = key;
-      this.detalle.add(temp);
-    });
+  //   final Map<String, dynamic> map = json.decode(resp.body);
+  //   map.forEach((key, value) {
+  //     final temp = PedidoDetalle.fromMapFire(value);
+  //     temp.idfirebase = key;
+  //     this.detalle.add(temp);
+  //   });
 
-    detalle.forEach((pedido) {
-      DatabaseHelper.instance
-          .AgregarPedidoDetalleNoDescargado(pedido)
-          .then((value) => {
-                if (value == 0) {bajado + 1} else {}
-              });
-    });
+  //   detalle.forEach((pedido) {
+  //     DatabaseHelper.instance
+  //         .AgregarPedidoDetalleNoDescargado(pedido)
+  //         .then((value) => {
+  //               if (value == 0) {bajado + 1} else {}
+  //             });
+  //   });
 
-    Resumen.resumentList.add(Resumen(
-        accion: 'Pedidos Detalle Descargado', cantidad: bajado.toString()));
-  }
+  //   Resumen.resumentList.add(Resumen(
+  //       accion: 'Pedidos Detalle Descargado', cantidad: bajado.toString()));
+  // }
 
   Future cargarDetallePedidos() async {
     print('este es un reporte');
@@ -71,27 +98,5 @@ class PedidoDetalleServicio extends ChangeNotifier {
           accion: 'Pedidos Detalle Cargado',
           cantidad: pedidoLista.length.toString()));
     });
-
-    // // DatabaseReference ref = FirebaseDatabase.instance.ref('Clientes/123');
-    // // CollectionReference users =
-    // //     FirebaseFirestore.instance.collection('Pedidos');
-    // final databaseReference = FirebaseDatabase.instance.ref('PedidoDetalle');
-
-    // pedidoLista.forEach((element) async {
-    //   await databaseReference.child(element.id.toString()).set({
-    //     "Cantidad": element.cantidad,
-    //     "Compagnia": element.compagnia,
-    //     "Id": element.id,
-    //     "IsDelete": element.isDelete,
-    //     "PedidoId": element.pedidoId,
-    //     "Precio": element.precio,
-    //     "ProductoId": element.productoId,
-    //     "Sincronizado": element.sincronizado,
-    //     "Codigo": element.codigo,
-    //     "Nombre": element.nombre,
-    //   });
-
-    // Resumen.resumentList.add(Resumen(
-    //     accion: 'Pedidos Subidos', cantidad: pedidoLista.length.toString()));
   }
 }

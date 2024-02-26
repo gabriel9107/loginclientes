@@ -77,7 +77,7 @@ class Cliente {
         comentario: json["comentario"].toString().trim(),
         codigoVendedor: json["codigoVendedor"].toString().trim(),
         compagnia: json["compagnia"],
-        sincronizado: int.parse(json["sincronizado"]),
+        sincronizado: json["sincronizado"],
         activo: json["activo"],
       );
 

@@ -191,8 +191,7 @@ class _login_pageState extends State<LoginScreen> {
                               if (errorMessage == 'validado') {
                                 isLoading = true;
                                 login(isChecked, isLoading);
-                                Navigator.of(context)
-                                    .pushReplacementNamed('home');
+                                Navigator.of(context).popAndPushNamed('home');
                               } else {
                                 NotificationsService.showSnackbar(
                                     errorMessage!);

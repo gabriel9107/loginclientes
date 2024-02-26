@@ -17,7 +17,68 @@ class PagoServices extends ChangeNotifier {
 
   PagoServices() {
     // this.cargarPago();
-    this.sincronizar();
+    downloadPayment();
+    uploadPayment();
+  }
+
+  Future uploadPayment() async {
+    var pagos = await DatabaseHelper.instance.obtenerPagosASincornizar();
+
+    var client = http.Client();
+    try {
+      pagos.forEach((element) async {
+        var response = await client.post(
+            Uri.parse(
+                'https://siga-d5296-default-rtdb.firebaseio.com/Pago.json'),
+            body: json.encode(element.toJson()));
+        var Response = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+        final codeData = json.decode(response.body);
+        final decodeData = codeData['name'];
+        if (Response.isNotEmpty) {
+          DatabaseHelper.instance
+              .actualizarPagoCargado(element.id as int, decodeData)
+              .then((value) => {
+                    DatabaseHelper.instance
+                        .obtenerPagoDetallessASincornizarPorId(
+                            element.id as int)
+                        .then(
+                            (value) => {sincronizarDetalle(value, decodeData)})
+                  });
+        }
+      });
+      Resumen.resumentList.add(
+          Resumen(accion: 'Pagos sincronizado', cantidad: pagos.toString()));
+    } finally {
+      client.close();
+    }
+  }
+
+  downloadPayment() async {
+    var client = http.Client();
+    try {
+      var response = await client.get(
+          Uri.parse('https://siga-d5296-default-rtdb.firebaseio.com/Pago.json'),
+          headers: {"Content-Type": "application/json"});
+
+      final Map<String, dynamic> pagoMap = json.decode(response.body);
+
+      if (response != "Null") {
+        final Map<String, dynamic> map = json.decode(response.body);
+
+        map.forEach((key, value) {
+          final temp = Pago.fromMapInsert(value);
+          temp.idFirebase = key;
+          pagos.add(temp);
+        });
+        pagos.forEach((pago) {
+          DatabaseHelper.instance.AgregarPagoDescargado(pago);
+        });
+        Resumen.resumentList.add(Resumen(
+            accion: 'Pagos Descargados', cantidad: pagos.length.toString()));
+      }
+    } finally {
+      client.close();
+    }
   }
 
   Future sincronizar() async {

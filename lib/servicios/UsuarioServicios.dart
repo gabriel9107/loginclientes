@@ -15,56 +15,111 @@ class UsuarioServicios extends ChangeNotifier {
   final List<Usuario> usuarios = [];
 
   UsuarioServicios() {
-    this.bajarUsuarios();
-    this.subirUsuarios();
+    // this.bajarUsuarios();
+    this.downNewUser();
+    this.upNewUser();
   }
-
-  Future bajarUsuarios() async {
-    final List<Usuario> List_usuarios = [];
+  Future downNewUser() async {
     int usuarioCargado = 0;
     final url = Uri.https(_baseUrl, 'Usuario.json');
-    final resp = await http.get(url);
 
-    final response =
-        await http.get(url, headers: {"Content-Type": "application/json"});
-    final Map<String, dynamic> usuariosMap = json.decode(resp.body);
+    var client = http.Client();
+    try {
+      var response = await client.get(
+          Uri.parse(
+              'https://siga-d5296-default-rtdb.firebaseio.com/Usuario.json'),
+          headers: {"Content-Type": "application/json"});
 
-    usuariosMap.forEach((key, value) {
-      final tempUsuarios = Usuario.fromMap(value);
+      final Map<String, dynamic> usuariosMap = json.decode(response.body);
 
-      // List_usuarios.add(tempUsuarios);
+      usuariosMap.forEach((key, value) {
+        final tempUsuarios = Usuario.fromMap(value);
 
-      var cargado =
-          DatabaseHelper.instance.verificarUsuarioASincronizar(tempUsuarios);
+        var cargado =
+            DatabaseHelper.instance.verificarUsuarioASincronizar(tempUsuarios);
+          usuarioCargado += 1;
+      
+      });
 
-      if (cargado == 1) {
-        usuarioCargado += 1;
-      }
-    });
-    print('Usuario sincronizadas');
-    Resumen.resumentList.add(Resumen(
-        accion: 'Usuarios Sincrinizados', cantidad: usuarioCargado.toString()));
-  }
-
-  Future subirUsuarios() async {
-    var usuarios = await DatabaseHelper.instance
-        .obtenerListaDeUsuariosPendienteASincronizar(compagnia)
-        .then((value) => (sincronizarUsuarios(value)));
-  }
-
-  sincronizarUsuarios(List<Usuario> listaDeUsuarios) async {
-    final url = Uri.https(_baseUrl, 'Usuario.json');
-
-    listaDeUsuarios.forEach((element) async {
-      final resp = await http.post(url, body: json.encode(element.toMap()));
-      final decodeData = resp.body;
-      if (decodeData.isNotEmpty) {
-        DatabaseHelper.instance.actualizarUsarioCargado(element.id as int);
-      }
-
-      //Notificar que el usuario fue cargado
       Resumen.resumentList.add(Resumen(
-          accion: 'Usuario     ', cantidad: listaDeUsuarios.length.toString()));
-    });
+          accion: 'Usuario Descargado ', cantidad: usuarioCargado.toString()));
+    } finally {
+      client.close();
+    }
   }
+
+  // Future bajarUsuarios() async {
+  //   final List<Usuario> List_usuarios = [];
+  //   int usuarioCargado = 0;
+  //   final url = Uri.https(_baseUrl, 'Usuario.json');
+  //   final resp = await http.get(url);
+
+  //   final response =
+  //       await http.get(url, headers: {"Content-Type": "application/json"});
+  //   final Map<String, dynamic> usuariosMap = json.decode(resp.body);
+
+  //   usuariosMap.forEach((key, value) {
+  //     final tempUsuarios = Usuario.fromMap(value);
+
+  //     // List_usuarios.add(tempUsuarios);
+
+  //     var cargado =
+  //         DatabaseHelper.instance.verificarUsuarioASincronizar(tempUsuarios);
+
+  //     if (cargado == 1) {
+  //       usuarioCargado += 1;
+  //     }
+  //   });
+  //   print('Usuario sincronizadas');
+  //   Resumen.resumentList.add(Resumen(
+  //       accion: 'Usuarios Sincrinizados', cantidad: usuarioCargado.toString()));
+  // }
+
+  Future upNewUser() async {
+    final url = Uri.https(_baseUrl, 'Usuario.json');
+    var usuarios = await DatabaseHelper.instance
+        .obtenerListaDeUsuariosPendienteASincronizar(compagnia);
+
+    var client = http.Client();
+    try {
+      usuarios.forEach((element) async {
+        var response = await client.post(
+            Uri.parse(
+                'https://siga-d5296-default-rtdb.firebaseio.com/Usuario.json'),
+            body: json.encode(element.toMap()));
+        var Response = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        if (Response.isNotEmpty) {
+          DatabaseHelper.instance.actualizarUsarioCargado(element.id as int);
+        }
+      });
+      Resumen.resumentList.add(Resumen(
+          accion: 'Usuario Sincronizados    ',
+          cantidad: usuarios.length.toString()));
+    } finally {
+      client.close();
+    }
+  }
+
+  // Future subirUsuarios() async {
+  //   var usuarios = await DatabaseHelper.instance
+  //       .obtenerListaDeUsuariosPendienteASincronizar(compagnia)
+  //       .then((value) => (sincronizarUsuarios(value)));
+  // }
+
+  // sincronizarUsuarios(List<Usuario> listaDeUsuarios) async {
+  //   final url = Uri.https(_baseUrl, 'Usuario.json');
+
+  //   listaDeUsuarios.forEach((element) async {
+  //     final resp = await http.post(url, body: json.encode(element.toMap()));
+  //     final decodeData = resp.body;
+  //     if (decodeData.isNotEmpty) {
+  //       DatabaseHelper.instance.actualizarUsarioCargado(element.id as int);
+  //     }
+
+  //     //Notificar que el usuario fue cargado
+  //     Resumen.resumentList.add(Resumen(
+  //         accion: 'Usuario     ', cantidad: listaDeUsuarios.length.toString()));
+  //   });
+  // }
 }

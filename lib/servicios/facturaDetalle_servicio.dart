@@ -14,7 +14,34 @@ class FacturaDetalleServices extends ChangeNotifier {
   final List<FacturaDetalle> detalles = [];
 
   FacturaDetalleServices() {
-    this.cargarDetalleFacturas();
+    downloadInvoiceDetails();
+  }
+
+  Future downloadInvoiceDetails() async {
+    var client = http.Client();
+    try {
+      var response = await client.get(
+          Uri.parse(
+              'https://siga-d5296-default-rtdb.firebaseio.com/FacturaDetalle.json'),
+          headers: {"Content-Type": "application/json"});
+
+      final Map<String, dynamic> facturaMap = json.decode(response.body);
+
+      facturaMap.forEach((key, value) {
+        final temp = FacturaDetalle.fromMap(value);
+        detalles.add(temp);
+      });
+      print('Usuario sincronizadas');
+      detalles.forEach((element) {
+        DatabaseHelper.instance.SincronizarDefalleFactura(element);
+      });
+
+      Resumen.resumentList.add(Resumen(
+          accion: 'Facturas Detalle Sincronizados',
+          cantidad: detalles.length.toString()));
+    } finally {
+      client.close();
+    }
   }
 
   Future cargarDetalleFacturas() async {

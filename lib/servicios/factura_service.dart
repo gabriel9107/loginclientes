@@ -14,52 +14,79 @@ class FacturaServices extends ChangeNotifier {
   final List<Factura> facturas = [];
 
   FacturaServices() {
-    this.descargarFacturas();
+    this.downloadInvoices();
   }
 
-  Future descargarFacturas() async {
-    final url = Uri.https(_baseUrl, 'Factura.json');
+  Future downloadInvoices() async {
+    var client = http.Client();
+    try {
+      var response = await client.get(
+          Uri.parse(
+              'https://siga-d5296-default-rtdb.firebaseio.com/Factura.json'),
+          headers: {"Content-Type": "application/json"});
 
-    final resp = await http.get(url);
+      final Map<String, dynamic> clienteMap = json.decode(response.body);
 
-    final response =
-        await http.get(url, headers: {"Content-Type": "application/json"});
-    // final jsonList = jsonDecode(response.body) as List<dynamic>;
+      clienteMap.forEach((key, value) {
+        final tempInvoice = Factura.fromMap(value);
+        this.facturas.add(tempInvoice);
+      });
 
-    // DatabaseHelper.instance.Deleteproducto();
-    final Map<String, dynamic> map = json.decode(response.body);
+      facturas.forEach((factura) {
+        DatabaseHelper.instance.SincronizarFactura(factura);
+      });
 
-    map.forEach((key, value) {
-      final temp = Factura.fromMap(value);
-      facturas.add(temp);
-    });
-
-//agregando las facturas a la base de datos
-
-    facturas.forEach((factura) {
-      DatabaseHelper.instance.SincronizarFactura(factura);
-    });
-
-    print('Facturas sincronizadas');
-    Resumen.resumentList.add(Resumen(
-        accion: 'Facturas Sincronizados',
-        cantidad: facturas.length.toString()));
-    // if (value != "") {
-    //   final temp = Factura.fromJson(value);
-
-    //   Factura facturas = Factura(
-    //       id: temp.id,
-    //       clienteId: temp.clienteId,
-    //       facturaFecha: temp.facturaFecha,
-    //       facturaId: temp.facturaId,
-    //       facturaVencimiento: temp.facturaVencimiento,
-    //       metodoDePago: temp.metodoDePago,
-    //       montoFactura: temp.montoFactura,
-    //       pedidosId: temp.pedidosId,
-    //       totalPagado: temp.totalPagado);
-
-    //   DatabaseHelper.instance.SincronizarFactura(facturas);
-    // }
-    // });
+      Resumen.resumentList.add(Resumen(
+          accion: 'Facturas Sincronizados',
+          cantidad: facturas.length.toString()));
+    } finally {
+      client.close();
+    }
   }
+
+//   Future descargarFacturas() async {
+//     final url = Uri.https(_baseUrl, 'Factura.json');
+
+//     final resp = await http.get(url);
+
+//     final response =
+//         await http.get(url, headers: {"Content-Type": "application/json"});
+//     // final jsonList = jsonDecode(response.body) as List<dynamic>;
+
+//     // DatabaseHelper.instance.Deleteproducto();
+//     final Map<String, dynamic> map = json.decode(response.body);
+
+//     map.forEach((key, value) {
+//       final temp = Factura.fromMap(value);
+//       facturas.add(temp);
+//     });
+
+// //agregando las facturas a la base de datos
+
+//     facturas.forEach((factura) {
+//       DatabaseHelper.instance.SincronizarFactura(factura);
+//     });
+
+//     print('Facturas sincronizadas');
+//     Resumen.resumentList.add(Resumen(
+//         accion: 'Facturas Sincronizados',
+//         cantidad: facturas.length.toString()));
+//     // if (value != "") {
+//     //   final temp = Factura.fromJson(value);
+
+//     //   Factura facturas = Factura(
+//     //       id: temp.id,
+//     //       clienteId: temp.clienteId,
+//     //       facturaFecha: temp.facturaFecha,
+//     //       facturaId: temp.facturaId,
+//     //       facturaVencimiento: temp.facturaVencimiento,
+//     //       metodoDePago: temp.metodoDePago,
+//     //       montoFactura: temp.montoFactura,
+//     //       pedidosId: temp.pedidosId,
+//     //       totalPagado: temp.totalPagado);
+
+//     //   DatabaseHelper.instance.SincronizarFactura(facturas);
+//     // }
+//     // });
+//   }
 }

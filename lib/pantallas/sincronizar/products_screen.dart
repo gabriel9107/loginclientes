@@ -59,7 +59,6 @@ class PincronizarListState extends State<PincronizarLista> {
     final servicioPedido = Provider.of<PedidoServicio>(context);
     final servicioPedidosDetalle = Provider.of<PedidoDetalleServicio>(context);
     final servicioPago = Provider.of<PagoServices>(context);
-    // final servicioPagoDetalle = Provider.of<PagodetalleServicio>(context);
 
     // DBProvider().initializeDB();
     return Scaffold(
