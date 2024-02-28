@@ -36,8 +36,8 @@ class ClienteSevices extends ChangeNotifier {
         this.clientes.add(tempClientes);
       });
       print('Usuario sincronizadas');
-      clientes.forEach((cliente) {
-        DatabaseHelper.instance.customerExists(cliente);
+      clientes.forEach((cliente) async {
+        await DatabaseHelper.instance.customerExists(cliente);
       });
 
       Resumen.resumentList.add(Resumen(

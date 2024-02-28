@@ -28,7 +28,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '93.db');
+    String path = join(documentsDirectory.path, '108.db');
     return await openDatabase(
       path,
       version: 7,
@@ -261,7 +261,7 @@ class DatabaseHelper {
     if (exists == 0) {
       Add(cliente);
     }
-    return 0;
+    return 1;
   }
 
   Future<List<Usuario>> obtenerInformacionUsuario(
@@ -301,8 +301,6 @@ class DatabaseHelper {
     var usuarios = await db.query(
       'Usuario',
       orderBy: 'UsuarioNombre',
-      where: " Compagnia = ?",
-      whereArgs: [compagnia],
     );
     List<Usuario> usuariosList = usuarios.isNotEmpty
         ? usuarios.map((c) => Usuario.fromMapSql(c)).toList()
@@ -314,7 +312,8 @@ class DatabaseHelper {
 //Obtener Clientes
   Future<List<Cliente>> getCustomers() async {
     Database db = await instance.database;
-    var customers = await db.query('Clientes', orderBy: 'nombre');
+    var customers = await db.query('Clientes',
+        where: 'codigoVendedor = ?', whereArgs: [usuario], orderBy: 'nombre');
     List<Cliente> customersList = customers.isNotEmpty
         ? customers.map((c) => Cliente.fromMapSql(c)).toList()
         : [];

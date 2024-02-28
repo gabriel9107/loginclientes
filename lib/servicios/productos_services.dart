@@ -34,9 +34,9 @@ class ProductoServices extends ChangeNotifier {
         productos.add(tempProductos);
       });
 
-      DatabaseHelper.instance.eliminarProducto();
-      productos.forEach((producto) {
-        DatabaseHelper.instance.addProduct(producto);
+      await DatabaseHelper.instance.eliminarProducto();
+      productos.forEach((producto) async {
+        await DatabaseHelper.instance.addProduct(producto);
       });
 
       Resumen.resumentList.add(Resumen(
