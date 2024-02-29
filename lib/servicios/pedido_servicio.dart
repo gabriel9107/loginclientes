@@ -153,26 +153,7 @@ class PedidoServicio extends ChangeNotifier {
           accion: 'Pedidos Detalle Cargado',
           cantidad: pedidoSubido.toString()));
     });
-    // var client = http.Client();
-
-    // try {
-    //   pedidoDetalle.forEach((element) async {
-    //     var response = await client.post(
-    //         Uri.parse(
-    //             'https://siga-d5296-default-rtdb.firebaseio.com/PedidoDetalle.json'),
-    //         body: json.encode(element.toMap()));
-    //     var Response = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    //     final codeData = json.decode(response.body);
-    //     final decodeData = codeData['name'];
-    //     DatabaseHelper.instance
-    //         .actualizarPedidoDetalleCargado(element.id as int, decodeData);
-    //   });
-    //   Resumen.resumentList.add(Resumen(
-    //       accion: 'Pedidos Detalle Cargado',
-    //       cantidad: pedidoSubido.toString()));
-    // } finally {
-    //   client.close();
-    // }
+ 
   }
 
   // sincronizarDetallePedido(

@@ -10,10 +10,15 @@ import 'package:sigalogin/clases/detalleFactura.dart';
 import 'package:sigalogin/clases/factura.dart';
 import 'package:sigalogin/clases/global.dart';
 import 'package:sigalogin/clases/modelos/clientes.dart';
+import 'package:sigalogin/clases/modelos/pago.dart';
+import 'package:sigalogin/clases/modelos/pagodetalle.dart';
 import 'package:sigalogin/clases/modelos/productos.dart';
+import 'package:sigalogin/clases/pedidoDetalle.dart';
+import 'package:sigalogin/clases/pedidos.dart';
 import 'package:sigalogin/clases/themes.dart';
 import 'package:sigalogin/clases/usuario.dart';
 import 'package:sigalogin/pantallas/NavigationDrawer.dart';
+import 'package:sigalogin/pantallas/buscar/buscarProductosEnPedidos.dart';
 import 'package:sigalogin/pantallas/productos/products_detail.dart';
 import 'package:sigalogin/servicios/UsuarioServicios.dart';
 import 'package:sigalogin/servicios/detalleDePago_servicio.dart';
@@ -42,7 +47,9 @@ class PincronizarLista extends StatefulWidget {
 // }
 
 class PincronizarListState extends State<PincronizarLista> {
+  final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   int contador = 0;
+    final List<Pago> pagos = [];
   List<Resumen> resumenDeSincronizacion = [];
 
   @override
@@ -115,6 +122,194 @@ class PincronizarListState extends State<PincronizarLista> {
               ));
   }
 
+  Future uploadPayment() async {
+    var pagos = await DatabaseHelper.instance.obtenerPagosASincornizar();
+
+    var client = http.Client();
+    try {
+      pagos.forEach((element) async {
+        var response = await client.post(
+            Uri.parse(
+                'https://siga-d5296-default-rtdb.firebaseio.com/Pago.json'),
+            body: json.encode(element.toJson()));
+        var Response = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+        final codeData = json.decode(response.body);
+        final decodeData = codeData['name'];
+        if (Response.isNotEmpty) {
+          DatabaseHelper.instance
+              .actualizarPagoCargado(element.id as int, decodeData)
+              .then((value) => {
+                    DatabaseHelper.instance
+                        .obtenerPagoDetallessASincornizarPorId(
+                            element.id as int)
+                        .then(
+                            (value) => {sincronizarDetalle(value, decodeData)})
+                  });
+        }
+      });
+      Resumen.resumentList.add(
+          Resumen(accion: 'Pagos sincronizado', cantidad: pagos.toString()));
+    } finally {
+      client.close();
+    }
+  }
+sincronizarDetalle(List<PagoDetalle> pago, String _pagoIdFirebase) async {
+  
+    final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
+    final url = Uri.https(_baseUrl, 'PagoDetalle.json');
+    pago.forEach((element) async {
+      element.pagoIdFirebase = _pagoIdFirebase;
+      final resp = await http.post(url, body: json.encode(element.toJson()));
+      final decodeData = resp.body;
+
+      if (decodeData.isNotEmpty) {
+        DatabaseHelper.instance
+            .actualizarPagoCargado(element.id as int, decodeData);
+      }
+    });
+
+    Resumen.resumentList.add(Resumen(
+        accion: 'Pago Detalle Cargado', cantidad: pagos.length.toString()));
+  }
+}
+  downloadPayment() async {
+    final List<Pago> pagos = [];
+    var client = http.Client();
+    try {
+      var response = await client.get(
+          Uri.parse('https://siga-d5296-default-rtdb.firebaseio.com/Pago.json'),
+          headers: {"Content-Type": "application/json"});
+
+      final Map<String, dynamic> pagoMap = json.decode(response.body);
+
+      if (response != "Null") {
+        final Map<String, dynamic> map = json.decode(response.body);
+
+        map.forEach((key, value) {
+          final temp = Pago.fromMapInsert(value);
+          temp.idFirebase = key;
+          pagos.add(temp);
+        });
+        pagos.forEach((pago) {
+          DatabaseHelper.instance.AgregarPagoDescargado(pago);
+        });
+        Resumen.resumentList.add(Resumen(
+            accion: 'Pagos Descargados', cantidad: pagos.length.toString()));
+      }
+    } finally {
+      client.close();
+    }
+  }
+
+  Future downloadOrdes() async {
+    int pedidosSincronizados = 0;
+    final List<Pedido> pedidos = [];
+    var client = http.Client();
+    try {
+      var response = await client.get(
+          Uri.parse(
+              'https://siga-d5296-default-rtdb.firebaseio.com/Pedidos.json'),
+          headers: {"Content-Type": "application/json"});
+
+      final Map<String, dynamic> ordersMap = json.decode(response.body);
+
+      ordersMap.forEach((key, value) {
+        final tempOrders = Pedido.fromMap(value);
+        pedidos.add(tempOrders);
+      });
+
+      pedidos.forEach((pedido) {
+        DatabaseHelper.instance.AgregarPedidoNoDescargado(pedido).then((value) {
+          pedidosSincronizados + 1;
+        });
+      });
+      Resumen.resumentList.add(Resumen(
+          accion: 'Pedidos Descargados',
+          cantidad: pedidosSincronizados.toString()));
+    } finally {
+      client.close();
+    }
+  }
+
+  Future downloadOrderDetalls() async {
+    final List<PedidoDetalle> detalle = [];
+    var client = http.Client();
+    int bajado = 0;
+    try {
+      var response = await client.get(
+          Uri.parse(
+              'https://siga-d5296-default-rtdb.firebaseio.com/PedidoDetalle.json'),
+          headers: {"Content-Type": "application/json"});
+
+      final Map<String, dynamic> ordersDetallsMap = json.decode(response.body);
+
+      ordersDetallsMap.forEach((key, value) {
+        final tempOrders = PedidoDetalle.fromMap(value);
+        detalle.add(tempOrders);
+      });
+
+      detalle.forEach((pedido) {
+        DatabaseHelper.instance
+            .AgregarPedidoDetalleNoDescargado(pedido)
+            .then((value) => {bajado + 1});
+      });
+      Resumen.resumentList.add(Resumen(
+          accion: 'Pedidos Detalle  Descargados', cantidad: bajado.toString()));
+    } finally {
+      client.close();
+    }
+  }
+
+  Future uploadOrdes() async {
+    var pedidosPendiente =
+        await DatabaseHelper.instance.obtenerPedidosPendienteDeSincornizacion();
+
+    var client = http.Client();
+    try {
+      pedidosPendiente.forEach((element) async {
+        var response = await client.post(
+            Uri.parse(
+                'https://siga-d5296-default-rtdb.firebaseio.com/Pedidos.json'),
+            body: json.encode(element.toMap()));
+        var Response = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+        final codeData = json.decode(response.body);
+        final decodeData = codeData['name'];
+
+        if (Response.isNotEmpty) {
+          DatabaseHelper.instance
+              .actualizarPedidoCargado(element.id as int, decodeData);
+
+          DatabaseHelper.instance
+              .obtenerPedidoDetalleEspecificoASincronizar(element.id as int)
+              .then((value) => {uploadDetallePedido(value, decodeData)});
+        }
+      });
+    } finally {}
+    Resumen.resumentList.add(Resumen(
+        accion: 'Pedidos      ', cantidad: pedidosPendiente.length.toString()));
+  }
+
+  uploadDetallePedido(List<PedidoDetalle> pedidoDetalle, String decode) async {
+    final int pedidoSubido = 0;
+    pedidoDetalle.forEach((element) async {
+      element.idfirebase = decode;
+      final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
+      final resp = await http.post(url, body: element.toJson());
+
+      final decodeData = resp.body;
+
+      print(decodeData);
+
+      if (decodeData.isNotEmpty) {
+        DatabaseHelper.instance
+            .actualizarPedidoDetalleCargado(element.id as int, decodeData);
+      }
+      Resumen.resumentList.add(Resumen(
+          accion: 'Pedidos Detalle Cargado',
+          cantidad: pedidoSubido.toString()));
+    });
+  }
+
   Future downloadInvoiceDetails() async {
     final List<FacturaDetalle> detalles = [];
     int cantidad = 0;
@@ -140,6 +335,34 @@ class PincronizarListState extends State<PincronizarLista> {
       Resumen.resumentList.add(Resumen(
           accion: 'Facturas Detalle Sincronizados',
           cantidad: detalles.length.toString()));
+    } finally {
+      client.close();
+    }
+  }
+
+  Future downproductos() async {
+    final List<Producto> productos = [];
+    var client = http.Client();
+    try {
+      var response = await client.get(
+          Uri.parse(
+              'https://siga-d5296-default-rtdb.firebaseio.com/Productos.json'),
+          headers: {"Content-Type": "application/json"});
+
+      final Map<String, dynamic> productosMap = json.decode(response.body);
+      productosMap.forEach((key, value) {
+        final tempProductos = Producto.fromMap(value);
+        productos.add(tempProductos);
+      });
+
+      await DatabaseHelper.instance.eliminarProducto();
+      productos.forEach((producto) async {
+        await DatabaseHelper.instance.addProduct(producto);
+      });
+      print('Productos sincrinizados');
+      Resumen.resumentList.add(Resumen(
+          accion: 'Productos Sincronizados',
+          cantidad: productos.length.toString()));
     } finally {
       client.close();
     }
