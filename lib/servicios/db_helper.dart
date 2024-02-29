@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sigalogin/clases/factura.dart';
 import 'package:intl/intl.dart';
 
@@ -28,7 +29,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '93.db');
+    String path = join(documentsDirectory.path, '107.db');
     return await openDatabase(
       path,
       version: 7,
@@ -314,7 +315,10 @@ class DatabaseHelper {
 //Obtener Clientes
   Future<List<Cliente>> getCustomers() async {
     Database db = await instance.database;
-    var customers = await db.query('Clientes', orderBy: 'nombre');
+    var customers = await db.query('Clientes',
+        where: 'Compagnia =? and codigoVendedor = ? ',
+        whereArgs: [compagnia, usuario],
+        orderBy: 'nombre');
     List<Cliente> customersList = customers.isNotEmpty
         ? customers.map((c) => Cliente.fromMapSql(c)).toList()
         : [];
@@ -366,7 +370,6 @@ class DatabaseHelper {
     Database db = await instance.database;
     var clientes = await db.rawQuery(
         "SELECT * FROM Clientes    where   codigoVendedor = '$vendedor' and   compagnia = $compagnia");
-    //  "SELECT * FROM Clientes where codigoVendedor = '$vendedor' and compagnia = $compagnia");
 
     List<Cliente> listadeClientes = clientes.isNotEmpty
         ? clientes.map((e) => Cliente.fromMapSql(e)).toList()
@@ -871,11 +874,13 @@ class DatabaseHelper {
   }
 
   Future<List<Factura>> getFacturasporClientes(String clienteId) async {
+    var cliente = clienteId.toString().trimLeft().trimRight();
+    print(clienteId);
     Database db = await instance.database;
     var factura =
         // await db.rawQuery("SELECT * FROM Factura order by facturaFecha desc");
         await db.rawQuery(
-            "SELECT * FROM Factura WHERE clienteId= '$clienteId' and Compagnia =$compagnia and MontoPendiente > 3 order by facturaFecha desc");
+            "SELECT * FROM Factura WHERE clienteId= '$cliente' and Compagnia =$compagnia and MontoPendiente > 3 order by facturaFecha desc");
     List<Factura> facturaList = factura.map((c) => Factura.fromMap(c)).toList();
     return facturaList;
   }
@@ -1104,7 +1109,7 @@ class DatabaseHelper {
     return ordenesDetalleLista;
   }
 
-  Future<int> verificarUsuarioASincronizar(Usuario element) async {
+  Future<bool> verificarUsuarioASincronizar(Usuario element) async {
     var usuario = element.usuarioNombre;
     int company = element.compania;
     Database db = await instance.database;
@@ -1114,8 +1119,9 @@ class DatabaseHelper {
     int? exists = Sqflite.firstIntValue(res);
     if (exists == 0) {
       agregarUsuarioActualizadoFire(element);
+      return true;
     }
-    return 1;
+    return false;
   }
 
   Future<int> actualizarFactura(Factura factura) async {

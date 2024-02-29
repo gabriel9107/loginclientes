@@ -35,14 +35,13 @@ class ClienteSevices extends ChangeNotifier {
         final tempClientes = Cliente.fromMap(value);
         this.clientes.add(tempClientes);
       });
-      print('Usuario sincronizadas');
-      clientes.forEach((cliente) {
-        DatabaseHelper.instance.customerExists(cliente);
+      print('Clientes Sincronizados');
+      clientes.forEach((cliente) async {
+        await DatabaseHelper.instance.customerExists(cliente);
       });
-
+      print('Clientes Descargado');
       Resumen.resumentList.add(Resumen(
-          accion: 'Clientes Descargados',
-          cantidad: clientes.length.toString()));
+          accion: 'Clientes Descargado', cantidad: clientes.length.toString()));
     } finally {
       client.close();
     }
@@ -92,11 +91,14 @@ class ClienteSevices extends ChangeNotifier {
         var Response = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
         if (Response.isNotEmpty) {
-          DatabaseHelper.instance.actualizarClientesCargado(element.id as int);
+          await DatabaseHelper.instance
+              .actualizarClientesCargado(element.id as int);
         }
       });
+      print('Clientes Sincronizados');
       Resumen.resumentList.add(Resumen(
-          accion: 'Usuario     ', cantidad: clientes.length.toString()));
+          accion: 'Clientes Sincronizados ',
+          cantidad: clientes.length.toString()));
     } finally {
       client.close();
     }

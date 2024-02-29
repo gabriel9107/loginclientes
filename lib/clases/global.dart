@@ -7,6 +7,8 @@ import 'factura.dart';
 
 //compania 0 = AX, compania 1 = GP
 
+int estado = 0;
+
 String compagniaTexto = '';
 String nombre_Usuario = '';
 int compagnia = 0;

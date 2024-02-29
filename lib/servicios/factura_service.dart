@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:sigalogin/clases/factura.dart';
+import 'package:sigalogin/clases/global.dart';
 
 import '../clases/modelos/resumen.dart';
 import 'db_helper.dart';
@@ -12,6 +13,9 @@ import 'db_helper.dart';
 class FacturaServices extends ChangeNotifier {
   final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   final List<Factura> facturas = [];
+  int fin = 0;
+
+  bool foreEachDone = false;
 
   FacturaServices() {
     this.downloadInvoices();
@@ -32,9 +36,14 @@ class FacturaServices extends ChangeNotifier {
         this.facturas.add(tempInvoice);
       });
 
-      facturas.forEach((factura) {
-        DatabaseHelper.instance.SincronizarFactura(factura);
+      facturas.forEach((factura) async {
+        await DatabaseHelper.instance.SincronizarFactura(factura);
+        fin += 1;
       });
+
+      if (fin == facturas.length) estado += 1;
+
+      print('Facturas Sincronizados');
 
       Resumen.resumentList.add(Resumen(
           accion: 'Facturas Sincronizados',

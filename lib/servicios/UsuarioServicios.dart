@@ -13,6 +13,8 @@ import 'package:sigalogin/servicios/db_helper.dart';
 class UsuarioServicios extends ChangeNotifier {
   final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
   final List<Usuario> usuarios = [];
+  final int dos = 0;
+  final int fin = 0;
 
   UsuarioServicios() {
     // this.bajarUsuarios();
@@ -20,7 +22,6 @@ class UsuarioServicios extends ChangeNotifier {
     this.upNewUser();
   }
   Future downNewUser() async {
-    int usuarioCargado = 0;
     final url = Uri.https(_baseUrl, 'Usuario.json');
 
     var client = http.Client();
@@ -37,12 +38,14 @@ class UsuarioServicios extends ChangeNotifier {
 
         var cargado =
             DatabaseHelper.instance.verificarUsuarioASincronizar(tempUsuarios);
-          usuarioCargado += 1;
-      
       });
 
+      
+
+      if (fin == usuariosMap.length) estado += 1;
       Resumen.resumentList.add(Resumen(
-          accion: 'Usuario Descargado ', cantidad: usuarioCargado.toString()));
+          accion: 'Usuario Descargado o actualizado',
+          cantidad: usuariosMap.length.toString()));
     } finally {
       client.close();
     }
@@ -93,6 +96,7 @@ class UsuarioServicios extends ChangeNotifier {
           DatabaseHelper.instance.actualizarUsarioCargado(element.id as int);
         }
       });
+
       Resumen.resumentList.add(Resumen(
           accion: 'Usuario Sincronizados    ',
           cantidad: usuarios.length.toString()));

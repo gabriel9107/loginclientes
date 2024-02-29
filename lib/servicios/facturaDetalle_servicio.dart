@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
@@ -18,6 +19,7 @@ class FacturaDetalleServices extends ChangeNotifier {
   }
 
   Future downloadInvoiceDetails() async {
+    int cantidad = 0;
     var client = http.Client();
     try {
       var response = await client.get(
@@ -32,8 +34,9 @@ class FacturaDetalleServices extends ChangeNotifier {
         detalles.add(temp);
       });
       print('Usuario sincronizadas');
-      detalles.forEach((element) {
-        DatabaseHelper.instance.SincronizarDefalleFactura(element);
+      detalles.forEach((element) async {
+        await DatabaseHelper.instance.SincronizarDefalleFactura(element);
+        cantidad += 1;
       });
 
       Resumen.resumentList.add(Resumen(
@@ -45,6 +48,7 @@ class FacturaDetalleServices extends ChangeNotifier {
   }
 
   Future cargarDetalleFacturas() async {
+    int cantidad = 0;
     final url = Uri.https(_baseUrl, 'FacturaDetalle.json');
 
     final resp = await http.get(url);
@@ -61,8 +65,9 @@ class FacturaDetalleServices extends ChangeNotifier {
       detalles.add(temp);
     });
     print('Usuario sincronizadas');
-    detalles.forEach((element) {
-      DatabaseHelper.instance.SincronizarDefalleFactura(element);
+    detalles.forEach((element) async {
+      await DatabaseHelper.instance.SincronizarDefalleFactura(element);
+      cantidad += 1;
     });
 
     Resumen.resumentList.add(Resumen(

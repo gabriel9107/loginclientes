@@ -183,7 +183,7 @@ class Factura {
       "MontoPendiente": montoPendiente,
       "PedidoId": pedidoId,
       "Sincronizado": sincronizado,
-      "clienteId": clienteId,
+      "clienteId": clienteId.trimRight().trimLeft(),
       "clienteNombre": clienteNombre,
       "totalPagado": totalPagado,
       "vendedorId": vendedorId,

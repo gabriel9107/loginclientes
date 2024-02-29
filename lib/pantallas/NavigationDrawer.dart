@@ -129,11 +129,24 @@ class navegacions extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.padding_outlined),
             title: const Text('Usuarios'),
-            onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => listaUsuarios(),
-                // builder: (context) => Cart(),
-              ));
+            onTap: () async {
+              if (nombre_Usuario == '') {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => listaUsuarios(),
+                  // builder: (context) => Cart(),
+                ));
+              } else {
+                print(nombre_Usuario);
+                await showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text('Alerta'),
+                    content: Text(
+                      'Esta seccion es para el Administrador..',
+                    ),
+                  ),
+                );
+              }
             },
           ),
           const Divider(color: Colors.black54),

@@ -230,7 +230,8 @@ class ListFactura extends StatelessWidget {
     return FutureBuilder<List<Factura>>(
       future: DatabaseHelper.instance
           // .getFacturas(),
-          .getFacturasporClientes(this.customerCode.toString()),
+          .getFacturasporClientes(
+              this.customerCode.toString().trimRight().trimLeft()),
       builder: (BuildContext context, AsyncSnapshot<List<Factura>> snapshot) {
         Future<void> _showMyDialog() async {
           return showDialog<void>(
@@ -259,9 +260,10 @@ class ListFactura extends StatelessWidget {
                         backgroundColor: Colors.blue,
                         child: Icon(Icons.inventory),
                       ),
-                      title: Text('Factura Numero :' +
+                      title: Text('Factura Numero :--' +
                           ' ' +
-                          factura.facturaId.toString()),
+                          factura.clienteId.toString() +
+                          '------.'),
                       subtitle: Text(
                         'Pedido Numero' + ' ' + factura.pedidoId,
                         textAlign: TextAlign.left,
