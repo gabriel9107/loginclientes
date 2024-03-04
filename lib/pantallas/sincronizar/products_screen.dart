@@ -54,19 +54,39 @@ class PincronizarListState extends State<PincronizarLista> {
   final List<Pago> pagos = [];
   List<Resumen> resumenDeSincronizacion = [];
 
+  late var timer;
+
   @override
   void initState() {
+    super.initState();
     llamarMetodos();
 
     resumenDeSincronizacion = Resumen.obtenerResumen();
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      resumenDeSincronizacion = Resumen.obtenerResumen();
-      if (procentaje >= 91) todobien = true;
-    });
-    super.initState();
+
+    timer = new Timer.periodic(
+        Duration(seconds: 200),
+        (Timer t) => setState(() {
+              resumenDeSincronizacion = Resumen.obtenerResumen();
+              if (procentaje >= 80)
+                setState(() {
+                  todobien = true;
+                });
+              print('porcentaje');
+              print(procentaje);
+            }));
+
+    // Timer.periodic(Duration(seconds: 10), (timer) {
+
+    // });
     // resumenDeSincronizacion = Resumen.obtenerResumen();
 
     // super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -584,33 +604,41 @@ Future downloadClients() async {
 void llamarMetodos() {
   // ------------------------- Usuario -------------------------
   // Bajar Usuarios
-  downNewUser();
 
-  // Subir usuarios
-  upNewUser();
+  if (usuariobool == false) {
+    downNewUser();
 
+    // Subir usuarios
+    upNewUser();
+    usuariobool = true;
+  }
+  if (productosbool == false) {
 // ------------------------- Productos -------------------------
 
-  downproductos();
-
+    downproductos();
+  }
+  if (cientesbool) {
 // ------------------------- Clientes -------------------------
 
-  downloadClients();
-
-  uploadClients();
-
-// ------------------------- Pedidos -------------------------
-
-  downloadOrdes();
-  downloadOrderDetalls();
-  uploadOrdes();
-
-// ------------------------- Facturas -------------------------
-
-  downloadInvoices();
-  downloadInvoiceDetails();
-// ------------------------- Pagos -------------------------
-
-  downloadPayment();
-  uploadPayment();
+    downloadClients();
+    uploadClients();
+    cientesbool = false;
+  }
+  if (pedidosbool == false) {
+    // ------------------------- Pedidos -------------------------
+    downloadOrdes();
+    downloadOrderDetalls();
+    uploadOrdes();
+    pedidosbool = true;
+  }
+  if (facturabool == false) {
+    downloadInvoices();
+    downloadInvoiceDetails();
+    facturabool = true;
+  }
+  if (pagosbool == false) {
+    downloadPayment();
+    uploadPayment();
+    pagosbool = true;
+  }
 }

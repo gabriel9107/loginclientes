@@ -26,5 +26,12 @@ List<dynamic> Lista = [];
 
 String CurrentUserName = null.toString();
 
+//para el listado
+bool usuariobool = false;
+bool cientesbool = false;
+bool productosbool = false;
+bool pedidosbool = false;
+bool facturabool = false;
+bool pagosbool = false;
 
-// 0 (false) and 1 (true) 
+// 0 (false) and 1 (true)
