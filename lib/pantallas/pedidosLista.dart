@@ -109,9 +109,14 @@ class _ListaOedidosState extends State<pedidosLista> {
                                   } else if (pedidos.sincronizado == 1) {
                                     print('No hacer nada ');
                                   } else if (pedidos.sincronizado == 1) {
+                                    RefreshIndicator() {
+                                      setState(() {
+                                        updateEstadoPedido(pedidos.id!, 0);
+                                      });
+                                    }
+
                                     print(
                                         'Actualizado a pendiente nuevamente y se debe de poner el rojo');
-                                    updateEstadoPedido(pedidos.id!, 0);
                                   }
                                 },
                               ),

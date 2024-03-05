@@ -617,7 +617,7 @@ void llamarMetodos() {
 
     downproductos();
   }
-  if (cientesbool) {
+  if (cientesbool == false) {
 // ------------------------- Clientes -------------------------
 
     downloadClients();
