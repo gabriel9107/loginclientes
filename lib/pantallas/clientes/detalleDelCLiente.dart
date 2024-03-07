@@ -260,10 +260,9 @@ class ListFactura extends StatelessWidget {
                         backgroundColor: Colors.blue,
                         child: Icon(Icons.inventory),
                       ),
-                      title: Text('Factura Numero :--' +
+                      title: Text('Factura Numero : ' +
                           ' ' +
-                          factura.clienteId.toString() +
-                          '------.'),
+                          factura.facturaId.toString()),
                       subtitle: Text(
                         'Pedido Numero' + ' ' + factura.pedidoId,
                         textAlign: TextAlign.left,

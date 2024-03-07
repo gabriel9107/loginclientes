@@ -77,7 +77,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
               Container(
                 width: 100,
                 child: Text(NumberFormat.simpleCurrency()
-                    .format(suggestion.montoFactura)),
+                    .format(suggestion.montoFactura - suggestion.totalPagado)),
               ),
               Container(
                 alignment: Alignment.topRight,
@@ -112,6 +112,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
             ],
           ),
           onTap: () {
+            query = "";
             query = suggestion.facturaId.toString();
           },
         );

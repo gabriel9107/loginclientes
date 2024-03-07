@@ -409,6 +409,7 @@ class Pago {
 
   List<Factura> factura = [];
   static Future obtenerFacturas() async {
+    // TodasLasFacturas.clear();
     var clienteId = pago.clienteId;
     var documento = await DatabaseHelper.instance
         .getFacturasporClientes(clienteId) as List<Factura>;
@@ -431,6 +432,7 @@ class Pago {
             pedidoId: element.pedidoId,
             sincronizado: element.sincronizado,
             vendedorId: usuario);
+
         TodasLasFacturas.add(a);
       });
       ListasFactura = true;

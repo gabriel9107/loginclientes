@@ -6,6 +6,7 @@ import 'package:sigalogin/clases/modelos/productos.dart';
 import 'package:sigalogin/clases/modelos/pago.dart';
 import 'package:sigalogin/clases/pedidoDetalle.dart';
 import 'package:sigalogin/clases/pedidos.dart';
+import 'package:sigalogin/pantallas/Usuarios/listaUsuarios.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -29,7 +30,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '123.db');
+    String path = join(documentsDirectory.path, '127.db');
     return await openDatabase(
       path,
       version: 7,
@@ -301,7 +302,8 @@ class DatabaseHelper {
     Database db = await instance.database;
     var usuarios = await db.query(
       'Usuario',
-      orderBy: 'UsuarioNombre',
+      where: 'Compagnia =?',
+      whereArgs: [compagnia],
     );
     List<Usuario> usuariosList = usuarios.isNotEmpty
         ? usuarios.map((c) => Usuario.fromMapSql(c)).toList()
@@ -366,8 +368,10 @@ class DatabaseHelper {
   Future<List<Cliente>> obtenerClientesPorVendedor(
       String vendedor, int compagnia) async {
     Database db = await instance.database;
-    var clientes = await db.rawQuery(
-        "SELECT * FROM Clientes    where   codigoVendedor = '$vendedor' and   compagnia = $compagnia");
+    var clientes = await db
+        // .rawQuery("SELECT * FROM Clientes    where   compagnia = $compagnia");
+        .rawQuery(
+            "SELECT * FROM Clientes    where   codigoVendedor = '$vendedor' and   compagnia = $compagnia");
 
     List<Cliente> listadeClientes = clientes.isNotEmpty
         ? clientes.map((e) => Cliente.fromMapSql(e)).toList()
@@ -671,8 +675,10 @@ class DatabaseHelper {
   Future<List<Pedido>> obtenerPedidosPorClient(String clienteid) async {
     Database db = await instance.database;
 
+    var clienteB = clienteid.toString().trimLeft().trimRight();
+
     var res = await db.rawQuery(
-        "SELECT * FROM Pedidos where clienteId = '$clienteid' and compagnia = $compagnia order by fechaOrden desc");
+        "SELECT * FROM Pedidos where clienteId = '$clienteB'   order by fechaOrden desc");
 
     List<Pedido> ordenesLista =
         res.isNotEmpty ? res.map((c) => Pedido.fromMapsqlite(c)).toList() : [];
@@ -929,7 +935,7 @@ class DatabaseHelper {
     int compa = compagnia;
     Database db = await instance.database;
     var detalleFactura = await db.rawQuery(
-        "SELECT * FROM FacturaDetalle WHERE FacturaId= '$facturaId' and compagnia = $compa");
+        "SELECT * FROM FacturaDetalle WHERE FacturaId= '$facturaId' ");
     List<FacturaDetalle> productoLista =
         detalleFactura.map((e) => FacturaDetalle.fromMapSql(e)).toList();
     return productoLista;

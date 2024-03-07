@@ -67,7 +67,7 @@ class ProductsListState extends State<ProductsList> {
                         child: ListTile(
                           leading: CircleAvatar(
                             backgroundColor: Colors.blue,
-                            child: Icon(Icons.emoji_people),
+                            child: Icon(Icons.wallet_travel),
                           ),
                           title: Text(producto.nombre.toString()),
                           subtitle: Text(producto.codigo.toString()),

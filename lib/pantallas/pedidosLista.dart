@@ -24,6 +24,8 @@ class pedidosLista extends StatefulWidget {
 }
 
 class _ListaOedidosState extends State<pedidosLista> {
+  Color _iconColor = Colors.grey;
+
   late DatabaseReference dbref;
   // late List<Client> Clients;
   int count = 0;
@@ -98,28 +100,50 @@ class _ListaOedidosState extends State<pedidosLista> {
                                     print(val);
                                   }),
                               IconButton(
-                                icon: Icon(Icons.check,
-                                    color: getColor(pedidos.sincronizado)),
-                                onPressed: () {
-                                  if (pedidos.sincronizado == 0) {
-                                    print(
-                                        'se actualizo el estado a no actualizar');
-
-                                    updateEstadoPedido(pedidos.id!, 3);
-                                  } else if (pedidos.sincronizado == 1) {
-                                    print('No hacer nada ');
-                                  } else if (pedidos.sincronizado == 1) {
-                                    RefreshIndicator() {
+                                  icon: Icon(Icons.check, color: _iconColor),
+                                  onPressed: () {
+                                    if (pedidos.sincronizado == 0) {
+                                      Future.delayed(
+                                          const Duration(seconds: 2));
                                       setState(() {
+                                        _iconColor = Colors.red;
+                                        updateEstadoPedido(pedidos.id!, 3);
+                                        print(
+                                            'se actualizo el estado a no actualizar');
+                                      });
+                                    } else if (pedidos.sincronizado == 1) {
+                                      print('No hacer nada ');
+                                    } else if (pedidos.sincronizado == 3) {
+                                      setState(() {
+                                        print(
+                                            'Actualizado a pendiente nuevamente y se debe de poner el rojo');
+                                        _iconColor = Colors.green;
                                         updateEstadoPedido(pedidos.id!, 0);
                                       });
                                     }
 
-                                    print(
-                                        'Actualizado a pendiente nuevamente y se debe de poner el rojo');
-                                  }
-                                },
-                              ),
+                                    // icon: Icon(Icons.check,
+                                    //     color: getColor(pedidos.sincronizado)),
+                                    // onPressed: () {
+                                    //   if (pedidos.sincronizado == 0) {
+                                    //     print(
+                                    //         'se actualizo el estado a no actualizar');
+
+                                    //     updateEstadoPedido(pedidos.id!, 3);
+                                    //   } else if (pedidos.sincronizado == 1) {
+                                    //     print('No hacer nada ');
+                                    //   } else if (pedidos.sincronizado == 1) {
+                                    //     RefreshIndicator() {
+                                    //       setState(() {
+                                    //         updateEstadoPedido(pedidos.id!, 0);
+                                    //       });
+                                    //     }
+
+                                    //     print(
+                                    //         'Actualizado a pendiente nuevamente y se debe de poner el rojo');
+                                    //   }
+                                    // },
+                                  }),
                             ],
                           ),
                           onTap: () {

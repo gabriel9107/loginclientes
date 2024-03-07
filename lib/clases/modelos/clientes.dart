@@ -67,13 +67,13 @@ class Cliente {
 
   factory Cliente.fromMap(Map<String, dynamic> json) => new Cliente(
         id: json["ID"],
-        codigo: json["codigo"],
+        codigo: json["codigo"].toString().trimLeft().trimRight(),
         nombre: json["nombre"].toString().trim(),
         direccion: json["direccion"].toString().trim(),
         telefono2: json["telefono2"].toString().trim(),
         telefono1: json["telefono1"].toString().trim(),
         comentario: json["comentario"].toString().trim(),
-        codigoVendedor: json["codigoVendedor"].toString().trim(),
+        codigoVendedor: json["codigoVendedor"].trimLeft().trimRight(),
         compagnia: json["compagnia"],
         sincronizado: json["sincronizado"],
         activo: 1,

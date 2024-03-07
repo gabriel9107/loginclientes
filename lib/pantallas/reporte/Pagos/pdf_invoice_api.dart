@@ -31,7 +31,7 @@ class PdfInvoiceApi {
 
     pdf.addPage(
       pw.MultiPage(
-        pageFormat: PdfPageFormat.legal,
+        pageFormat: PdfPageFormat.letter,
         orientation: pw.PageOrientation.landscape,
         build: (context) {
           return [

@@ -122,9 +122,12 @@ class _MyHomePageState extends State<MyReportePage> {
                         ),
                         title: Text("Nombre Cliente :  " +
                             item.nombreCliente.toString() +
-                            "   Cliente ID :" +
+                            "   Cliente ID : " +
                             item.clienteId.toString()),
-                        subtitle: Text("Monto Recibido" +
+                        subtitle: Text("Numero de Factura : " +
+                            item.facturaId.toString() +
+                            "      " +
+                            "Monto Recibido : " +
                             item.montoPagado.toStringAsFixed(2) +
                             "                     Fecha Pago : " +
                             item.fechaPago.toString().substring(0, 10)),

@@ -145,7 +145,7 @@ class Producto {
         "Cantidad": cantidad,
         "Codigo": codigo,
         "Compagnia": compagnia,
-        "Id": id,
+        // "Id": id,
         "IsDelete": isDelete,
         "Nombre": nombre,
         "OuM": ouM,

@@ -61,10 +61,10 @@ class PincronizarListState extends State<PincronizarLista> {
     super.initState();
     llamarMetodos();
 
-    resumenDeSincronizacion = Resumen.obtenerResumen();
+    resumenDeSincronizacion = [];
 
     timer = new Timer.periodic(
-        Duration(seconds: 200),
+        Duration(seconds: 70),
         (Timer t) => setState(() {
               resumenDeSincronizacion = Resumen.obtenerResumen();
               if (procentaje >= 80)
