@@ -20,7 +20,8 @@ class PdfInvoiceApi {
 
     final tableHeaders = [
       'Numero Recibo',
-      'Codigo',
+      'Compañia'
+          'Codigo',
       'Nombre',
       'Fecha Recibo',
       'Monto Recibo',

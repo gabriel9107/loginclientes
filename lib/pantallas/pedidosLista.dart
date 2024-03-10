@@ -94,11 +94,6 @@ class _ListaOedidosState extends State<pedidosLista> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Checkbox(
-                                  value: false,
-                                  onChanged: (val) {
-                                    print(val);
-                                  }),
                               IconButton(
                                   icon: Icon(Icons.check, color: _iconColor),
                                   onPressed: () {

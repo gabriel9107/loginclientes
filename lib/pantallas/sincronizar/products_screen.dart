@@ -658,7 +658,7 @@ void llamarMetodos() {
   }
   if (pagosbool == false) {
     // downloadPayment();
-    uploadPayment();
+    //  uploadPayment();
     pagosbool = true;
   }
 }
