@@ -356,9 +356,9 @@ Future downproductos() async {
       productos.add(tempProductos);
     });
 
-    await DatabaseHelper.instance.eliminarProducto();
+    DatabaseHelper.instance.eliminarProducto();
     productos.forEach((producto) async {
-      await DatabaseHelper.instance.addProduct(producto);
+      DatabaseHelper.instance.addProduct(producto);
     });
     print('Productos sincrinizados');
     Resumen.resumentList.add(Resumen(
@@ -372,6 +372,7 @@ Future downproductos() async {
 
 Future downloadInvoices() async {
   final List<Factura> facturas = [];
+  final List<Factura> facturaFinal = [];
   var client = http.Client();
   try {
     var response = await client.get(
@@ -386,9 +387,15 @@ Future downloadInvoices() async {
       facturas.add(tempInvoice);
     });
 
-    facturas.forEach((factura) async {
-      await DatabaseHelper.instance.SincronizarFactura(factura);
+    facturas.forEach((element) async {
+      if (element.vendedorId == usuario) {
+        await DatabaseHelper.instance.SincronizarFactura(element);
+      }
     });
+
+    // facturas.forEach((factura) async {
+    //   await DatabaseHelper.instance.SincronizarFactura(factura);
+    // });
 
     print('Facturas Sincronizados');
 
@@ -590,7 +597,13 @@ Future downloadClients() async {
     });
     print('Clientes Sincronizados');
     clientes.forEach((cliente) async {
-      await DatabaseHelper.instance.customerExists(cliente);
+      if (cliente.codigoVendedor == usuario) {
+        if (cliente.activo == 1) {
+          await DatabaseHelper.instance.customerExists(cliente);
+        } else {
+          await DatabaseHelper.instance.deleteExist(cliente);
+        }
+      }
     });
     print('Clientes Descargado');
     Resumen.resumentList.add(Resumen(
@@ -605,13 +618,20 @@ void llamarMetodos() {
   // ------------------------- Usuario -------------------------
   // Bajar Usuarios
 
-  if (usuariobool == false) {
-    downNewUser();
+  print('Primero usuario');
+  print(CurrentUserName);
+  print('Segundo usuario');
+  print(usuario);
+  if (usuario == "") {
+    if (usuariobool == false) {
+      downNewUser();
 
-    // Subir usuarios
-    upNewUser();
-    usuariobool = true;
+      // Subir usuarios
+      upNewUser();
+      usuariobool = true;
+    }
   }
+
   if (productosbool == false) {
 // ------------------------- Productos -------------------------
 
@@ -626,18 +646,18 @@ void llamarMetodos() {
   }
   if (pedidosbool == false) {
     // ------------------------- Pedidos -------------------------
-    downloadOrdes();
-    downloadOrderDetalls();
+    // downloadOrdes();
+    // downloadOrderDetalls();
     uploadOrdes();
     pedidosbool = true;
   }
   if (facturabool == false) {
     downloadInvoices();
-    downloadInvoiceDetails();
+    // downloadInvoiceDetails();
     facturabool = true;
   }
   if (pagosbool == false) {
-    downloadPayment();
+    // downloadPayment();
     uploadPayment();
     pagosbool = true;
   }

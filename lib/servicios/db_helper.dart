@@ -30,7 +30,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '127.db');
+    String path = join(documentsDirectory.path, '145.db');
     return await openDatabase(
       path,
       version: 7,
@@ -266,6 +266,15 @@ class DatabaseHelper {
     return 1;
   }
 
+  Future<int> deleteExist(Cliente cliente) async {
+    var customerCode = cliente.codigo;
+    var db = await instance.database;
+    return await db.rawDelete(
+      'DELETE FROM Clientes WHERE codigo = ?',
+      [customerCode],
+    );
+  }
+
   Future<List<Usuario>> obtenerInformacionUsuario(
       int compagnia, String usuarioNombre) async {
     Database db = await instance.database;
@@ -328,8 +337,27 @@ class DatabaseHelper {
 
 //Agregar Clientes
   Future<int> Add(Cliente customers) async {
-    Database db = await instance.database;
-    return await db.insert('Clientes', customers.toMapsql());
+    var db = await instance.database;
+
+    await db.rawInsert(
+        """ INSERT INTO Clientes (  activo, codigo, codigoVendedor, comentario, compagnia, direccion, nombre, sincronizado, telefono1, telefono2) VALUES (?,?,?,?,?,?,?,?,?,?)""",
+        [
+          customers.activo,
+          customers.codigo,
+          customers.codigoVendedor,
+          customers.comentario,
+          customers.compagnia,
+          customers.direccion,
+          customers.nombre,
+          customers.sincronizado,
+          customers.telefono1,
+          customers.telefono2
+        ]);
+
+    return 0;
+
+    // Database db = await instance.database;
+    // return await db.insert('Clientes', customers.toMapsql());
   }
 
   Future<int> agregarNuevoCLiente(Cliente customers) async {
@@ -622,7 +650,29 @@ class DatabaseHelper {
 
   Future<int> addProduct(Producto producto) async {
     var db = await instance.database;
-    return await db.insert('Productos', producto.toMap());
+
+    await db.rawInsert(
+        """ INSERT INTO Productos (  Codigo, Nombre, Cantidad, Precio, OuM, TipodeVenta, Compagnia, Sincronizado, IsDelete) VALUES (?,?,?,?,?,?,?,?,?)""",
+        [
+          producto.codigo,
+          producto.nombre,
+          producto.cantidad,
+          producto.precio,
+          producto.ouM,
+          producto.tipodeVenta,
+          producto.compagnia,
+          producto.sincronizado,
+          producto.isDelete
+        ]);
+
+    // await db.close();
+    return 0;
+
+    // return db.insert(
+    //   'Productos',
+    //   producto.toMap(),
+    //   conflictAlgorithm: ConflictAlgorithm.replace,
+    // );
   }
 
   Future<int> eliminarProducto() async {
@@ -873,7 +923,30 @@ class DatabaseHelper {
   }
 
   Future<int> AddFactura(Factura factura) async {
-    Database db = await instance.database;
+    var db = await instance.database;
+
+    // await db.rawInsert(
+    //     """ INSERT INTO Factura (  Compagnia, FacturaFecha, FacturaId, FacturaVencimiento, Id, IsDelete,  MetodoDePago, MontoFactura, MontoPendiente , PedidoId, Sincronizado, clienteId, clienteNombre, totalPagado, vendedorId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+    //     [
+    //       factura.compagnia,
+    //       factura.facturaFecha,
+    //       factura.facturaId,
+    //       factura.facturaVencimiento,
+    //       factura.id,
+    //       factura..isDelete,
+    //       factura.metodoDePago,
+    //       factura.montoFactura,
+    //       factura.montoPendiente,
+    //       factura.pedidoId,
+    //       factura.sincronizado,
+    //       factura.clienteId,
+    //       factura.clienteNombre,
+    //       factura.totalPagado,
+    //       factura..vendedorId
+    //     ]);
+    // return 0;
+
+    // Database db = await instance.database;
     return await db.insert('Factura', factura.toMap());
   }
 
@@ -942,8 +1015,26 @@ class DatabaseHelper {
   }
 
   Future<int> AddDetalleFactura(FacturaDetalle factura) async {
-    Database db = await instance.database;
-    return await db.insert('FacturaDetalle', factura.toMapSql());
+    var db = await instance.database;
+
+    await db.rawInsert(
+        """ INSERT INTO Factura (  Compagnia, FacturaFecha, FacturaId, FacturaVencimiento, Id, IsDelete,  MetodoDePago, MontoFactura, MontoPendiente , PedidoId, Sincronizado, clienteId, clienteNombre, totalPagado, vendedorId) VALUES (?,?,?,?,?,?,?,?,?,?)""",
+        [
+          factura.compagnia,
+          factura.facturaId,
+          factura.id,
+          factura.lineaNumero,
+          factura.nombre,
+          factura.precioVenta,
+          factura.productoCodigo,
+          factura.qty,
+          factura.sincronizado,
+          factura.montoLinea
+        ]);
+    return 0;
+
+    // Database db = await instance.database;
+    // return await db.insert('FacturaDetalle', factura.toMapSql());
   }
 
   Future<int> SincronizarDefalleFactura(FacturaDetalle factura) async {
