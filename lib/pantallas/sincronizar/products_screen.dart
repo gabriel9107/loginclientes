@@ -388,7 +388,7 @@ Future downloadInvoices() async {
     });
 
     facturas.forEach((element) async {
-      if (element.vendedorId == usuario) {
+      if (element.vendedorId == codigoUsuario) {
         await DatabaseHelper.instance.SincronizarFactura(element);
       }
     });
@@ -653,7 +653,7 @@ void llamarMetodos() {
   }
   if (facturabool == false) {
     downloadInvoices();
-    // downloadInvoiceDetails();
+    downloadInvoiceDetails();
     facturabool = true;
   }
   if (pagosbool == false) {

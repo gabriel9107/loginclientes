@@ -75,28 +75,36 @@ class PagoReporte {
       // //id
       case 0:
         return id.toString();
+      //compagnia
+      case 1:
+        return compania == 1 ? "Siga " : "New";
 
       //Codigo del cliente o Cliente Id
-      case 1:
-        // //Codigo
-        return clienteId.toString();
-      // Nombre
       case 2:
-        return nombreCliente.toString();
-// Fecha recibo
+        // //Codigo
+        return clienteId.toString().trimLeft().trimRight();
+        ;
+      // Nombre
       case 3:
-        return fechaPago.toString().substring(0, 10);
-// //Monto recibido
+        return nombreCliente.toString().trimLeft().trimRight();
+        ;
+// Fecha recibo
       case 4:
-        return montoPagado.toStringAsFixed(2);
-// factura
+        return fechaPago.toString().substring(0, 10).trimLeft().trimRight();
+// //Monto recibido
       case 5:
-        return facturaId.toString();
-// Tipo de Pago
+        return montoPagado.toStringAsFixed(2).trimLeft().trimRight();
+        ;
+// factura
       case 6:
-        return metodoDePago.toString();
-      //so[]porte
+        return facturaId.toString().trimLeft().trimRight();
+        ;
+// Tipo de Pago
       case 7:
+        return metodoDePago.toString().trimLeft().trimRight();
+        ;
+      //so[]porte
+      case 8:
         return '______________';
     }
     return '';

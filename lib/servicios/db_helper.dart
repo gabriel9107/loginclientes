@@ -30,7 +30,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '145.db');
+    String path = join(documentsDirectory.path, '146.db');
     return await openDatabase(
       path,
       version: 7,
@@ -1015,26 +1015,26 @@ class DatabaseHelper {
   }
 
   Future<int> AddDetalleFactura(FacturaDetalle factura) async {
-    var db = await instance.database;
+    // var db = await instance.database;
 
-    await db.rawInsert(
-        """ INSERT INTO Factura (  Compagnia, FacturaFecha, FacturaId, FacturaVencimiento, Id, IsDelete,  MetodoDePago, MontoFactura, MontoPendiente , PedidoId, Sincronizado, clienteId, clienteNombre, totalPagado, vendedorId) VALUES (?,?,?,?,?,?,?,?,?,?)""",
-        [
-          factura.compagnia,
-          factura.facturaId,
-          factura.id,
-          factura.lineaNumero,
-          factura.nombre,
-          factura.precioVenta,
-          factura.productoCodigo,
-          factura.qty,
-          factura.sincronizado,
-          factura.montoLinea
-        ]);
-    return 0;
+    // await db.rawInsert(
+    //     """ INSERT INTO Factura (  Compagnia, FacturaFecha, FacturaId, FacturaVencimiento, Id, IsDelete,  MetodoDePago, MontoFactura, MontoPendiente , PedidoId, Sincronizado, clienteId, clienteNombre, totalPagado, vendedorId) VALUES (?,?,?,?,?,?,?,?,?,?)""",
+    //     [
+    //       factura.compagnia,
+    //       factura.facturaId,
+    //       factura.id,
+    //       factura.lineaNumero,
+    //       factura.nombre,
+    //       factura.precioVenta,
+    //       factura.productoCodigo,
+    //       factura.qty,
+    //       factura.sincronizado,
+    //       factura.montoLinea
+    //     ]);
+    // return 0;
 
-    // Database db = await instance.database;
-    // return await db.insert('FacturaDetalle', factura.toMapSql());
+    Database db = await instance.database;
+    return await db.insert('FacturaDetalle', factura.toMapSql());
   }
 
   Future<int> SincronizarDefalleFactura(FacturaDetalle factura) async {

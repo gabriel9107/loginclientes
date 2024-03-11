@@ -19,9 +19,9 @@ class PdfInvoiceApi {
     });
 
     final tableHeaders = [
-      'Numero Recibo',
-      'Compañia'
-          'Codigo',
+      'Nro. Recibo',
+      'Compañia ',
+      'Codigo',
       'Nombre',
       'Fecha Recibo',
       'Monto Recibo',
@@ -44,7 +44,7 @@ class PdfInvoiceApi {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      "siga SRL",
+                      "siga",
                       style: pw.TextStyle(
                         fontSize: 17.0,
                         fontWeight: pw.FontWeight.bold,
@@ -100,16 +100,18 @@ class PdfInvoiceApi {
                   (row) => List<String>.generate(tableHeaders.length,
                       (col) => tableDataa[row].getIndex(col))),
               border: null,
-              headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              
+              // headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
               headerDecoration:
                   const pw.BoxDecoration(color: PdfColors.grey300),
-              cellHeight: 30.0,
+              // cellHeight: 1.0,
               cellAlignments: {
                 0: pw.Alignment.centerLeft,
-                1: pw.Alignment.centerRight,
+                1: pw.Alignment.centerLeft,
                 2: pw.Alignment.centerRight,
                 3: pw.Alignment.centerRight,
                 4: pw.Alignment.centerRight,
+                5: pw.Alignment.centerRight,
               },
             ),
             pw.Divider(),

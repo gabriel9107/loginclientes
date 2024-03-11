@@ -24,7 +24,7 @@ class pedidosLista extends StatefulWidget {
 }
 
 class _ListaOedidosState extends State<pedidosLista> {
-  Color _iconColor = Colors.grey;
+  Color _iconColor = Colors.green;
 
   late DatabaseReference dbref;
   // late List<Client> Clients;
@@ -95,7 +95,10 @@ class _ListaOedidosState extends State<pedidosLista> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               IconButton(
-                                  icon: Icon(Icons.check, color: _iconColor),
+                                  icon: Icon(Icons.check,
+                                      color: pedidos.sincronizado == 1
+                                          ? Colors.grey
+                                          : _iconColor),
                                   onPressed: () {
                                     if (pedidos.sincronizado == 0) {
                                       Future.delayed(

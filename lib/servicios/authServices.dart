@@ -46,6 +46,7 @@ class AuthServices extends ChangeNotifier {
         await verificarUsuarioLocal(email, password, compagnia);
 
     usuario = email;
+    codigoUsuario = email; 
 
     return _usuarioLocal.mensaje.toString();
   }

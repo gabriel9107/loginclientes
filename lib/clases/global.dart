@@ -14,6 +14,7 @@ String compagniaTexto = '';
 String nombre_Usuario = '';
 int compagnia = 0;
 String usuario = '';
+String codigoUsuario = '';
 double _impuesto = 18;
 bool ListasFactura = false;
 List<Factura> TodasLasFacturas = [];
