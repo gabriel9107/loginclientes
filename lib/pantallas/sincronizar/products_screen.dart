@@ -64,10 +64,10 @@ class PincronizarListState extends State<PincronizarLista> {
     resumenDeSincronizacion = [];
 
     timer = new Timer.periodic(
-        Duration(seconds: 70),
+        Duration(seconds: 120),
         (Timer t) => setState(() {
               resumenDeSincronizacion = Resumen.obtenerResumen();
-              if (procentaje >= 80)
+              if (procentaje >= 50)
                 setState(() {
                   todobien = true;
                 });
@@ -622,7 +622,7 @@ void llamarMetodos() {
   print(CurrentUserName);
   print('Segundo usuario');
   print(usuario);
-  if (usuario == "") {
+  if (CurrentUserName == "null") {
     if (usuariobool == false) {
       downNewUser();
 

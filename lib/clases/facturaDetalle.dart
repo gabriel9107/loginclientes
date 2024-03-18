@@ -133,6 +133,19 @@ class FacturaDetalle {
     return facturaDetalle.toList();
   }
 
+  static Future<List<PedidoDetalle>> getFacturaDetalleHistorico() async {
+    late List<PedidoDetalle> detallePedido = [];
+    var result = await DatabaseHelper.instance
+        .obtenerDetallePedidosHistorico()
+        .then((value) => {
+              value.forEach((element) {
+                detallePedido.add(element);
+              })
+            });
+
+    return detallePedido.toList();
+  }
+
   static actualiarLinea(var index) {
     facturaDetalle[index].montoLinea = facturaDetalle[index].montoproducto *
         facturaDetalle[index].cantidadProducto;

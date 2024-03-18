@@ -44,7 +44,7 @@ class PdfInvoiceApi {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      "siga",
+                      "Siga",
                       style: pw.TextStyle(
                         fontSize: 17.0,
                         fontWeight: pw.FontWeight.bold,
@@ -95,15 +95,20 @@ class PdfInvoiceApi {
             ///
             pw.Table.fromTextArray(
               headers: tableHeaders,
+              border: null,
+
               data: List<List<String>>.generate(
                   tableDataa.length,
                   (row) => List<String>.generate(tableHeaders.length,
                       (col) => tableDataa[row].getIndex(col))),
-              border: null,
-              
-              // headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
+
+              headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.normal),
               headerDecoration:
                   const pw.BoxDecoration(color: PdfColors.grey300),
+              cellHeight: 30.0,
+              oddRowDecoration: const pw.BoxDecoration(
+                color: PdfColors.grey100,
+              ),
               // cellHeight: 1.0,
               cellAlignments: {
                 0: pw.Alignment.centerLeft,
@@ -119,7 +124,7 @@ class PdfInvoiceApi {
               alignment: pw.Alignment.centerRight,
               child: pw.Row(
                 children: [
-                  pw.Spacer(flex: 6),
+                  // pw.Spacer(flex: 6),
                   pw.Expanded(
                     flex: 4,
                     child: pw.Column(

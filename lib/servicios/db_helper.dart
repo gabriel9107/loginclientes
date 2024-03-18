@@ -30,16 +30,16 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '146.db');
+    String path = join(documentsDirectory.path, '151.db');
     return await openDatabase(
       path,
-      version: 7,
+      version: 1,
       onCreate: _onCreate,
     );
   }
 
   Future _onCreate(Database db, int version) async {
-    await db.execute('''CREATE TABLE Clientes(  
+    await db.execute('''CREATE TABLE Clientes(     
    ID INTEGER PRIMARY KEY AUTOINCREMENT,
    
         codigo TEXT,
@@ -722,6 +722,18 @@ class DatabaseHelper {
     return ordenesLista;
   }
 
+  Future<List<PedidoDetalle>> obtenerDetallePedidosHistorico() async {
+    Database db = await instance.database;
+
+    var res = await db
+        .rawQuery("SELECT * FROM PedidoDetalle where compagnia = $compagnia");
+
+    List<PedidoDetalle> ordenesLista = res.isNotEmpty
+        ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()
+        : [];
+    return ordenesLista;
+  }
+
   Future<List<Pedido>> obtenerPedidosPorClient(String clienteid) async {
     Database db = await instance.database;
 
@@ -1100,8 +1112,9 @@ class DatabaseHelper {
 
   Future<List<PedidoDetalle>> getDetallesporId(String id) async {
     Database db = await instance.database;
-    var detalle = await db.rawQuery(
-        "SELECT * FROM PedidoDetalle WHERE PedidoId = '$id' and Compagnia =$compagnia");
+    var detalle = await db
+        .rawQuery("SELECT * FROM PedidoDetalle WHERE PedidoId = '$id' ");
+    // and Compagnia =$compagnia");
     // await db.rawQuery("SELECT * FROM PedidoDetalle");
 
     List<PedidoDetalle> ordenesDetalleLista = detalle.isNotEmpty
