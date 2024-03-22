@@ -70,6 +70,9 @@ class PincronizarListState extends State<PincronizarLista> {
               if (procentaje >= 50)
                 setState(() {
                   todobien = true;
+                  procentaje = 0;
+                  cientesbool = false;
+                  pedidosbool = false;
                 });
               print('porcentaje');
               print(procentaje);
@@ -227,36 +230,6 @@ Future downloadOrdes() async {
   }
 }
 
-Future downloadOrderDetalls() async {
-  final List<PedidoDetalle> detalle = [];
-  var client = http.Client();
-  int bajado = 0;
-  try {
-    var response = await client.get(
-        Uri.parse(
-            'https://siga-d5296-default-rtdb.firebaseio.com/PedidoDetalle.json'),
-        headers: {"Content-Type": "application/json"});
-
-    final Map<String, dynamic> ordersDetallsMap = json.decode(response.body);
-
-    ordersDetallsMap.forEach((key, value) {
-      final tempOrders = PedidoDetalle.fromMap(value);
-      detalle.add(tempOrders);
-    });
-
-    detalle.forEach((pedido) {
-      DatabaseHelper.instance
-          .AgregarPedidoDetalleNoDescargado(pedido)
-          .then((value) => {bajado + 1});
-    });
-    Resumen.resumentList.add(Resumen(
-        accion: 'Pedidos Detalle  Descargados', cantidad: bajado.toString()));
-  } finally {
-    client.close();
-    procentaje = procentaje + 9;
-  }
-}
-
 Future uploadOrdes() async {
   var pedidosPendiente =
       await DatabaseHelper.instance.obtenerPedidosPendienteDeSincornizacion();
@@ -297,18 +270,101 @@ uploadDetallePedido(List<PedidoDetalle> pedidoDetalle, String decode) async {
     final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
     final resp = await http.post(url, body: element.toJson());
 
-    final decodeData = resp.body;
+    final codeData = json.decode(resp.body);
+    final decodeData = codeData['name'];
 
     print(decodeData);
 
     if (decodeData.isNotEmpty) {
-      DatabaseHelper.instance
-          .actualizarPedidoDetalleCargado(element.id as int, decodeData);
+      DatabaseHelper.instance.actualizarPedidoDetalleCargado(
+          element.id as int, element.pedidoId, decodeData);
     }
     Resumen.resumentList.add(Resumen(
         accion: 'Pedidos Detalle Cargado', cantidad: pedidoSubido.toString()));
   });
 }
+
+// Future downloadOrderDetalls() async {
+//   final List<PedidoDetalle> detalle = [];
+//   var client = http.Client();
+//   int bajado = 0;
+//   try {
+//     var response = await client.get(
+//         Uri.parse(
+//             'https://siga-d5296-default-rtdb.firebaseio.com/PedidoDetalle2.json'),
+//         headers: {"Content-Type": "application/json"});
+
+//     final Map<String, dynamic> ordersDetallsMap = json.decode(response.body);
+
+//     ordersDetallsMap.forEach((key, value) {
+//       final tempOrders = PedidoDetalle.fromMap(value);
+//       detalle.add(tempOrders);
+//     });
+
+//     detalle.forEach((pedido) {
+//       DatabaseHelper.instance
+//           .AgregarPedidoDetalleNoDescargado(pedido)
+//           .then((value) => {bajado + 1});
+//     });
+//     Resumen.resumentList.add(Resumen(
+//         accion: 'Pedidos Detalle  Descargados', cantidad: bajado.toString()));
+//   } finally {
+//     client.close();
+//     procentaje = procentaje + 9;
+//   }
+// }
+
+// Future uploadOrdes() async {
+//   var pedidosPendiente =
+//       await DatabaseHelper.instance.obtenerPedidosPendienteDeSincornizacion();
+
+//   var client = http.Client();
+//   try {
+//     pedidosPendiente.forEach((element) async {
+//       var response = await client.post(
+//           Uri.parse(
+//               'https://siga-d5296-default-rtdb.firebaseio.com/Pedidos.json'),
+//           body: json.encode(element.toMap()));
+//       var Response = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+//       final codeData = json.decode(response.body);
+//       final decodeData = codeData['name'];
+
+//       if (Response.isNotEmpty) {
+//         await DatabaseHelper.instance
+//             .actualizarPedidoCargado(element.id as int, decodeData);
+//         client.close();
+//       }
+//     });
+//   } finally {
+//     client.close();
+//     procentaje = procentaje + 9;
+//   }s
+//   Resumen.resumentList.add(Resumen(
+//       accion: 'Pedidos      ', cantidad: pedidosPendiente.length.toString()));
+// }
+
+// uploadDetallePedido() async {
+//   var pedidoDetalle =
+//       await DatabaseHelper.instance.obtenerPedidoDetalleASincronizar();
+
+//   final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
+//   final int pedidoSubido = 0;
+//   pedidoDetalle.forEach((element) async {
+//     final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
+//     final resp = await http.post(url, body: element.toJson());
+
+//     final decodeData = resp.body;
+
+//     print(decodeData);
+
+//     if (decodeData.isNotEmpty) {
+//       await DatabaseHelper.instance.actualizarPedidoDetalleCargado(
+//           element.id as int, element.pedidoId, decodeData);
+//     }
+//     Resumen.resumentList.add(Resumen(
+//         accion: 'Pedidos Detalle Cargado', cantidad: pedidoSubido.toString()));
+//   });
+// }
 
 Future downloadInvoiceDetails() async {
   final List<FacturaDetalle> detalles = [];
@@ -614,7 +670,7 @@ Future downloadClients() async {
   }
 }
 
-void llamarMetodos() {
+void llamarMetodos() async {
   // ------------------------- Usuario -------------------------
   // Bajar Usuarios
 
@@ -648,17 +704,19 @@ void llamarMetodos() {
     // ------------------------- Pedidos -------------------------
     // downloadOrdes();
     // downloadOrderDetalls();
-    uploadOrdes();
+    await uploadOrdes();
+    //Ve
+
     pedidosbool = true;
   }
   if (facturabool == false) {
     downloadInvoices();
-    downloadInvoiceDetails();
+    // downloadInvoiceDetails();
     facturabool = true;
   }
   if (pagosbool == false) {
     // downloadPayment();
-    //  uploadPayment();
+    uploadPayment();
     pagosbool = true;
   }
 }

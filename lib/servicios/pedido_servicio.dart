@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sigalogin/clases/pedidoDetalle.dart';
+
 import 'package:sigalogin/clases/pedidos.dart';
 
 import 'dart:async';
@@ -16,7 +14,7 @@ import 'package:sigalogin/servicios/db_helper.dart';
 import '../clases/modelos/resumen.dart';
 
 class PedidoServicio extends ChangeNotifier {
-  final String _baseUrl = 'siga-d5296-default-rtdb.firebaseio.com';
+  
   final List<Pedido> pedidos = [];
   final int pedidosSincronizados = 0;
   final int pedidoSubido = 0;
@@ -73,9 +71,9 @@ class PedidoServicio extends ChangeNotifier {
           DatabaseHelper.instance
               .actualizarPedidoCargado(element.id as int, decodeData);
 
-          DatabaseHelper.instance
-              .obtenerPedidoDetalleEspecificoASincronizar(element.id as int)
-              .then((value) => {uploadDetallePedido(value, decodeData)});
+          // DatabaseHelper.instance
+          //     .obtenerPedidoDetalleEspecificoASincronizar(element.id as int)
+          //     .then((value) => {uploadDetallePedido(value, decodeData)});
         }
       });
     } finally {}
@@ -135,30 +133,8 @@ class PedidoServicio extends ChangeNotifier {
   //       accion: 'Pedidos Cargados', cantidad: pedidos.length.toString()));
   // }
 
-  uploadDetallePedido(List<PedidoDetalle> pedidoDetalle, String decode) async {
-    pedidoDetalle.forEach((element) async {
-      element.idfirebase = decode;
-      final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
-      final resp = await http.post(url, body: element.toJson());
-
-      final decodeData = resp.body;
-
-      print(decodeData);
-
-      if (decodeData.isNotEmpty) {
-        DatabaseHelper.instance
-            .actualizarPedidoDetalleCargado(element.id as int, decodeData);
-      }
-      Resumen.resumentList.add(Resumen(
-          accion: 'Pedidos Detalle Cargado',
-          cantidad: pedidoSubido.toString()));
-    });
- 
-  }
-
-  // sincronizarDetallePedido(
-  //     List<PedidoDetalle> pedidoLista, String decode) async {
-  //   pedidoLista.forEach((element) async {
+  // uploadDetallePedido(List<PedidoDetalle> pedidoDetalle, String decode) async {
+  //   pedidoDetalle.forEach((element) async {
   //     element.idfirebase = decode;
   //     final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
   //     final resp = await http.post(url, body: element.toJson());
@@ -175,10 +151,32 @@ class PedidoServicio extends ChangeNotifier {
   //         accion: 'Pedidos Detalle Cargado',
   //         cantidad: pedidoSubido.toString()));
   //   });
+
   // }
 
-  void buscarDetalleaSincronizar(Pedido pedido) async {
-    var detalle = DatabaseHelper.instance
-        .obtenerDetallePedidosPendienteDeSincornizacion();
-  }
+  // // sincronizarDetallePedido(
+  // //     List<PedidoDetalle> pedidoLista, String decode) async {
+  // //   pedidoLista.forEach((element) async {
+  // //     element.idfirebase = decode;
+  // //     final url = Uri.https(_baseUrl, 'PedidoDetalle.json');
+  // //     final resp = await http.post(url, body: element.toJson());
+
+  // //     final decodeData = resp.body;
+
+  // //     print(decodeData);
+
+  // //     if (decodeData.isNotEmpty) {
+  // //       DatabaseHelper.instance
+  // //           .actualizarPedidoDetalleCargado(element.id as int, decodeData);
+  // //     }
+  // //     Resumen.resumentList.add(Resumen(
+  // //         accion: 'Pedidos Detalle Cargado',
+  // //         cantidad: pedidoSubido.toString()));
+  // //   });
+  // // }
+
+  // void buscarDetalleaSincronizar(Pedido pedido) async {
+  //   var detalle = DatabaseHelper.instance
+  //       .obtenerDetallePedidosPendienteDeSincornizacion();
+  // }
 }

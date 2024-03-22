@@ -128,10 +128,11 @@ class _mainPage extends State<PedidoHistorico> {
                                           GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  FacturaDetalle.remover(index);
-                                                  detalleFactura
-                                                      .removeAt(index);
-                                                  detalleFactura.remove(index);
+                                                  
+                                                  // FacturaDetalle.remover(index);
+                                                  // detalleFactura
+                                                  //     .removeAt(index);
+                                                  // detalleFactura.remove(index);
 
                                                   // detalleFactura[index].cantidadProducto -=
                                                   // //     1;
@@ -203,10 +204,13 @@ class _mainPage extends State<PedidoHistorico> {
                                                 onTap: () {
                                                   setState(() {
                                                     print('restando');
-                                                    detalles![index].cantidad +=
-                                                        1;
-                                                    FacturaDetalle
-                                                        .actualiarLinea(index);
+                                                    DatabaseHelper.instance
+                                                        .actualizarCantidadPedido(
+                                                            detalles![index]);
+                                                    // detalles![index].cantidad +=
+                                                    //     1;
+                                                    // FacturaDetalle
+                                                    //     .actualiarLinea(index);
                                                   });
                                                 },
                                                 child: Icon(
@@ -226,13 +230,19 @@ class _mainPage extends State<PedidoHistorico> {
                                             GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    detalles![index].cantidad -=
+                                                    detalles![index].cantidad +
                                                         1;
-                                                    print(detalleFactura[index]
-                                                        .cantidad);
 
-                                                    FacturaDetalle
-                                                        .actualiarLinea(index);
+                                                    DatabaseHelper.instance
+                                                        .actualizarCantidadPedido(
+                                                            detalles![index]);
+                                                    // detalles![index].cantidad -=
+                                                    //     1;
+                                                    // print(detalleFactura[index]
+                                                    //     .cantidad);
+
+                                                    // FacturaDetalle
+                                                    //     .actualiarLinea(index);
 
                                                     // qty -= 1;
                                                   });

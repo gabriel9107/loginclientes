@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +19,7 @@ class PdfInvoiceApi {
 
     final tableHeaders = [
       'Nro. Recibo',
-      'Compañia ',
+      'Comp. ',
       'Codigo',
       'Nombre',
       'Fecha Recibo',

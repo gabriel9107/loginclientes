@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 
 import 'dart:async';
@@ -8,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:sigalogin/clases/pedidoDetalle.dart';
-import 'package:sigalogin/pantallas/pedidos/pedidos.dart';
+
 import 'package:sigalogin/servicios/db_helper.dart';
 
 import '../clases/modelos/resumen.dart';
@@ -91,8 +90,8 @@ class PedidoDetalleServicio extends ChangeNotifier {
       print(decodeData);
 
       if (decodeData.isNotEmpty) {
-        DatabaseHelper.instance
-            .actualizarPedidoDetalleCargado(element.id as int, decodeData);
+        // DatabaseHelper.instance
+        //     .actualizarPedidoDetalleCargado(element.id as int, decodeData);
       }
       Resumen.resumentList.add(Resumen(
           accion: 'Pedidos Detalle Cargado',

@@ -30,7 +30,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, '151.db');
+    String path = join(documentsDirectory.path, '156.db');
     return await openDatabase(
       path,
       version: 1,
@@ -702,11 +702,29 @@ class DatabaseHelper {
     Database db = await instance.database;
 
     var res = await db.rawQuery(
-        "SELECT * FROM Pedidos where Sincronizado = 0 and  IsDelete = 0 and compagnia =$compagnia");
+        "SELECT * FROM Pedidos where Sincronizado = 0   and compagnia =$compagnia");
 
     List<Pedido> ordenesLista =
         res.isNotEmpty ? res.map((c) => Pedido.fromMapsqlite(c)).toList() : [];
     return ordenesLista;
+  }
+
+  Future<int> actualizarCantidadPedido(PedidoDetalle pedido) async {
+    Database db = await instance.database;
+    final data = {'Cantidad': pedido.cantidad};
+
+    final result = await db.update('PedidoDetalle', data,
+        where: "PedidoId = ? ", whereArgs: [pedido.pedidoId]);
+    return result;
+  }
+
+  Future<int> eliminarCantidadPedido(PedidoDetalle pedido) async {
+    Database db = await instance.database;
+
+    final result = await db.delete('PedidoDetalle',
+        where: "id = ? and PedidoId = ? and Compagnia = ?",
+        whereArgs: [pedido.id, pedido.pedidoId, pedido.compagnia]);
+    return result;
   }
 
   Future<List<PedidoDetalle>>
@@ -888,16 +906,41 @@ class DatabaseHelper {
     return ordenesLista;
   }
 
+  Future<List<PedidoDetalle>> obtenerPedidoDetalleASincronizar() async {
+    Database db = await instance.database;
+
+    var res = await db.rawQuery(
+        "SELECT * FROM PedidoDetalle where Sincronizado = 0 and  IsDelete = 0 and compagnia =$compagnia");
+
+    List<PedidoDetalle> ordenesLista = res.isNotEmpty
+        ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()
+        : [];
+    return ordenesLista;
+  }
+
   Future<int> actualizarPedidoCargado(int id, String idfire) async {
     Database db = await instance.database;
     final data = {'Sincronizado': 1, 'idfirebase': idfire};
 
-    final result =
-        await db.update('Pedidos', data, where: "ID = ?", whereArgs: [id]);
+    final result = await db
+        .update('Pedidos', data, where: "ID = ?", whereArgs: [id]).then(
+            (value) => actualizarIdPedidoDetalleFireBase(id, idfire));
+
     return result;
   }
 
-  Future<int> actualizarPedidoDetalleCargado(int id, String idfire) async {
+  Future<int> actualizarIdPedidoDetalleFireBase(int id, String idfire) async {
+    Database db = await instance.database;
+    final data = {'Sincronizado': 1, 'idfirebase': idfire};
+
+    final result = await db.update('PedidoDetalle', data,
+        where: "PedidoId = ?  and Compagnia = ?", whereArgs: [id, compagnia]);
+
+    return result;
+  }
+
+  Future<int> actualizarPedidoDetalleCargado(
+      int id, String pedidoId, String idfire) async {
     Database db = await instance.database;
     final data = {
       'Sincronizado': 1,
@@ -906,8 +949,9 @@ class DatabaseHelper {
       // 'createdAt': DateTime.now().toString()
     };
 
-    final result = await db
-        .update('PedidoDetalle', data, where: "PedidoId = ?", whereArgs: [id]);
+    final result = await db.update('PedidoDetalle', data,
+        where: "PedidoId = ? and Id = ? and Compagnia = ?",
+        whereArgs: [pedidoId, id, compagnia]);
     return result;
   }
 

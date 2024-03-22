@@ -238,6 +238,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 child: ElevatedButton(
                     child: Text('Buscar Factura'),
                     onPressed: () async {
+                      // TodasLasFacturas.clear();
+                      // TodasLasFacturas = [];
                       if (_claveFormulario.currentState!.validate()) {
                         // double valordelPago =
                         //     double.parse(valordelpagoControler.text);
@@ -487,7 +489,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   bottom: 0.0,
                   right: 0.0,
                   left: 0.0,
-                  child: _buildCartSummary(context))
+                  child:
+                      _buildCartSummary(context, this.clienteName.toString()))
             ],
           ),
         ),
@@ -497,7 +500,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   }
 }
 
-_buildCartSummary(BuildContext context) {
+_buildCartSummary(BuildContext context, String clienteName) {
   var subtotal = PagoTemporal.obtenerSubtotal();
   var total = Pago.obtenermontodelpago();
   return Container(
@@ -590,7 +593,7 @@ _buildCartSummary(BuildContext context) {
                   var reciboId = await Pago.guardarPagoConID(pagot);
                   final comprobanteDePago factura = comprobanteDePago(
                       clienteCodigo: Pago.pago.clienteId.toString(),
-                      clienteNombre: Pago.pago.clienteId.toString(),
+                      clienteNombre: clienteName,
                       fechaComprobante: DateTime.now(),
                       numeroComprobante: reciboId,
                       vendedorNombre: nombre_Usuario.toString(),

@@ -105,7 +105,7 @@ class PagoReporte {
         ;
       //so[]porte
       case 8:
-        return '______________';
+        return '__________';
     }
     return '';
   }
