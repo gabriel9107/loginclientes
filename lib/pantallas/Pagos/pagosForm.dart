@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:sigalogin/clases/api/facturaRecibo.dart';
 import 'package:sigalogin/clases/formatos.dart';
@@ -71,6 +72,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
   List<PagoDetalle> facturas = [];
   List<PagoTemporal> facturaTemp = [];
 
+  List<Factura> items = [];
+
   // Whether the textfield is read-only or not
   bool _isReadonly = false;
 
@@ -80,6 +83,13 @@ class _MyCustomFormState extends State<MyCustomForm> {
   @override
   void initState() {
     super.initState();
+    Pago.obtenerfacturados(this.customerCode!).then((factu) {
+      setState(() {
+        factu.forEach((element) {
+          items.add(element);
+        });
+      });
+    });
     Future.delayed(Duration(seconds: 1), () {
       facturaTemp = PagoTemporal.getDetalleFactura();
     });
@@ -238,8 +248,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 child: ElevatedButton(
                     child: Text('Buscar Factura'),
                     onPressed: () async {
-                      // TodasLasFacturas.clear();
-                      // TodasLasFacturas = [];
+                      // await Pago.obtenerFacturas();
+
                       if (_claveFormulario.currentState!.validate()) {
                         // double valordelPago =
                         //     double.parse(valordelpagoControler.text);
@@ -248,7 +258,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                         Pago.actualizarpago(this.customerCode.toString(),
                             _selectedValueFormaDePago);
                         await showSearch(
-                            context: context, delegate: BuscarFacturaEnPagos());
+                            context: context, delegate: CustomDelegate(items));
                         setState(() {
                           _refresh();
                         });

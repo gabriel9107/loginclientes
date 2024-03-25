@@ -101,8 +101,6 @@ class _ListaOedidosState extends State<pedidosLista> {
                                           : _iconColor),
                                   onPressed: () {
                                     if (pedidos.sincronizado == 0) {
-                                      Future.delayed(
-                                          const Duration(seconds: 2));
                                       setState(() {
                                         _iconColor = Colors.red;
                                         updateEstadoPedido(pedidos.id!, 3);
@@ -112,6 +110,7 @@ class _ListaOedidosState extends State<pedidosLista> {
                                     } else if (pedidos.sincronizado == 1) {
                                       print('No hacer nada ');
                                     } else if (pedidos.sincronizado == 3) {
+                                      updateEstadoPedido(pedidos.id!, 0);
                                       setState(() {
                                         print(
                                             'Actualizado a pendiente nuevamente y se debe de poner el rojo');

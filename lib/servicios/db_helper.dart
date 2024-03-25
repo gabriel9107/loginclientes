@@ -226,7 +226,7 @@ class DatabaseHelper {
     final data = {'Sincronizado': estadoSincronizacion};
 
     final result = await db
-        .update('Pedidos', data, where: "ID = ?", whereArgs: [pedidoid]);
+        .update('Pedidos', data, where: "Id = ?", whereArgs: [pedidoid]);
     return result;
   }
 
@@ -714,7 +714,8 @@ class DatabaseHelper {
     final data = {'Cantidad': pedido.cantidad};
 
     final result = await db.update('PedidoDetalle', data,
-        where: "PedidoId = ? ", whereArgs: [pedido.pedidoId]);
+        where: "PedidoId = ? and Id = ?",
+        whereArgs: [pedido.pedidoId, pedido.id]);
     return result;
   }
 
@@ -733,6 +734,19 @@ class DatabaseHelper {
 
     var res = await db.rawQuery(
         "SELECT * FROM PedidoDetalle where Sincronizado = 0 and compagnia = $compagnia");
+
+    List<PedidoDetalle> ordenesLista = res.isNotEmpty
+        ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()
+        : [];
+    return ordenesLista;
+  }
+
+  Future<List<PedidoDetalle>> obtenerDetallePedidosHistoricoPorCliente(
+      String PedidoId) async {
+    Database db = await instance.database;
+
+    var res = await db.rawQuery(
+        "SELECT * FROM PedidoDetalle where compagnia = $compagnia and PedidoId ='$PedidoId'");
 
     List<PedidoDetalle> ordenesLista = res.isNotEmpty
         ? res.map((c) => PedidoDetalle.toMapSqli(c)).toList()

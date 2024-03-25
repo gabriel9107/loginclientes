@@ -17,7 +17,7 @@ String usuario = '';
 String codigoUsuario = '';
 double _impuesto = 18;
 bool ListasFactura = false;
-List<Factura> TodasLasFacturas = [];
+
 bool ListaClientes = false;
 
 List<Cliente> TodosLosClientes = [];

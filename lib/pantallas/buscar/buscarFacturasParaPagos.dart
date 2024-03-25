@@ -14,45 +14,29 @@ import '../../clases/modelos/pagodetalle.dart';
 
 import 'package:intl/intl.dart';
 
-class BuscarFacturaEnPagos extends SearchDelegate {
+class CustomDelegate extends SearchDelegate<Factura> {
+  final List<Factura> facturas;
+  List<Factura> _filter = [];
+
+  CustomDelegate(this.facturas);
+
   @override
-  List<Widget>? buildActions(BuildContext context) => [
-        IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: () {
-              if (query.isEmpty) {
-                close(context, null);
-              } else {
-                query = '';
-              }
-            }),
-      ];
+  List<Widget> buildActions(BuildContext context) =>
+      [IconButton(icon: Icon(Icons.clear), onPressed: () => query = '')];
+
   @override
   Widget? buildLeading(BuildContext context) => IconButton(
         //Boton para regresar atras
         icon: const Icon(Icons.arrow_back),
-        onPressed: () => close(context, null),
+        onPressed: () => close(context, facturas[1]),
       );
 
   @override
-  Widget buildResults(BuildContext context) => Center(
-        child: Text(
-          query,
-          style: const TextStyle(fontSize: 64, fontWeight: FontWeight.w300),
-        ),
-      );
+  Widget buildResults(BuildContext context) => Container();
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<Factura> _ListFactura = [];
-
-    Pago.obtenerFacturas().then((value) {
-      if (value != null) value.forEach((item) => _ListFactura.add(item));
-    });
-
-    _ListFactura = TodasLasFacturas.toList() as List<Factura>;
-
-    List<Factura> suggestions = _ListFactura.where((element) {
+    List<Factura> suggestions = facturas.where((element) {
       final result = element.facturaId.toString().toLowerCase();
       final input = query.toLowerCase();
       return result.contains(input);
@@ -104,7 +88,7 @@ class BuscarFacturaEnPagos extends SearchDelegate {
                           (suggestion.montoFactura - suggestion.totalPagado),
                     );
                     PagoTemporal.agregarFacturasaPagos(pago);
-                    close(context, null);
+                    close(context, facturas[0]);
                   },
                   child: Text('Agregar'),
                 ),
@@ -112,7 +96,6 @@ class BuscarFacturaEnPagos extends SearchDelegate {
             ],
           ),
           onTap: () {
-            query = "";
             query = suggestion.facturaId.toString();
           },
         );

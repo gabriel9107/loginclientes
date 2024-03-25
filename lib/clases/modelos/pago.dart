@@ -415,6 +415,34 @@ class Pago {
   //   });
   // }
 
+  static Future<List<Factura>> obtenerfacturados(String clienteId) async {
+    List<Factura> factura = [];
+
+    var documento = await DatabaseHelper.instance
+        .getFacturasporClientes(clienteId) as List<Factura>;
+
+    documento.forEach((element) {
+      Factura a = new Factura(
+          id: element.id,
+          clienteId: element.clienteId,
+          facturaFecha: element.facturaFecha,
+          facturaId: element.facturaId,
+          facturaVencimiento: element.facturaVencimiento,
+          metodoDePago: element.metodoDePago,
+          montoFactura: element.montoFactura,
+          totalPagado: element.totalPagado,
+          clienteNombre: '',
+          compagnia: compagnia,
+          isDelete: 0,
+          montoPendiente: (element.montoPendiente - element.montoFactura),
+          pedidoId: element.pedidoId,
+          sincronizado: element.sincronizado,
+          vendedorId: usuario);
+      factura.add(a);
+    });
+    return factura;
+  }
+
   List<Factura> factura = [];
   static Future obtenerFacturas() async {
     // TodasLasFacturas.clear();
@@ -422,29 +450,27 @@ class Pago {
     var documento = await DatabaseHelper.instance
         .getFacturasporClientes(clienteId) as List<Factura>;
 
-    if (ListasFactura == false) {
-      documento.forEach((element) {
-        Factura a = new Factura(
-            id: element.id,
-            clienteId: element.clienteId,
-            facturaFecha: element.facturaFecha,
-            facturaId: element.facturaId,
-            facturaVencimiento: element.facturaVencimiento,
-            metodoDePago: element.metodoDePago,
-            montoFactura: element.montoFactura,
-            totalPagado: element.totalPagado,
-            clienteNombre: '',
-            compagnia: compagnia,
-            isDelete: 0,
-            montoPendiente: (element.montoPendiente - element.montoFactura),
-            pedidoId: element.pedidoId,
-            sincronizado: element.sincronizado,
-            vendedorId: usuario);
+    documento.forEach((element) {
+      Factura a = new Factura(
+          id: element.id,
+          clienteId: element.clienteId,
+          facturaFecha: element.facturaFecha,
+          facturaId: element.facturaId,
+          facturaVencimiento: element.facturaVencimiento,
+          metodoDePago: element.metodoDePago,
+          montoFactura: element.montoFactura,
+          totalPagado: element.totalPagado,
+          clienteNombre: '',
+          compagnia: compagnia,
+          isDelete: 0,
+          montoPendiente: (element.montoPendiente - element.montoFactura),
+          pedidoId: element.pedidoId,
+          sincronizado: element.sincronizado,
+          vendedorId: usuario);
 
-        TodasLasFacturas.add(a);
-      });
-      ListasFactura = true;
-    }
+      // TodasLasFacturas.add(a);
+    });
+
     // TodosProductos.add(documento);
     // Lista.add(documento);
     return documento;
