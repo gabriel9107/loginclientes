@@ -28,6 +28,7 @@ import 'package:sigalogin/servicios/factura_service.dart';
 import 'package:sigalogin/servicios/pagoDetalle_Servicio.dart';
 import 'package:sigalogin/servicios/pago_servicio.dart';
 import 'package:sigalogin/servicios/pedido_servicio.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../clases/customers.dart';
 import '../../clases/modelos/resumen.dart';
@@ -652,6 +653,7 @@ Future downloadClients() async {
       clientes.add(tempClientes);
     });
     print('Clientes Sincronizados');
+    DatabaseHelper.instance.eliminarClientes();
     clientes.forEach((cliente) async {
       if (cliente.codigoVendedor == usuario) {
         if (cliente.activo == 1) {

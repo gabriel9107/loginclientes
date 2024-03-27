@@ -20,8 +20,8 @@ class _MyHomePageState extends State<MyReportePage> {
   var formatter = new DateFormat('yyyy-MM-dd');
   DateTime fromDate =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime toDate =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime toDate = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1);
 
   Future<DateTime> selectDate(BuildContext context, DateTime _date) async {
     final DateTime? picked = await showDatePicker(

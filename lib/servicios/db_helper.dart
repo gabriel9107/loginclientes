@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sigalogin/clases/factura.dart';
 import 'package:intl/intl.dart';
@@ -600,7 +602,7 @@ class DatabaseHelper {
     //     "SELECT * FROM Pago where vendorId = 'Anderson Adames' and compagni = $compagnia and BETWEEN  $fechaInicio and $fechaFin");
 
     var pagos = await db.rawQuery(
-        "SELECT Pago.*, Clientes.nombre FROM Pago INNER JOIN Clientes ON Pago.clienteId = Clientes.codigo where compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
+        "SELECT Pago.*, Clientes.nombre FROM Pago INNER JOIN Clientes ON Pago.clienteId = Clientes.codigo where compagni = $compagnia and    fechaPago BETWEEN '$fechaInicioL' AND '$fechaFinL' ");
     // var pagos = await db.rawQuery(
     //     "SELECT * FROM Pago where compagni = $compagnia and fechaPago BETWEEN $fechaInicio and $fechaFin and vendorId = $usuario");
     List<PagoReporte> listadePagos = pagos.isNotEmpty
@@ -615,14 +617,15 @@ class DatabaseHelper {
     Database db = await instance.database;
 
     var fechaInicioL = fechaInicio.substring(0, 10);
-    print(fechaInicioL);
-    var fechaFinL = fechaFin.substring(0, 10);
+
+    var fechaFinL = fechaFin.substring(0, 10).toString();
     var pagos = await db.rawQuery(
-        // "SELECT Pago.*,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDealle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo   where compagni = $compagnia and  vendorId = 'Anderson Adames' and fechaPago BETWEEN DATE('$fechaInicioL') AND DATE('$fechaFinL') ");
-        "SELECT Pago.*,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDetalle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo;");
+        "SELECT Pago.*,  Clientes.nombre, PagoDetalle.facturaId FROM Pago inner join PagoDetalle on Pago.Id = PagoDetalle.pagoId  inner join Clientes on  Pago.clienteId = Clientes.codigo where Clientes.compagnia = $compagnia and  fechaPago BETWEEN '$fechaInicioL' AND '$fechaFinL' ");
+
     List<PagoReporte> listadePagos = pagos.isNotEmpty
         ? pagos.map((e) => PagoReporte.fromMapSqlLiteWitId(e)).toList()
         : [];
+
     return listadePagos;
   }
 
@@ -678,6 +681,11 @@ class DatabaseHelper {
   Future<int> eliminarProducto() async {
     var db = await instance.database;
     return await db.delete('Productos');
+  }
+
+  Future<int> eliminarClientes() async {
+    var db = await instance.database;
+    return await db.delete('Clientes');
   }
 
   Future<bool> aregarProductoSiNoExiste(
